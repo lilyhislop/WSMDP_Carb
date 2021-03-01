@@ -39,6 +39,15 @@ CarbPredData$Location[which(grepl("N",CarbPredData$Year))] = "NY"
 CarbPredData$Year<-str_remove(CarbPredData$Year,"N")
 CarbPredData <- CarbPredData[-c(1:2),]
 tail(CarbPredData)
+CarbPredData$Year <- as.numeric(CarbPredData$Year)
 
 
 summary(CarbPredData)
+hist(CarbPredData$Year)
+hist(CarbPredData$Glucose)
+hist(CarbPredData$WSP)
+hist(CarbPredData$Starch)
+hist(CarbPredData$Fructose)
+hist(CarbPredData$Sucrose)
+hist(CarbPredData$Total.Sugar)
+
