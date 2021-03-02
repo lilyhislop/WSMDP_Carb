@@ -8,7 +8,8 @@
 
 
 #####Todo::::: Compare actual vs predicted. where are the predictions of the actual?
-
+#make validation set more robust
+#statistically ennumerate how good the equation is
 
 
 #########################
@@ -38,7 +39,6 @@ source("R/AgPredOutput.R")
 ActualFile <- "Data/WSMDP_EqnValidation_Wetlab_Data.csv"
 
 #######Visualize the Validation Dataset for the the different models#####
-
 models <- c("pls","pcr","modpls")
 scaleVerb <- c("Global","su1 calibrated","sh2 calibrated")
 scaleAbr <- c("gl","su1","sh2")
@@ -56,7 +56,7 @@ ValidationDF <- rbind(ValidationDF, CarbEquationComparison(ActualFile,Prediction
 
 ValidationDF <- MixedEndoEqnValidation(ActualFile,ValidationDF)
 
-write.csv(ValidationDF, "Data/WSMDP_Equations_fit_Validation_Evaluation.csv")
+write.csv(ValidationDF, "Data/OutputtedData/WSMDP_Equations_fit_Validation_Evaluation.csv")
 
 #Look at quality of equation
 #start with global pls equation
@@ -68,6 +68,8 @@ PredictionStarchFile <-paste("Data/RawData/wsmdp2021",scaleAbr[j],"st",models[i]
 PredictionSugarFile <-paste("Data/RawData/wsmdp2021",scaleAbr[j],"su",models[i],setArb,".txt", sep = "")
 
 EqnPre <- data.frame(AgPredOutput(PredictionStarchFile,PredictionSugarFile))
+
+
 
 # ActualFile <- "Data/WSMDP_Wetlab_StarchSugarData_FormatedForWinISI_WithR.csv"
 # 

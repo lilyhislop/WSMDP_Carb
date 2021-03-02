@@ -1,4 +1,4 @@
-AgPredOutput <- function(PredictionStarchFile,PredictionSugarFile){
+AgPredOutput <- function(PredictionStarchFile,PredictionSugarFile, condense = TRUE){
   #this function reads in the WinISI output of predicted starch and sugar data and outputs a dataframe of that data combined and cleaned up
   
   
@@ -19,12 +19,14 @@ wetlabPredicted <- data.frame(SugStar_Pred$Sample.Number,SugStar_Pred$Starch, Su
 #rename variables
 colnames(wetlabPredicted) <- dfLabels
 
+if(condense){
 #the NIR scanned the wetlab samples multiple times. Average all the wetlab preditions. This also orders the samples alphanumerically
-wetlabPredicted_aggregate <- wetlabPredicted %>%
+  wetlabPredicted <- wetlabPredicted %>%
   group_by(Samples) %>%
   summarise(Starch = mean(Starch),Total.Polysaccharides = mean(Total.Polysaccharides), 
             WSP = mean(WSP), Glucose =mean(Glucose), Fructose = mean(Fructose),
             Sucrose = mean(Sucrose), Total.Sugar = mean(Total.Sugar))
+}
 
-return(wetlabPredicted_aggregate)
+return(wetlabPredicted)
 }
