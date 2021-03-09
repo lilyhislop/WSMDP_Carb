@@ -10,6 +10,7 @@
 #####Todo::::: Compare actual vs predicted. where are the predictions of the actual?
 #make validation set more robust
 #statistically ennumerate how good the equation is
+#output the best equation into a CSV
 
 
 #########################
@@ -17,7 +18,7 @@
 #########################
 #begin by establishing a new fresh work space
 rm(list=ls())
-# library(dplyr)
+library(dplyr)
 # library(lme4)
 # library(ggplot2)
 # library(ggpmisc)
@@ -39,44 +40,80 @@ source("R/AgPredOutput.R")
 ActualFile <- "Data/WSMDP_EqnValidation_Wetlab_Data.csv"
 
 #######Visualize the Validation Dataset for the the different models#####
+####this code looks at all validation data set for the different models and outputs their R^2 value
+#all the differen models
 models <- c("pls","pcr","modpls")
+
+#the different calibration sets
 scaleVerb <- c("Global","su1 calibrated","sh2 calibrated")
 scaleAbr <- c("gl","su1","sh2")
+
+#Val equations
 setVerb <- "Validation"
 setArb <- "val"
 ValidationDF <- data.frame()
+
+#itterate through the different models and calibration types 
 for(j in 1:3){
 for(i in 1:3){
 PredictionStarchFile <-paste("Data/RawData/wsmdp2021",scaleAbr[j],"st",models[i],setArb,".txt", sep = "")
 PredictionSugarFile <-paste("Data/RawData/wsmdp2021",scaleAbr[j],"su",models[i],setArb,".txt", sep = "")
 
+#read out the outputs of those comparisons
 ValidationDF <- rbind(ValidationDF, CarbEquationComparison(ActualFile,PredictionStarchFile,PredictionSugarFile,setVerb,scaleAbr[j], models[i]))
-
 }}
 
+#what if we only apply the sh2 calibration to the sh2 lines, etc. This code does that
 ValidationDF <- MixedEndoEqnValidation(ActualFile,ValidationDF)
 
+#write all of that to a csv
 write.csv(ValidationDF, "Data/OutputtedData/WSMDP_Equations_fit_Validation_Evaluation.csv")
 
-#Look at quality of equation
-#start with global pls equation
-
-setArb = "all"
-i = 1
-j = 1
-PredictionStarchFile <-paste("Data/RawData/wsmdp2021",scaleAbr[j],"st",models[i],setArb,".txt", sep = "")
-PredictionSugarFile <-paste("Data/RawData/wsmdp2021",scaleAbr[j],"su",models[i],setArb,".txt", sep = "")
-
-EqnPre <- data.frame(AgPredOutput(PredictionStarchFile,PredictionSugarFile))
+#Which model is the best over all?
+ValDFAve <- aggregate(r~scale + modeltype, ValidationDF, FUN = mean)
+ValDFAve[order(ValDFAve$r,decreasing = TRUE)[1],] #this one is the highest scoring model! 
 
 
 
-# ActualFile <- "Data/WSMDP_Wetlab_StarchSugarData_FormatedForWinISI_WithR.csv"
-# 
-# dfLabels <- c("Samples","Starch","Total.Polysaccharides", "WSP","Glucose","Fructose","Sucrose","Total.Sugar")
-# WetlabSamples <- read.csv(file = ActualFile)
-# 
-# WetLabStarchFirst <- WetlabSamples[c(1,6:8,2:5)]
-# colnames(WetLabStarchFirst) <- dfLabels
-# 
-# Both <- merge(EqnPre,WetLabStarchFirst, by = "Samples")
+###########statistical Comparison of predicted vs actual for the samples used to create eqn
+ComparisonSu1SugarFile <- read.delim("Data/RawData/wsmdp_allsamples_inclval_wwet_wsmdp2021su1supls.txt", header = TRUE, sep = "", skip = 18)
+ComparisonSh2SugarFile <- read.delim("Data/RawData/wsmdp_allsamples_inclval_wwet_wsmdp2021sh2supls.txt", header = TRUE, sep = "", skip = 18)
+ComparisonOtSugarFile <- read.delim("Data/RawData/wsmdp_allsamples_inclval_wwet_wsmdp2021otsupls.txt", header = TRUE, sep = "", skip = 18)
+ComparisonSu1StarchFile <- read.delim("Data/RawData/wsmdp_allsamples_inclval_wwet_wsmdp2021su1stpls.txt", header = TRUE, sep = "", skip = 18)
+ComparisonSh2StarchFile <- read.delim("Data/RawData/wsmdp_allsamples_inclval_wwet_wsmdp2021sh2stpls.txt", header = TRUE, sep = "", skip = 18)
+
+#su1
+condenseSug <- function(ComparisonDF){
+spacers <- which(ComparisonSu1SugarFile[,2] == "vs.")
+ComparisonDFFruct <- ComparisonDF[c(1:spacers[1]),2:4]
+ComparisonDFGluc <- ComparisonDF[(spacers[1]+8):(spacers[2]-1),2:4]
+ComparisonDFSuc <- ComparisonDF[(spacers[2]+8):(spacers[3]-1),2:4]
+ComparisonDFTot <- ComparisonDF[(spacers[3]+8):(dim(ComparisonDF)[1]),2:4]
+
+ComparisonSugar<- merge(merge(merge(ComparisonDFFruct, ComparisonDFGluc, by= "Sample"),ComparisonDFSuc, by = "Sample"), ComparisonDFTot, by= "Sample")
+colnames(ComparisonSugar) <- c("NIR", "Fructose.Wetlab","Fructose.Eqn", "Glucose.Wetlab","Glucose.Eqn",  "Sucrose.Wetlab","Sucrose.Eqn",  "TotalSug.Wetlab","TotalSug.Eqn")
+return(ComparisonSugar)
+}
+condenseStarch <- function(ComparisonDF){
+  spacers <- which(ComparisonDF[,2] == "vs.")
+  ComparisonDFStar <- ComparisonDF[1:(spacers[1]-1),2:4]
+  ComparisonDFPoly <- ComparisonDF[(spacers[1]+8):(spacers[2]-1),2:4]
+  ComparisonDFWSP <- ComparisonDF[(spacers[2]+8):(dim(ComparisonDF)[1]),2:4]
+  
+  ComparisonStar<- merge(merge(ComparisonDFStar, ComparisonDFPoly, by= "Sample"),ComparisonDFWSP, by = "Sample")
+  colnames(ComparisonStar) <- c("NIR", "Starch.Wetlab","Starch.Eqn", "TotalPoly.Wetlab","TotalPoly.Eqn",  "WSP.Wetlab","WSP.Eqn")
+  return(ComparisonStar)
+}
+
+Su1Sug <- condenseSug(ComparisonSu1SugarFile)
+Sh2Sug <- condenseSug(ComparisonSh2SugarFile)
+OtSug <- condenseSug(ComparisonOtSugarFile)
+
+Su1St <- condenseStarch(ComparisonSu1StarchFile)
+Sh2St <- condenseStarch(ComparisonSh2StarchFile)
+
+#now match up these wetlab and equation outputs with the carb info and mash it all up into one
+
+CarbInfosu1s <- CarbInfoExpandedDF[which(CarbInfoExpandedDF$endo == "su1"),]
+CarbInfosh2s <- CarbInfoExpandedDF[which(CarbInfoExpandedDF$endo == "sh2"),]
+CarbInfoots <- CarbInfoExpandedDF[which(CarbInfoExpandedDF$endo != "sh2" & CarbInfoExpandedDF$endo != "su1" ),]
