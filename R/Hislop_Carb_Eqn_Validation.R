@@ -91,7 +91,8 @@ ComparisonDFSuc <- ComparisonDF[(spacers[2]+8):(spacers[3]-1),2:4]
 ComparisonDFTot <- ComparisonDF[(spacers[3]+8):(dim(ComparisonDF)[1]),2:4]
 
 ComparisonSugar<- merge(merge(merge(ComparisonDFFruct, ComparisonDFGluc, by= "Sample"),ComparisonDFSuc, by = "Sample"), ComparisonDFTot, by= "Sample")
-colnames(ComparisonSugar) <- c("NIR", "Fructose.Wetlab","Fructose.Eqn", "Glucose.Wetlab","Glucose.Eqn",  "Sucrose.Wetlab","Sucrose.Eqn",  "TotalSug.Wetlab","TotalSug.Eqn")
+colnames(ComparisonSugar) <- c("Samples", "Fructose.Wetlab","Fructose.Eqn", "Glucose.Wetlab","Glucose.Eqn",  "Sucrose.Wetlab","Sucrose.Eqn",  "TotalSug.Wetlab","TotalSug.Eqn")
+ComparisonSugar[2:9] <- sapply(ComparisonSugar[2:9],as.numeric)
 return(ComparisonSugar)
 }
 condenseStarch <- function(ComparisonDF){
@@ -101,7 +102,8 @@ condenseStarch <- function(ComparisonDF){
   ComparisonDFWSP <- ComparisonDF[(spacers[2]+8):(dim(ComparisonDF)[1]),2:4]
   
   ComparisonStar<- merge(merge(ComparisonDFStar, ComparisonDFPoly, by= "Sample"),ComparisonDFWSP, by = "Sample")
-  colnames(ComparisonStar) <- c("NIR", "Starch.Wetlab","Starch.Eqn", "TotalPoly.Wetlab","TotalPoly.Eqn",  "WSP.Wetlab","WSP.Eqn")
+  colnames(ComparisonStar) <- c("Samples", "Starch.Wetlab","Starch.Eqn", "TotalPoly.Wetlab","TotalPoly.Eqn",  "WSP.Wetlab","WSP.Eqn")
+  ComparisonStar[2:7] <- sapply(ComparisonStar[2:7],as.numeric)
   return(ComparisonStar)
 }
 
@@ -117,3 +119,29 @@ Sh2St <- condenseStarch(ComparisonSh2StarchFile)
 CarbInfosu1s <- CarbInfoExpandedDF[which(CarbInfoExpandedDF$endo == "su1"),]
 CarbInfosh2s <- CarbInfoExpandedDF[which(CarbInfoExpandedDF$endo == "sh2"),]
 CarbInfoots <- CarbInfoExpandedDF[which(CarbInfoExpandedDF$endo != "sh2" & CarbInfoExpandedDF$endo != "su1" ),]
+
+
+Su1s <- merge(merge(CarbInfosu1s,Su1Sug, by = "Samples"),Su1St, by = "Samples")
+Sh2s <- merge(merge(CarbInfosh2s,Sh2Sug, by = "Samples"),Sh2St, by = "Samples")
+Ots <- merge(merge(CarbInfoots,OtSug, by = "Samples"),Su1St, by = "Samples")
+MixedEqnFull <- rbind(Su1s,Sh2s,Ots)
+
+
+
+#Now I have a variable that has all the projected values, for the values used to calibrate the equations. WHat are the statistics on that?
+#set carb to a number 1:7. carb <- c(Fructose, Glucose, Sucrose, Total Sugar, Starch, Total Polysaccharide, WSP)
+EqnStats <- function(DF){
+  Out <- data.frame(Carb = c("Fructose", "Glucose", "Sucrose", "Total Sugar", "Starch", "Total Polysaccharide", "WSP"),
+                    RMSEP = rep(NA,7), 
+                    bias = rep(NA,7),
+                    SEE = rep(NA,7))
+  for(carb in 1:7){
+  Out$RMSEP[carb] <- sqrt(sum((DF[,carb*2+21]- DF[,carb*2+20])^2)/dim(DF)[1])
+  Out$bias[carb] <- mean(DF[,carb*2+21]) - mean(DF[,carb*2+20])
+  Out$SEE[carb] <- sqrt((dim(DF)[1]/(dim(DF)[1]-1))*(Out$RMSEP[carb]^2-Out$bias[carb]^2))
+  Out$Carb[carb] <- colnames(DF[carb*2+21])
+  }
+  return(Out)
+}
+MixedEqnStats <- EqnStats(MixedEqnFull)
+write.csv(MixedEqnStats, "Data/OutputtedData/WSMDP_MixedEquation_Statistics.csv")
