@@ -24,8 +24,8 @@ library(lme4)
 library(ggplot2)#for making pretty graphs
 library(ggpmisc)
 library(grDevices)
-library(tidyr)
-library(stringr)
+library(tidyr) #for separate
+library(stringr)#str_remove
 library(psych)
 library(reshape2)#for multiple groups in GGplot
 

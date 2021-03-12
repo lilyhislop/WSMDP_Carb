@@ -134,14 +134,69 @@ EqnStats <- function(DF){
   Out <- data.frame(Carb = c("Fructose", "Glucose", "Sucrose", "Total Sugar", "Starch", "Total Polysaccharide", "WSP"),
                     RMSEP = rep(NA,7), 
                     bias = rep(NA,7),
-                    SEE = rep(NA,7))
+                    SEE = rep(NA,7),
+                    slope = rep(NA,7),
+                    intercept = rep(NA,7),
+                    R2 = rep(NA,7))
+  dfpos <- c(2,4,6,8,10,12,14)
   for(carb in 1:7){
-  Out$RMSEP[carb] <- sqrt(sum((DF[,carb*2+21]- DF[,carb*2+20])^2)/dim(DF)[1])
-  Out$bias[carb] <- mean(DF[,carb*2+21]) - mean(DF[,carb*2+20])
+  Out$RMSEP[carb] <- sqrt(sum((DF[,dfpos[carb]]- DF[,dfpos[carb]-1])^2)/dim(DF)[1])
+  Out$bias[carb] <- mean(DF[,dfpos[carb]]) - mean(DF[,dfpos[carb]-1])
   Out$SEE[carb] <- sqrt((dim(DF)[1]/(dim(DF)[1]-1))*(Out$RMSEP[carb]^2-Out$bias[carb]^2))
-  Out$Carb[carb] <- colnames(DF[carb*2+21])
+  Out$Carb[carb] <- colnames(DF[dfpos[carb]])
   }
   return(Out)
 }
-MixedEqnStats <- EqnStats(MixedEqnFull)
-write.csv(MixedEqnStats, "Data/OutputtedData/WSMDP_MixedEquation_Statistics.csv")
+
+
+#Visualize these
+R2Vis <- function(DF, label, Out){
+  dfpos <- c(2,4,6,8,10,12,14)
+  Carb = c("Fructose", "Glucose", "Sucrose", "Total Sugar", "Starch", "Total Polysaccharide", "WSP")
+for(i in 1:7){
+  carbCompare  <- lm(DF[,dfpos[i]]~ DF[,dfpos[i]-1])
+  carbFileName <- paste("Figures/wsmdp2021_",label,Carb[i],"_NIR_Eqn_Prediction_vis.png", sep = "")
+  png(carbFileName)
+  par(mfrow=c(1,1))
+  print(summary(carbCompare))
+  rsqua <- summary(carbCompare)$r.squared
+  plot(DF[,dfpos[i]]~ DF[,dfpos[i]-1],
+       pch = 16,
+       xlab = paste(Carb[i]," wetlab (%)",sep = ""),
+       ylab = paste(Carb[i]," NIR Prediction (%)",sep = ""),
+       main = paste("Actual Vs Predicted ",Carb[i]," r^2 =",trunc(rsqua*10^3)/10^3,sep = ""))
+  abline(coefficients(carbCompare), lwd = 2, lty = 2, col = "red")
+  # text(15,max(Prediction[,i])-5,labels = paste("r^2 =",trunc(rsqua*10^3)/10^3))
+  
+  Out$slope[i] <- trunc(10^3*summary(carbCompare)$coefficients[2])/10^3
+  Out$intercept[i] <- trunc(10^3*summary(carbCompare)$coefficients[1])/10^3
+  Out$R2[i] <- trunc(10^3*summary(carbCompare)$r.squared)/10^3
+
+  
+  dev.off()
+}
+  return(Out)
+}
+
+MixedEqnStats <- EqnStats(MixedEqnFull[,22:35])
+MixedEqnStatsR <- R2Vis(MixedEqnFull[,22:35], "Uncleaned_PredVsWetlab_for_Calibration_Samples", MixedEqnStats)
+write.csv(MixedEqnStats, "Data/OutputtedData/WSMDP_MixedEquation_Uncleaned_Statistics.csv")
+
+
+#the NIR scanned the wetlab samples multiple times. Average all the wetlab preditions. This also orders the samples alphanumerically
+MixedEqnFullMerged <- MixedEqnFull %>%
+  group_by(Samples) %>%
+  summarise(Starch = mean(Starch),Total.Polysaccharides = mean(Total.Polysaccharides), 
+            WSP = mean(WSP), Glucose =mean(Glucose), Fructose = mean(Fructose),
+            Sucrose = mean(Sucrose), Total.Sugar = mean(Total.Sugar),
+            Fructose.Wetlab = mean(Fructose.Wetlab), Fructose.Eqn = mean(Fructose.Eqn),
+            Glucose.Wetlab = mean(Glucose.Wetlab), Glucose.Eqn = mean(Glucose.Eqn),
+            Sucrose.Wetlab = mean(Sucrose.Wetlab), Sucrose.Eqn = mean(Sucrose.Eqn),
+            TotalSug.Wetlab = mean(TotalSug.Wetlab), TotalSug.Eqn = mean(TotalSug.Eqn),
+            Starch.Wetlab = mean(Starch.Wetlab), Starch.Eqn = mean(Starch.Eqn),
+            TotalPoly.Wetlab = mean(TotalPoly.Wetlab), TotalPoly.Eqn = mean(TotalPoly.Eqn),
+            WSP.Wetlab = mean(WSP.Wetlab), WSP.Eqn = mean(WSP.Eqn))
+
+MixedEqnStats <- EqnStats(data.frame(MixedEqnFullMerged[,9:22]))
+MixedEqnStatsR <- R2Vis(data.frame(MixedEqnFullMerged[,9:22]), "Merged_PredVsWetlab_for_Calibration_Samples", MixedEqnStats)
+write.csv(MixedEqnStats, "Data/OutputtedData/WSMDP_MixedEquation_Merged_Statistics.csv")
