@@ -1,32 +1,38 @@
-CarbOutlierCleanup <- function(CarbDataFrame,CarbColumns = c(6:12),VarietyPos = 15 ,alpha = 0.05){
+CarbOutlierCleanup <- function(CarbDataFrame,CarbColumns = c(6:12) ,alpha = 0.05){
 
 #lets tease out outliers
   #Establish to remove list
   toremove <- c()
   
+  VarietyPos <- which(colnames(CarbDataFrame) == "Variety")
+  SamplesPos <- which(colnames(CarbDataFrame) == "Samples")
+  StarchPos <- which(colnames(CarbDataFrame) == "Starch")
+  SugarPos <- which(colnames(CarbDataFrame) == "Total.Sugar")
+  
   #establish outlier record dataframe
   ProbSamples <- data.frame()
   # ProbSamples <- data.frame()
-  Subset <- c(1:2,CarbColumns, VarietyPos,22)
+  Subset <- c(SamplesPos,c(StarchPos:SugarPos), VarietyPos)
   
   recordKeeping <- function(Action){
-    out <- data.frame(CarbDataFrame$DFPosition[i],CarbDataFrame[PosOutliers[i],c(1:2,CarbColumns, VarietyPos)],Action)
+    out <- data.frame(CarbDataFrame$DFPosition[i],CarbDataFrame[PosOutliers[i],Subset],Action)
     names(out) <- names(ProbSamples)
     ProbSamples <- rbind(ProbSamples,out)
     return(ProbSamples)
   }
-  ##########Sucrose Outliers First##########
-  CarbDataFrame$DFPosition <- rownames(CarbDataFrame)
-  CarbDataFrame <- CarbDataFrame[order(CarbDataFrame$Sucrose),]
-  PosOutliers <- which(CarbDataFrame$Sucrose < 0)
-  PosOutliersVar <- CarbDataFrame[PosOutliers,"Variety"]
-  head(CarbDataFrame[PosOutliers, Subset])
+##########Sucrose Outliers First##########
+Carbs <- c("Starch","Total.Polysaccharides", "WSP","Glucose","Fructose","Sucrose","Total.Sugar")
+for(c in 1:length(Carbs)){
+
+CarbDataFrame$DFPosition <- rownames(CarbDataFrame)
+CarbDataFrame <- CarbDataFrame[order(CarbDataFrame$Sucrose),]
+PosOutliers <- which(CarbDataFrame$Sucrose < 0)
+PosOutliersVar <- CarbDataFrame[PosOutliers,"Variety"]
+head(CarbDataFrame[PosOutliers, Subset])
   
 #lets look at each potential outlier within the context of the the other examples of that variety. Start with Check1 and Check 2 since those will have the most other samples
-CarbDataFrame[which(CarbDataFrame$Variety == "Check1"),Subset] #the -11 value is definitely an outlier
-grubbs.test(CarbDataFrame[which(CarbDataFrame$Variety == "Check1"),'Sucrose'])#Grubs test confirms
 CarbDataFrame[which(CarbDataFrame$Variety == "Check2"),Subset] #The -5 sucrose looks like an outlier
-grubbs.test(CarbDataFrame[which(CarbDataFrame$Variety == "Check2"),'Sucrose']) #grub test confirms, less confidently. But other values of entry 113 are also wonked so remove
+grubbs.test(pull(CarbDataFrame[which(CarbDataFrame$Variety == "Check2"),'Sucrose']),opposite = FALSE) 
 
 counter <- 1
 end <- length(PosOutliers)+1
@@ -34,12 +40,12 @@ i <- 1
 #Do the same for the other samples 
 while(counter < end){
   #reporting out whats going on
-  print(paste("The Sucrose content of sample ", CarbDataFrame$DFPosition[PosOutliers[counter]], " is ",round(CarbDataFrame[PosOutliers[counter],11],2),"%. I is ",counter,sep = ""))
+  print(paste("The Sucrose content of sample ", CarbDataFrame$DFPosition[PosOutliers[counter]], " is ",round(CarbDataFrame[PosOutliers[counter],10],2),"%. I is ",counter,sep = ""))
   
   #ok, so what is the outlier in the context of the variety
-  outlierincontext <- CarbDataFrame[which(CarbDataFrame$Variety == PosOutliersVar[i]),Subset]
+  outlierincontext <- CarbDataFrame[which(CarbDataFrame$Variety == PosOutliersVar[[1]][i]),Subset]
   #how much of an outlier is it?
-  outlierData <- grubbs.test(CarbDataFrame[which(CarbDataFrame$Variety == PosOutliersVar[i]),'Sucrose'])
+  outlierData <- grubbs.test(pull(CarbDataFrame[which(CarbDataFrame$Variety == PosOutliersVar[[1]][i]),'Sucrose']))
   
   if(!is.na(outlierData$p.value)){
     #if the outlier has a pvalue of less than alpha
@@ -60,29 +66,29 @@ while(counter < end){
         ProbSamples <- recordKeeping("Removed")
         toremove <- c(toremove,CarbDataFrame$DFPosition[i])
         CarbDataFrame <- CarbDataFrame[-PosOutliers[i],]
-        print(paste("It is an outlier among all",PosOutliersVar[i], "lines. It's Polysaccharide content is also an outlier. The Sample will be removed"))
+        print(paste("It is an outlier among all",PosOutliersVar[[1]][i], "lines. It's Polysaccharide content is also an outlier. The Sample will be removed"))
         #To account for the sample being removed, i and the end needs to be adjusted
         counter = counter-1
         end = end -1
         }
       if(polymean+3*polySD > OutlierPoly && polymean-3*polySD < OutlierPoly){
         ProbSamples <- recordKeeping("Sucrose Nulled")
-        CarbDataFrame[PosOutliers[i],c(11:12)]<- NA
-        print(paste("It is an outlier among all",PosOutliersVar[i], "lines. It's Polysaccharide content is not an outlier. The Sample will have its sucrose and total sugar set to NA"))
+        CarbDataFrame[PosOutliers[i],c(10:11)]<- NA
+        print(paste("It is an outlier among all",PosOutliersVar[[1]][i], "lines. It's Polysaccharide content is not an outlier. The Sample will have its sucrose and total sugar set to NA"))
         }
       
     }
     #if the outlier has a pvalue larger than the alpha, set the sucrose to 0
     if(outlierData$p.value > alpha){
       ProbSamples <- recordKeeping("Sucrose Zeroed")
-      CarbDataFrame[PosOutliers[i],11]<-0
-      print(paste("It is not an outlier among all",PosOutliersVar[i], "lines. Sucrose has been set to 0%, since biologically it can't be less than 0."))
+      CarbDataFrame[PosOutliers[i],10]<-0
+      print(paste("It is not an outlier among all",PosOutliersVar[[1]][i], "lines. Sucrose has been set to 0%, since biologically it can't be less than 0."))
       }
   }
   if(is.na(outlierData$p.value)){
     ProbSamples <- recordKeeping("Sucrose Zeroed")
-    CarbDataFrame[PosOutliers[i],11]<-0
-    print(paste("There are not enough",PosOutliersVar[i], "samples to determine if it is an outlier. Sucrose has been set to 0%, since biologically it can't be less than 0."))
+    CarbDataFrame[PosOutliers[i],10]<-0
+    print(paste("There are not enough",PosOutliersVar[[1]][i], "samples to determine if it is an outlier. Sucrose has been set to 0%, since biologically it can't be less than 0."))
   }
   i = i+1
   counter = counter + 1
