@@ -39,6 +39,7 @@ source("R/PredictionCulling.R")
 source("R/MixedEndoEqnValidation.R")
 source("R/AgPredOutput.R")
 source("R/CarbOutlierCleanup.R")
+source("R/CarbDataFrameVis.R")
 
 
 #Read in the sample information.
@@ -86,53 +87,11 @@ Ots <- OtDF[which(OtDF$endo != "sh2" & OtDF$endo != "su1"),]
 
 #mash it all together 
 CarbInfoExpandedDF <- rbind(Su1s,Sh2s,Ots)
+CarbDataFrameVis(CarbInfoExpandedDF,"WithOutliers")
+
+CleanedInfo <- CarbOutlierCleanup(CarbInfoExpandedDF,alpha = 0.05)
+CarbDataFrameVis(CleanedInfo,"Cleaned")
 
 
-#Visualize the Total Traits
-png("Figures/WSMDP_Carb_AllTrait_NIREqnOut_wOutliers_Histogram.png")
-par(mfrow=c(3,3))
-for(i in 5:11){
-hist(CarbInfoExpandedDF[[i]],main = paste("Histogram of",colnames(CarbInfoExpandedDF[i])), xlab = colnames(CarbInfoExpandedDF[i]))
-}
-dev.off()
 
-png("Figures/WSMDP_AllNIRPred_Starch_byEndo_wOUtliers_Boxplot.png", width = 750, height = 500)
-dat.m <- melt(CarbInfoExpandedDF, id.vars = "endo", measure.vars = c('Starch', 'WSP', 'Total.Polysaccharides') )
-p <- ggplot(dat.m) +
-  geom_boxplot(aes(x = endo, y = value, color = variable))
-p + labs(title = "Polysaccharide Content by Endosperm Type") + xlab("Endosperm Mutant") + ylab("Percentage of Kernel")
-dev.off()
-
-
-png("Figures/WSMDP_AllNIRPred_Sugar_byEndo_wOutliers_Boxplot.png", width = 1000, height = 500)
-dat.m <- melt(CarbInfoExpandedDF, id.vars = "endo", measure.vars = c('Glucose', 'Fructose', 'Sucrose', 'Total.Sugar') )
-p <- ggplot(dat.m) +
-  geom_boxplot(aes(x = endo, y = value, color = variable))
-p + labs(title = "Sugar Content by Endosperm Type") + xlab("Endosperm Mutant") + ylab("Percentage of Kernel")
-dev.off()
-
-CleanedInfo <- CarbOutlierCleanup(CarbInfoExpandedDF,CarbColumns = c(5:11),alpha = 0.05)
-
-#Visualize the Total Traits
-png("Figures/WSMDP_Carb_AllTrait_NIREqnOut_Histogram.png")
-par(mfrow=c(3,3))
-for(i in 6:12){
-  hist(CleanedInfo[,i],main = paste("Histogram of",colnames(CarbNIREqnOut[i])), xlab = colnames(CarbNIREqnOut[i]))
-}
-dev.off()
-
-png("Figures/WSMDP_AllNIRPred_Starch_byEndo_Boxplot.png", width = 750, height = 500)
-dat.m <- melt(CleanedInfo, id.vars = "endo", measure.vars = c('Starch', 'WSP', 'Total.Polysaccharides') )
-p <- ggplot(dat.m) +
-  geom_boxplot(aes(x = endo, y = value, color = variable))
-p + labs(title = "Polysaccharide Content by Endosperm Type") + xlab("Endosperm Mutant") + ylab("Percentage of Kernel")
-dev.off()
-
-
-png("Figures/WSMDP_AllNIRPred_Sugar_byEndo_Boxplot.png", width = 1000, height = 500)
-dat.m <- melt(CleanedInfo, id.vars = "endo", measure.vars = c('Glucose', 'Fructose', 'Sucrose', 'Total.Sugar') )
-p <- ggplot(dat.m) +
-  geom_boxplot(aes(x = endo, y = value, color = variable))
-p + labs(title = "Sugar Content by Endosperm Type") + xlab("Endosperm Mutant") + ylab("Percentage of Kernel")
-dev.off()
 

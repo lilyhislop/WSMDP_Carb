@@ -1,9 +1,11 @@
-CarbOutlierCleanup <- function(CarbDataFrame,CarbColumns = c(6:12) ,alpha = 0.05){
-
+CarbOutlierCleanup <- function(CarbDataFrame,alpha = 0.05){
 #lets tease out outliers
   #Establish to remove list
+  sink("Data/OutputtedData/EdittedSampleRecords_VerboseChanges.txt", split = TRUE)
   toremove <- c()
   
+  #make sure the original positions of the samples are recorded before we go futtzing around with them 
+  CarbDataFrame$DFPosition <- rownames(CarbDataFrame)
   VarietyPos <- which(colnames(CarbDataFrame) == "Variety")
   SamplesPos <- which(colnames(CarbDataFrame) == "Samples")
   StarchPos <- which(colnames(CarbDataFrame) == "Starch")
@@ -11,158 +13,192 @@ CarbOutlierCleanup <- function(CarbDataFrame,CarbColumns = c(6:12) ,alpha = 0.05
   
   #establish outlier record dataframe
   ProbSamples <- data.frame()
-  # ProbSamples <- data.frame()
+  
+  #lets get just the sample, variety and carb info positions
   Subset <- c(SamplesPos,c(StarchPos:SugarPos), VarietyPos)
   
+  #For each outlier to be analyzed, lets record what we are doing to it 
   recordKeeping <- function(Action){
     out <- data.frame(CarbDataFrame$DFPosition[i],CarbDataFrame[PosOutliers[i],Subset],Action)
     names(out) <- names(ProbSamples)
     ProbSamples <- rbind(ProbSamples,out)
     return(ProbSamples)
   }
-##########Sucrose Outliers First##########
+  
+##########Iterate through Carb lower Outliers First##########
 Carbs <- c("Starch","Total.Polysaccharides", "WSP","Glucose","Fructose","Sucrose","Total.Sugar")
 for(c in 1:length(Carbs)){
 
-CarbDataFrame$DFPosition <- rownames(CarbDataFrame)
-CarbDataFrame <- CarbDataFrame[order(CarbDataFrame$Sucrose),]
-PosOutliers <- which(CarbDataFrame$Sucrose < 0)
+  #Carb being analyzed and the relevant summation carb
+  if(c < 4){CarbSumPos  = StarchPos+1}
+  if(c > 3 ){CarbSumPos = SugarPos}
+CarbDFPos <- c+StarchPos - 1
+
+
+CarbDataFrame <- CarbDataFrame[order(CarbDataFrame[CarbDFPos]),]
+PosOutliers <- which(CarbDataFrame[CarbDFPos] < 0)
 PosOutliersVar <- CarbDataFrame[PosOutliers,"Variety"]
 head(CarbDataFrame[PosOutliers, Subset])
   
-#lets look at each potential outlier within the context of the the other examples of that variety. Start with Check1 and Check 2 since those will have the most other samples
-CarbDataFrame[which(CarbDataFrame$Variety == "Check2"),Subset] #The -5 sucrose looks like an outlier
-grubbs.test(pull(CarbDataFrame[which(CarbDataFrame$Variety == "Check2"),'Sucrose']),opposite = FALSE) 
 
 counter <- 1
 end <- length(PosOutliers)+1
 i <- 1
-#Do the same for the other samples 
+
+#lets look at each potential outlier within the context of the the other examples of that variety. 
 while(counter < end){
   #reporting out whats going on
-  print(paste("The Sucrose content of sample ", CarbDataFrame$DFPosition[PosOutliers[counter]], " is ",round(CarbDataFrame[PosOutliers[counter],10],2),"%. I is ",counter,sep = ""))
-  
+  print(paste("The ",colnames(CarbDataFrame[CarbDFPos])," content of sample ", CarbDataFrame$DFPosition[PosOutliers[counter]], " is ",round(CarbDataFrame[PosOutliers[counter],CarbDFPos],2),"%.",sep = ""))
+  if(is.na(CarbDataFrame[PosOutliers[counter],CarbDFPos]))
+  {
+    print(paste("The",colnames(CarbDataFrame[CarbDFPos]),"content of sample", CarbDataFrame$DFPosition[PosOutliers[counter]], "is NA. Skip this sample."))
+  }
   #ok, so what is the outlier in the context of the variety
-  outlierincontext <- CarbDataFrame[which(CarbDataFrame$Variety == PosOutliersVar[[1]][i]),Subset]
+  outlierincontext <- CarbDataFrame[which(CarbDataFrame$Variety == PosOutliersVar[[1]][i]),]
   #how much of an outlier is it?
-  outlierData <- grubbs.test(pull(CarbDataFrame[which(CarbDataFrame$Variety == PosOutliersVar[[1]][i]),'Sucrose']))
+  outlierData <- grubbs.test(pull(CarbDataFrame[which(CarbDataFrame$Variety == PosOutliersVar[[1]][i]),colnames(CarbDataFrame[CarbDFPos])]))
   
-  if(!is.na(outlierData$p.value)){
+  if(!is.na(outlierData$p.value ) && !is.na(pull(CarbDataFrame[PosOutliers[counter],CarbDFPos]))){
     #if the outlier has a pvalue of less than alpha
     if(outlierData$p.value < alpha)
     {
-      # print(paste(" an outlier among all",PosOutliersVar[i], "lines"))
-      #then test the total polysaccharide data
-      # outlierPolyData <- grubbs.test(outlierincontext$Total.Polysaccharides)
+      #if the summation stat is also an outlierr, then add the sample to the to remove list. If the summation isn't an outlier, set the carb and summation carb to NA
+      #test summation carb (total poly or total sugar) by seeing if its greater than standard deviations from the mean 
+      polySD <- sd(pull(outlierincontext[CarbSumPos]),na.rm = TRUE)
+      polymean <- mean(pull(outlierincontext[CarbSumPos]),na.rm = TRUE)
+      OutlierPoly <- pull(CarbDataFrame[PosOutliers[counter],CarbSumPos])
+
+      #Check if the carb's summation stat is also an outlier. (Total.Poly or Total.Sugar) It is more than 3 sd from the mean?
+      if((polymean+3*polySD < OutlierPoly || polymean-3*polySD > OutlierPoly) && !is.na(OutlierPoly)){
       
-      #if the total polysaccharide data is an outlier, then add the sample to the to remove list. If the poly isn't an outlier, set the sucrose and total sugar to NA
-      #test total Polysaccharide by seeing if its greater than standard deviations from the mean 
-      polySD <- sd(outlierincontext$Total.Polysaccharides)
-      polymean <- mean(outlierincontext$Total.Polysaccharides)
-      OutlierPoly <- CarbDataFrame$Total.Polysaccharides[PosOutliers[counter]]
-      if(polymean+3*polySD < OutlierPoly || polymean-3*polySD > OutlierPoly){
-      
-      # if(outlierPolyData$p.value < alpha){
         ProbSamples <- recordKeeping("Removed")
         toremove <- c(toremove,CarbDataFrame$DFPosition[i])
         CarbDataFrame <- CarbDataFrame[-PosOutliers[i],]
-        print(paste("It is an outlier among all",PosOutliersVar[[1]][i], "lines. It's Polysaccharide content is also an outlier. The Sample will be removed"))
-        #To account for the sample being removed, i and the end needs to be adjusted
-        counter = counter-1
-        end = end -1
-        }
-      if(polymean+3*polySD > OutlierPoly && polymean-3*polySD < OutlierPoly){
-        ProbSamples <- recordKeeping("Sucrose Nulled")
-        CarbDataFrame[PosOutliers[i],c(10:11)]<- NA
-        print(paste("It is an outlier among all",PosOutliersVar[[1]][i], "lines. It's Polysaccharide content is not an outlier. The Sample will have its sucrose and total sugar set to NA"))
-        }
-      
-    }
-    #if the outlier has a pvalue larger than the alpha, set the sucrose to 0
-    if(outlierData$p.value > alpha){
-      ProbSamples <- recordKeeping("Sucrose Zeroed")
-      CarbDataFrame[PosOutliers[i],10]<-0
-      print(paste("It is not an outlier among all",PosOutliersVar[[1]][i], "lines. Sucrose has been set to 0%, since biologically it can't be less than 0."))
-      }
-  }
-  if(is.na(outlierData$p.value)){
-    ProbSamples <- recordKeeping("Sucrose Zeroed")
-    CarbDataFrame[PosOutliers[i],10]<-0
-    print(paste("There are not enough",PosOutliersVar[[1]][i], "samples to determine if it is an outlier. Sucrose has been set to 0%, since biologically it can't be less than 0."))
-  }
-  i = i+1
-  counter = counter + 1
-}
-
-##########WSP Outliers First##########
-CarbDataFrame <- CarbDataFrame[order(CarbDataFrame$WSP),]
-PosOutliers <- which(CarbDataFrame$WSP < 0)
-PosOutliersVar <- CarbDataFrame[which(CarbDataFrame$WSP < 0),"Variety"]
-head(CarbDataFrame[PosOutliers, Subset])
-#Do the same for the other samples 
-counter <- 1
-end <- length(PosOutliers)+1
-i <- 1
-#Do the same for the other samples 
-while(counter < end){
-  #reporting out whats going on
-  print(paste("The WSP content of sample ", CarbDataFrame$DFPosition[PosOutliers[counter]], " is ",round(CarbDataFrame[PosOutliers[counter],8],2),"%. I is ",counter,sep = ""))
-  
-  #ok, so what is the outlier in the context of the variety
-  outlierincontext <- CarbDataFrame[which(CarbDataFrame$Variety == PosOutliersVar[i]),Subset]
-  #how much of an outlier is it?
-  outlierData <- grubbs.test(CarbDataFrame[which(CarbDataFrame$Variety == PosOutliersVar[i]),'WSP'])
-  
-  if(!is.na(outlierData$p.value)){
-    #if the outlier has a pvalue of less than alpha
-    if(outlierData$p.value < alpha)
-    {
-      # print(paste(" an outlier among all",PosOutliersVar[i], "lines"))
-      #then test the total Glucose data
-      # outlierPolyData <- grubbs.test(outlierincontext$Total.Glucoses)
-      
-      #if the total Glucose data is an outlier, then add the sample to the to remove list. If the poly isn't an outlier, set the WSP and total sugar to NA
-      #test total Glucose by seeing if its greater than standard deviations from the mean 
-      polySD <- sd(outlierincontext$Glucose)
-      polymean <- mean(outlierincontext$Glucose)
-      OutlierPoly <- CarbDataFrame$Glucose[PosOutliers[counter]]
-      if(polymean+3*polySD < OutlierPoly || polymean-3*polySD > OutlierPoly){
+        print(paste("It is an outlier among all",PosOutliersVar[[1]][i], "lines. It's ",colnames(outlierincontext[CarbSumPos])," content is also an outlier. The Sample will be removed"))
         
-        # if(outlierPolyData$p.value < alpha){
-        ProbSamples <- recordKeeping("Removed")
-        toremove <- c(toremove,CarbDataFrame$DFPosition[i])
-        CarbDataFrame <- CarbDataFrame[-PosOutliers[i],]
-        print(paste("It is an outlier among all",PosOutliersVar[i], "lines. It's Glucose content is also an outlier. The Sample will be removed"))
         #To account for the sample being removed, i and the end needs to be adjusted
         counter = counter-1
         end = end -1
       }
-      if(polymean+3*polySD > OutlierPoly && polymean-3*polySD < OutlierPoly){
-        ProbSamples <- recordKeeping("WSP Nulled")
-        CarbDataFrame[PosOutliers[i],c(7:8)]<- NA
-        print(paste("It is an outlier among all",PosOutliersVar[i], "lines. It's Glucose content is not an outlier. The Sample will have its WSP and total Polysaccharides set to NA"))
-      }
+      
+      # The total summationation stat is not an outlier
+      if((polymean+3*polySD > OutlierPoly && polymean-3*polySD < OutlierPoly) || is.na(OutlierPoly)){
+        ProbSamples <- recordKeeping(paste(colnames(CarbDataFrame[CarbDFPos]),"Nulled"))
+        CarbDataFrame[PosOutliers[i],CarbDFPos]<- NA
+        CarbDataFrame[PosOutliers[i],CarbSumPos]<- NA
+        print(paste("It is an outlier among all",PosOutliersVar[[1]][i], "lines. It's ",colnames(outlierincontext[CarbSumPos])," content is not an outlier. The Sample will have its ",colnames(CarbDataFrame[CarbDFPos])," and ",colnames(outlierincontext[CarbSumPos])," set to NA"))
+        }
       
     }
-    #if the outlier has a pvalue larger than the alpha, set the WSP to 0
+    #if the outlier has a pvalue larger than the alpha, set the the carb to 0
     if(outlierData$p.value > alpha){
-      ProbSamples <- recordKeeping("WSP Zeroed")
-      CarbDataFrame[PosOutliers[i],8]<-0
-      print(paste("It is not an outlier among all",PosOutliersVar[i], "lines. WSP has been set to 0%, since biologically it can't be less than 0."))
-    }
+      ProbSamples <- recordKeeping(paste(colnames(CarbDataFrame[CarbDFPos]),"Zeroed"))
+      CarbDataFrame[PosOutliers[i],CarbDFPos]<-0
+      print(paste("It is not an outlier among all",PosOutliersVar[[1]][i], "lines.",colnames(CarbDataFrame[CarbDFPos])," has been set to 0%, since biologically it can't be less than 0."))
+      }
   }
   if(is.na(outlierData$p.value)){
-    ProbSamples <- recordKeeping("WSP Zeroed")
-    CarbDataFrame[PosOutliers[i],8]<-0
-    print(paste("There are not enough",PosOutliersVar[i], "samples to determine if it is an outlier. WSP has been set to 0%, since biologically it can't be less than 0."))
+    ProbSamples <- recordKeeping(paste(colnames(CarbDataFrame[CarbDFPos]),"Zeroed"))
+    CarbDataFrame[PosOutliers[i],CarbDFPos]<-0
+    print(paste("There are not enough",PosOutliersVar[[1]][i], "samples to determine if it is an outlier. ",colnames(CarbDataFrame[CarbDFPos])," has been set to 0%, since biologically it can't be less than 0."))
   }
+
   i = i+1
   counter = counter + 1
 }
 
+}
 
-
-colnames(ProbSamples) <- c("Position", "NIRBase", "Samples","Starch","Total.Polysaccharides","WSP","Glucose","Fructose","WSP","Total.Sugar","Variety","Edit")
+###########now lets look at the upper outliers##################
+Carbs <- c("Starch","Total.Polysaccharides", "WSP","Glucose","Fructose","Sucrose","Total.Sugar")
+  for(c in 1:length(Carbs)){
+    
+    #Carb being analyzed and the relevant summation carb
+    if(c < 4){CarbSumPos  = StarchPos+1}
+    if(c > 3 ){CarbSumPos = SugarPos}
+    CarbDFPos <- c+StarchPos - 1
+    
+    CarbDataFrame <- CarbDataFrame[order(CarbDataFrame[CarbDFPos], decreasing = TRUE),]
+    
+    #what entries are above the 2.698S SD?
+    CarbSummary <- quantile(CarbDataFrame[CarbDFPos],na.rm = TRUE)
+    IQR <- CarbSummary[4]-CarbSummary[2]
+    UpperWisk <- CarbSummary[4]+1.5*IQR
+    
+    #ok, what are the samples that are above that upper wisker
+    PosOutliers <- which(CarbDataFrame[CarbDFPos] > UpperWisk)
+    PosOutliersVar <- CarbDataFrame[PosOutliers,"Variety"]
+    head(CarbDataFrame[PosOutliers, Subset])
+    
+    counter <- 1
+    end <- length(PosOutliers)+1
+    i <- 1
+    
+    #lets look at each potential outlier within the context of the the other examples of that variety. 
+    while(counter < end){
+      #reporting out whats going on
+      print(paste("The ",colnames(CarbDataFrame[CarbDFPos])," content of sample ", CarbDataFrame$DFPosition[PosOutliers[counter]], " is ",round(CarbDataFrame[PosOutliers[counter],CarbDFPos],2),"%. The upper wisker is at ", round(UpperWisk,2),"%.",sep = ""))
+      if(is.na(CarbDataFrame[PosOutliers[counter],CarbDFPos]))
+      {
+        print(paste("The",colnames(CarbDataFrame[CarbDFPos]),"content of sample", CarbDataFrame$DFPosition[PosOutliers[counter]], "is NA. Skip this sample."))
+      }
+      #ok, so what is the outlier in the context of the variety
+      outlierincontext <- CarbDataFrame[which(CarbDataFrame$Variety == PosOutliersVar[[1]][i]),]
+      #how much of an outlier is it?
+      outlierData <- grubbs.test(pull(CarbDataFrame[which(CarbDataFrame$Variety == PosOutliersVar[[1]][i]),colnames(CarbDataFrame[CarbDFPos])]))
+      
+      if(!is.na(outlierData$p.value ) && !is.na(pull(CarbDataFrame[PosOutliers[counter],CarbDFPos]))){
+        #if the outlier has a pvalue of less than alpha
+        if(outlierData$p.value < alpha)
+        {
+          #if the summation stat is also an outlierr, then add the sample to the to remove list. If the summation isn't an outlier, set the carb and summation carb to NA
+          #test summation carb (total poly or total sugar) by seeing if its greater than standard deviations from the mean 
+          polySD <- sd(pull(outlierincontext[CarbSumPos]),na.rm = TRUE)
+          polymean <- mean(pull(outlierincontext[CarbSumPos]),na.rm = TRUE)
+          OutlierPoly <- pull(CarbDataFrame[PosOutliers[counter],CarbSumPos])
+          
+          #Check if the carb's summation stat is also an outlier. (Total.Poly or Total.Sugar) It is more than 3 sd from the mean?
+          if((polymean+3*polySD < OutlierPoly || polymean-3*polySD > OutlierPoly) && !is.na(OutlierPoly)){
+            
+            ProbSamples <- recordKeeping("Removed")
+            toremove <- c(toremove,CarbDataFrame$DFPosition[i])
+            CarbDataFrame <- CarbDataFrame[-PosOutliers[i],]
+            print(paste("It is an outlier among all",PosOutliersVar[[1]][i], "lines. It's ",colnames(outlierincontext[CarbSumPos])," content is also an outlier. The Sample will be removed"))
+            
+            #To account for the sample being removed, i and the end needs to be adjusted
+            counter = counter-1
+            end = end -1
+          }
+          
+          # The total summationation stat is not an outlier
+          if((polymean+3*polySD > OutlierPoly && polymean-3*polySD < OutlierPoly) || is.na(OutlierPoly)){
+            ProbSamples <- recordKeeping(paste(colnames(CarbDataFrame[CarbDFPos]),"Nulled"))
+            CarbDataFrame[PosOutliers[i],CarbDFPos]<- NA
+            CarbDataFrame[PosOutliers[i],CarbSumPos]<- NA
+            print(paste("It is an outlier among all",PosOutliersVar[[1]][i], "lines. It's ",colnames(outlierincontext[CarbSumPos])," content is not an outlier. The Sample will have its ",colnames(CarbDataFrame[CarbDFPos])," and ",colnames(outlierincontext[CarbSumPos])," set to NA."))
+          }
+          
+        }
+        #if the outlier has a pvalue larger than the alpha, set the the carb to 0
+        if(outlierData$p.value > alpha){
+          # ProbSamples <- recordKeeping(paste(colnames(CarbDataFrame[CarbDFPos]),"Zeroed"))
+          # CarbDataFrame[PosOutliers[i],CarbDFPos]<-0
+          print(paste("It is not an outlier among all",PosOutliersVar[[1]][i], "lines.",colnames(CarbDataFrame[CarbDFPos])," has not been altered."))
+        }
+      }
+      if(is.na(outlierData$p.value)){
+        # ProbSamples <- recordKeeping(paste(colnames(CarbDataFrame[CarbDFPos]),"Zeroed"))
+        # CarbDataFrame[PosOutliers[i],CarbDFPos]<-0
+        print(paste("There are not enough",PosOutliersVar[[1]][i], "samples to determine if it is an outlier. ",colnames(CarbDataFrame[CarbDFPos])," has not been altered."))
+      }
+      
+      i = i+1
+      counter = counter + 1
+    
+    }
+}
+colnames(ProbSamples) <- c("Position", colnames(CarbDataFrame[PosOutliers[i],Subset]),"Edit")
 write.csv(file = "Data/OutputtedData/EdittedSampleRecords.csv",ProbSamples)
+sink()
 return(CarbDataFrame)
 }
