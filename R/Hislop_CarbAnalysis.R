@@ -29,6 +29,7 @@ library(stringr)#str_remove
 library(psych)
 library(reshape2)#for multiple groups in GGplot
 library(outliers)
+library(lattice)
 
 getwd()
 setwd("C:/Users/LHislop/Documents/GitHub/WSMDP_Carb")
@@ -94,8 +95,7 @@ CleanedInfo <- CarbOutlierCleanup(CarbInfoExpandedDF,alpha = 0.05)
 CarbDataFrameVis(CleanedInfo,"Cleaned")
 
 #write the names of the varieties used to a csv file so we can find the corresponding GBS data
-unique(CleanedInfo$Variety[order(CleanedInfo$Variety)])
-write.csv(file = "Data/OutputtedData/VarietiesWithinCarbData.csv", unique(CleanedInfo$Variety[order(CleanedInfo$Variety)]))
+write.csv(file = "Data/OutputtedData/InbredsWithinWSMDPCarbData.csv",unique(CleanedInfo[c("Variety", "endo")]))
 
 
 
@@ -119,14 +119,27 @@ for(j in 1:6){
 VarDF[i,j+1] <- (out$`Sum Sq`[j]/SStotal)}
 }
 VarDFMelt <- melt(VarDF)
-# VarDFMelt %>%
-#   gather(Carb,value) %>%
-# ggplot(aes(x = value, y = Carb)) + 
-#   geom_col(position = "identity")#+
-#   #facet_wrap(~variable) #+
-# # coord_flip()
+# # VarDFMelt %>%
+# #   gather(Carb,value) %>%
+# # ggplot(aes(x = value, y = Carb)) + 
+# #   geom_col(position = "identity")#+
+# #   #facet_wrap(~variable) #+
+# # # coord_flip()
+# 
+# p <- ggplot(data = VarDF, aes(x = Carb, y = Variety)) +
+#   geom_bar(stat = "identity")
+# p + coord_flip()
+# 
+#  ggplot(VarDFMelt, aes(x =Carb, y = value)) +
+#   facet_wrap(~variable)+
+#   geom_bar(aes(fill = factor(Carb)))
+# p + coord_flip()
 
-p <- ggplot(data = VarDFMelt, aes(x = Carb, y = value, key = variable)) +
-  geom_bar(stat = "identity")
-p + coord_flip()
+png(paste("Figures/WSMDP_AllNIRPred_MixedEqn_PercentVarianceExplainedby_Factors.png",sep=""), width = 1000, height = 500)
+barchart(~value|variable, group = factor(Carb), data= VarDFMelt,main = "Percent Phenotypic Variance Explained",layout = c(6,1),
+         key = simpleKey(text = colnames(CleanedInfo)[5:11],
+                         rectangles = TRUE, points = FALSE, space = "right"))
+dev.off()
 
+
+length(which(CleanedInfo$endo   == "field"))
