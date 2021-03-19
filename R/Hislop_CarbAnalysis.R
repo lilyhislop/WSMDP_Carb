@@ -87,11 +87,46 @@ Ots <- OtDF[which(OtDF$endo != "sh2" & OtDF$endo != "su1"),]
 
 #mash it all together 
 CarbInfoExpandedDF <- rbind(Su1s,Sh2s,Ots)
+CarbInfoExpandedDF$Envi <- paste(CarbInfoExpandedDF$Year,CarbInfoExpandedDF$Location)
 CarbDataFrameVis(CarbInfoExpandedDF,"WithOutliers")
 
 CleanedInfo <- CarbOutlierCleanup(CarbInfoExpandedDF,alpha = 0.05)
 CarbDataFrameVis(CleanedInfo,"Cleaned")
 
+#write the names of the varieties used to a csv file so we can find the corresponding GBS data
+unique(CleanedInfo$Variety[order(CleanedInfo$Variety)])
+write.csv(file = "Data/OutputtedData/VarietiesWithinCarbData.csv", unique(CleanedInfo$Variety[order(CleanedInfo$Variety)]))
 
 
+
+
+##########Linear Model Analysis!##########
+head(CleanedInfo)
+
+VarDF <- data.frame("Carb" = colnames(CleanedInfo)[5:11],"Variety" = rep(NA,7),"Envi" = rep(NA,7), "Rep" = rep(NA,7),"endo" = rep(NA,7),"Variety:Envi" = rep(NA,7),"Residuals"= rep(NA,7))
+
+#Starch
+for(i in 1:7){
+formula1 <- paste(colnames(CleanedInfo)[i+4],"~ Variety*Envi + Rep + endo")
+fit1 <- lm(formula1,data=CleanedInfo)
+AIC1 <- extractAIC(fit1)
+AIC1
+summary(fit1)$r.square
+print(anova(fit1))
+out <- anova(fit1)
+SStotal <- sum(out$`Sum Sq`)
+for(j in 1:6){
+VarDF[i,j+1] <- (out$`Sum Sq`[j]/SStotal)}
+}
+VarDFMelt <- melt(VarDF)
+# VarDFMelt %>%
+#   gather(Carb,value) %>%
+# ggplot(aes(x = value, y = Carb)) + 
+#   geom_col(position = "identity")#+
+#   #facet_wrap(~variable) #+
+# # coord_flip()
+
+p <- ggplot(data = VarDFMelt, aes(x = Carb, y = value, key = variable)) +
+  geom_bar(stat = "identity")
+p + coord_flip()
 
