@@ -57,58 +57,62 @@ tail(SampleInfo)
 
 #########Read in the output from NIR##########
 ####Copied pasted and modified from Hislop_carb_eqn_validation.R
-#5 files types. The starch and sugar predictions and the equations made by calibrating with only su1, sh2, and all other sample types
-CarbCombos <- c("su1st","sh2st","su1su","sh2su","otsu")
+#6 files types. The starch and sugar predictions and the equations made by calibrating with only high wsp lines, high wsp var sug, high wsp high sug
+CarbCombos <- c("hwspsu","hwspst","lwspwfsu","lwspwfst","lwspnfsu","lwspwfst")
 
 #establish DF to hold the file readins 
 CarbDF <- list()
 
 #iterate throught the 5 file types and read them in. skip the first 9 lines which are all file descriptors, no the data
-for(i in 1:5){CarbDF[[i]] <- read.csv(paste("Data/RawData/wsmdp_allsamples_inclval_wsmdp2021",CarbCombos[i],"pls.txt",sep = ""), skip = 9)}
+for(i in 1:6){CarbDF[[i]] <- read.csv(paste("Data/RawData/wsmdp",CarbCombos[i],"pls_predA-G.txt",sep = ""), skip = 9)}
 
 ########now match up these predicted values with the sample info and mash it all up into one########
 #combine the starch and sugar files for each equation type. Condense takes all the repeated scans of the same sample and averages them
-Su1sDF <- AgPredOutput(StarchDF = CarbDF[[1]], SugDF = CarbDF[[3]], condense = TRUE)
-Sh2sDF <- AgPredOutput(StarchDF = CarbDF[[2]], SugDF = CarbDF[[4]], condense = TRUE)
-OtDF <- AgPredOutput(StarchDF = CarbDF[[1]], SugDF = CarbDF[[5]], condense = TRUE)
+HWSPsDF <- AgPredOutput(StarchDF = CarbDF[[1]], SugDF = CarbDF[[2]], condense = TRUE)
+LWSPWFsDF <- AgPredOutput(StarchDF = CarbDF[[3]], SugDF = CarbDF[[4]], condense = TRUE)
+LWSPNFDF <- AgPredOutput(StarchDF = CarbDF[[5]], SugDF = CarbDF[[6]], condense = TRUE)
 
 #Add the endosperm and variety info from the SampleInfo DF to each DF
-Su1sDF$endo <- SampleInfo$endo[match(Su1sDF$NIRBase, SampleInfo$NIRBase, nomatch = NA)]
-Su1sDF$Variety <- SampleInfo$Variety[match(Su1sDF$NIRBase, SampleInfo$NIRBase, nomatch = NA)]
-Sh2sDF$endo <- SampleInfo$endo[match(Sh2sDF$NIRBase, SampleInfo$NIRBase, nomatch = NA)]
-Sh2sDF$Variety <- SampleInfo$Variety[match(Sh2sDF$NIRBase, SampleInfo$NIRBase, nomatch = NA)]
-OtDF$endo <- SampleInfo$endo[match(OtDF$NIRBase, SampleInfo$NIRBase, nomatch = NA)]
-OtDF$Variety <- SampleInfo$Variety[match(OtDF$NIRBase, SampleInfo$NIRBase, nomatch = NA)]
+HWSPsDF$endo <- SampleInfo$endo[match(HWSPsDF$NIRBase, SampleInfo$NIRBase, nomatch = NA)]
+HWSPsDF$Variety <- SampleInfo$Variety[match(HWSPsDF$NIRBase, SampleInfo$NIRBase, nomatch = NA)]
+LWSPWFsDF$endo <- SampleInfo$endo[match(LWSPWFsDF$NIRBase, SampleInfo$NIRBase, nomatch = NA)]
+LWSPWFsDF$Variety <- SampleInfo$Variety[match(LWSPWFsDF$NIRBase, SampleInfo$NIRBase, nomatch = NA)]
+LWSPNFDF$endo <- SampleInfo$endo[match(LWSPNFDF$NIRBase, SampleInfo$NIRBase, nomatch = NA)]
+LWSPNFDF$Variety <- SampleInfo$Variety[match(LWSPNFDF$NIRBase, SampleInfo$NIRBase, nomatch = NA)]
 
-#Eliminate irrelivant endosperm mutants from each df. We don't want to include sh2 samples that were predicted by the su1 calibrated equations
+#Eliminate irrelivant endosperm mutants from each df. We don't want to include sh2 samples that were predicted by the HWSP calibrated equations
 #should sh2i samples be estimated by the sh2 calibrated equations or the other calibrated equation?
-Su1s <- Su1sDF[which(Su1sDF$endo == "su1"),]
-Sh2s <- Sh2sDF[which(Sh2sDF$endo == "sh2"),]
-Ots <- OtDF[which(OtDF$endo != "sh2" & OtDF$endo != "su1"),]
+HWSPs <- HWSPsDF[which(HWSPsDF$endo == "su1" | HWSPsDF$endo == "se"),]
+LWSPWFs <- LWSPWFsDF[which(LWSPNFDF$endo != "se" & LWSPNFDF$endo != "su1"),]
+LWSPNFs <- LWSPNFDF[which(LWSPNFDF$endo == "sh2" | LWSPNFDF$endo == "sh2i"),]
 
 #mash it all together 
-CarbInfoExpandedDF <- rbind(Su1s,Sh2s,Ots)
-CarbInfoExpandedDF$Envi <- paste(CarbInfoExpandedDF$Year,CarbInfoExpandedDF$Location)
-CarbDataFrameVis(CarbInfoExpandedDF,"WithOutliers")
+CarbInfoExpandedWFDF <- rbind(HWSPs,LWSPWFs)
+CarbInfoExpandedNFDF <- rbind(HWSPs,LWSPNFs)
+CarbInfoExpandedWFDF$Envi <- paste(CarbInfoExpandedWFDF$Year,CarbInfoExpandedWFDF$Location)
+CarbInfoExpandedNFDF$Envi <- paste(CarbInfoExpandedNFDF$Year,CarbInfoExpandedNFDF$Location)
+CarbDataFrameVis(CarbInfoExpandedWFDF,"WithField_WithOutliers")
+CarbDataFrameVis(CarbInfoExpandedNFDF,"NoField_WithOutliers")
 
-CleanedInfo <- CarbOutlierCleanup(CarbInfoExpandedDF,alpha = 0.05)
-CarbDataFrameVis(CleanedInfo,"Cleaned")
+CleanedInfoWF <- CarbOutlierCleanup(CarbInfoExpandedWFDF,alpha = 0.05)
+CleanedInfoNF <- CarbOutlierCleanup(CarbInfoExpandedNFDF,alpha = 0.05)
+CarbDataFrameVis(CleanedInfoWF,"WithField_Cleaned")
+CarbDataFrameVis(CleanedInfoNF,"NoField_Cleaned")
 
 #write the names of the varieties used to a csv file so we can find the corresponding GBS data
-write.csv(file = "Data/OutputtedData/InbredsWithinWSMDPCarbData.csv",unique(CleanedInfo[c("Variety", "endo")]))
+write.csv(file = "Data/OutputtedData/InbredsWithinWSMDPCarbData.csv",unique(CleanedInfoNF[c("Variety", "endo")]))
 
 
 
 
 ##########Linear Model Analysis!##########
-head(CleanedInfo)
+head(CleanedInfoWF)
 
-VarDF <- data.frame("Carb" = colnames(CleanedInfo)[5:11],"Variety" = rep(NA,7),"Envi" = rep(NA,7), "Rep" = rep(NA,7),"endo" = rep(NA,7),"Variety:Envi" = rep(NA,7),"Residuals"= rep(NA,7))
+VarDF <- data.frame("Carb" = colnames(CleanedInfoWF)[5:11],"Variety" = rep(NA,7),"Envi" = rep(NA,7), "Rep" = rep(NA,7),"endo" = rep(NA,7),"Variety:Envi" = rep(NA,7),"Residuals"= rep(NA,7))
 
-#Starch
 for(i in 1:7){
-formula1 <- paste(colnames(CleanedInfo)[i+4],"~ Variety*Envi + Rep + endo")
-fit1 <- lm(formula1,data=CleanedInfo)
+formula1 <- paste(colnames(CleanedInfoWF)[i+4],"~ Variety*Envi + Rep + endo")
+fit1 <- lm(formula1,data=CleanedInfoWF)
 AIC1 <- extractAIC(fit1)
 AIC1
 summary(fit1)$r.square
@@ -135,11 +139,11 @@ VarDFMelt <- melt(VarDF)
 #   geom_bar(aes(fill = factor(Carb)))
 # p + coord_flip()
 
-png(paste("Figures/WSMDP_AllNIRPred_MixedEqn_PercentVarianceExplainedby_Factors.png",sep=""), width = 1000, height = 500)
+png(paste("Figures/WSMDP_AllNIRPred_MixedEqn_PercentVarianceExplainedby_Factors_WithField.png",sep=""), width = 1000, height = 500)
 barchart(~value|variable, group = factor(Carb), data= VarDFMelt,main = "Percent Phenotypic Variance Explained",layout = c(6,1),
-         key = simpleKey(text = colnames(CleanedInfo)[5:11],
+         key = simpleKey(text = colnames(CleanedInfoWF)[5:11],
                          rectangles = TRUE, points = FALSE, space = "right"))
 dev.off()
 
 
-length(which(CleanedInfo$endo   == "field"))
+length(which(CleanedInfoWF$endo   == "field"))
