@@ -92,6 +92,7 @@ LWSPNFDF$Variety <- SampleInfo$Variety[match(LWSPNFDF$NIRBase, SampleInfo$NIRBas
 #Eliminate irrelivant endosperm mutants from each df. We don't want to include sh2 samples that were predicted by the HWSP calibrated equations
 #should sh2i samples be estimated by the sh2 calibrated equations or the other calibrated equation?
 HWSPs <- HWSPsDF[which(HWSPsDF$endo == "su1" | HWSPsDF$endo == "se" | (is.na(HWSPsDF$endo)& (HWSPsDF$Year== "15"|HWSPsDF$Year == "14"))),]
+# HWSPs <- HWSPsDF[which(HWSPsDF$endo == "su1" | HWSPsDF$endo == "se" | is.na(HWSPsDF$endo)),]
 LWSPWFs <- LWSPWFsDF[which(LWSPNFDF$endo != "se" & LWSPNFDF$endo != "su1"),]
 LWSPNFs <- LWSPNFDF[which(LWSPNFDF$endo == "sh2" | LWSPNFDF$endo == "sh2i"),]
 
@@ -109,8 +110,8 @@ CarbInfoExpandedNFDF$Envi <- paste(CarbInfoExpandedNFDF$Year,CarbInfoExpandedNFD
 CarbDataFrameVis(CarbInfoExpandedWFDF,"WithField_WithOutliers")
 CarbDataFrameVis(CarbInfoExpandedNFDF,"NoField_WithOutliers")
 
-CleanedInfoWF <- CarbOutlierCleanup(CarbInfoExpandedWFDF,alpha = 0.05)
-CleanedInfoNF <- CarbOutlierCleanup(CarbInfoExpandedNFDF,alpha = 0.05)
+CleanedInfoWF <- CarbOutlierCleanup(CarbInfoExpandedWFDF,"WF",alpha = 0.05)
+CleanedInfoNF <- CarbOutlierCleanup(CarbInfoExpandedNFDF,"NF",alpha = 0.05)
 CarbDataFrameVis(CleanedInfoWF,"WithField_Cleaned")
 CarbDataFrameVis(CleanedInfoNF,"NoField_Cleaned")
 
@@ -244,10 +245,17 @@ vcfFilename <- "Data/RawData/WSMDP_SCMV_SeqE_Vcf.vcf"
 system.time(vcf <- readVcf(vcfFilename))
 snpmat <- genotypeToSnpMatrix(vcf)
 Matrix <- snpmat$genotypes@.Data
-myY <- CleanedInfoNF[,c(14,5:11)]#,"class","tbl")
-myG <- read.delim("Data/RawData/WSMDP_SCMV_SeqE.hmp.txt", head = FALSE)
-myG<-gsub(myG, pattern = ":.*", replacement = "")
 
+
+
+genoinfo <- read.csv("Data/InbredsWithinWSMDPCarbDataWFGenoQuery.txt",head = FALSE)
+colnames(genoinfo) <- c("Variety","endo","GenoName","source","notes","varietyagain")
+CleanedInfoNFwGeno <- merge(CleanedInfoNF,genoinfo, by = "Variety")
+myY <- CleanedInfoNFwGeno[,c(19,6:12)]#,"class","tbl")
+myG <- read.delim("Data/RawData/WSMDP_SCMV_SeqE.hmp.txt", head = FALSE)
+myGnames <- myG[1,]
+myGnames<-gsub(myGnames, pattern = ":.*", replacement = "")
+myG[1,] <- 
 
 myGAPIT <- GAPIT(
   Y=myY,

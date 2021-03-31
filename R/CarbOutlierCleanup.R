@@ -1,7 +1,7 @@
-CarbOutlierCleanup <- function(CarbDataFrame,alpha = 0.05){
+CarbOutlierCleanup <- function(CarbDataFrame,DFType = NA, alpha = 0.05){
 #lets tease out outliers
   #Establish to remove list
-  sink("Data/OutputtedData/EdittedSampleRecords_VerboseChanges.txt", split = TRUE)
+  sink(paste("Data/OutputtedData/EdittedSampleRecords_VerboseChanges_",DFType,".txt",sep = ""), split = TRUE)
   toremove <- c()
   
   #make sure the original positions of the samples are recorded before we go futtzing around with them 
@@ -207,7 +207,7 @@ Carbs <- c("Starch","Total.Polysaccharides", "WSP","Glucose","Fructose","Sucrose
     }
 }
 colnames(ProbSamples) <- c("Position", colnames(CarbDataFrame[PosOutliers[i],Subset]),"Edit")
-write.csv(file = "Data/OutputtedData/EdittedSampleRecords.csv",ProbSamples)
+write.csv(file = paste("Data/OutputtedData/EdittedSampleRecords_",DFType,".csv",sep = ""),ProbSamples)
 sink()
 return(CarbDataFrame)
 }
