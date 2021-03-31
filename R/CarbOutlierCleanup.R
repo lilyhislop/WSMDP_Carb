@@ -53,12 +53,13 @@ while(counter < end){
   {
     print(paste("The",colnames(CarbDataFrame[CarbDFPos]),"content of sample", CarbDataFrame$DFPosition[PosOutliers[counter]], "is NA. Skip this sample."))
   }
+  if(!is.na(PosOutliersVar[[1]][i])){
   #ok, so what is the outlier in the context of the variety
   outlierincontext <- CarbDataFrame[which(CarbDataFrame$Variety == PosOutliersVar[[1]][i]),]
   #how much of an outlier is it?
   outlierData <- grubbs.test(pull(CarbDataFrame[which(CarbDataFrame$Variety == PosOutliersVar[[1]][i]),colnames(CarbDataFrame[CarbDFPos])]))
   
-  if(!is.na(outlierData$p.value ) && !is.na(pull(CarbDataFrame[PosOutliers[counter],CarbDFPos]))){
+  if(!is.na(outlierData$p.value) && !is.na(pull(CarbDataFrame[PosOutliers[counter],CarbDFPos]))){
     #if the outlier has a pvalue of less than alpha
     if(outlierData$p.value < alpha)
     {
@@ -102,7 +103,10 @@ while(counter < end){
     CarbDataFrame[PosOutliers[i],CarbDFPos]<-0
     print(paste("There are not enough",PosOutliersVar[[1]][i], "samples to determine if it is an outlier. ",colnames(CarbDataFrame[CarbDFPos])," has been set to 0%, since biologically it can't be less than 0."))
   }
-
+  }
+  if(is.na(PosOutliersVar[[1]][i]))
+  {   print(paste("The variety of the sample is NA. Skip this sample."))
+  }
   i = i+1
   counter = counter + 1
 }
@@ -136,12 +140,14 @@ Carbs <- c("Starch","Total.Polysaccharides", "WSP","Glucose","Fructose","Sucrose
     
     #lets look at each potential outlier within the context of the the other examples of that variety. 
     while(counter < end){
+      
       #reporting out whats going on
       print(paste("The ",colnames(CarbDataFrame[CarbDFPos])," content of sample ", CarbDataFrame$DFPosition[PosOutliers[counter]], " is ",round(CarbDataFrame[PosOutliers[counter],CarbDFPos],2),"%. The upper wisker is at ", round(UpperWisk,2),"%.",sep = ""))
       if(is.na(CarbDataFrame[PosOutliers[counter],CarbDFPos]))
       {
         print(paste("The",colnames(CarbDataFrame[CarbDFPos]),"content of sample", CarbDataFrame$DFPosition[PosOutliers[counter]], "is NA. Skip this sample."))
       }
+      if(!is.na(PosOutliersVar[[1]][i])){
       #ok, so what is the outlier in the context of the variety
       outlierincontext <- CarbDataFrame[which(CarbDataFrame$Variety == PosOutliersVar[[1]][i]),]
       #how much of an outlier is it?
@@ -191,7 +197,10 @@ Carbs <- c("Starch","Total.Polysaccharides", "WSP","Glucose","Fructose","Sucrose
         # CarbDataFrame[PosOutliers[i],CarbDFPos]<-0
         print(paste("There are not enough",PosOutliersVar[[1]][i], "samples to determine if it is an outlier. ",colnames(CarbDataFrame[CarbDFPos])," has not been altered."))
       }
-      
+      }
+      if(is.na(PosOutliersVar[[1]][i]))
+      {   print(paste("The variety of the sample is NA. Skip this sample."))
+      }
       i = i+1
       counter = counter + 1
     

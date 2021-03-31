@@ -30,6 +30,15 @@ library(psych)
 library(reshape2)#for multiple groups in GGplot
 library(outliers)
 library(lattice)
+library(PopGenome)
+BiocManager::install("VariantAnnotation")
+library("VariantAnnotation")
+library("snpStats")
+library("compiler") #needed to make GAPIT work
+source("http://zzlab.net/GAPIT/gapit_functions.txt")
+source("http://zzlab.net/FarmCPU/FarmCPU_functions.txt")
+# library("bigmemory") #to make a matrix big
+# library(rrBLUP)
 
 getwd()
 setwd("C:/Users/LHislop/Documents/GitHub/WSMDP_Carb")
@@ -82,9 +91,15 @@ LWSPNFDF$Variety <- SampleInfo$Variety[match(LWSPNFDF$NIRBase, SampleInfo$NIRBas
 
 #Eliminate irrelivant endosperm mutants from each df. We don't want to include sh2 samples that were predicted by the HWSP calibrated equations
 #should sh2i samples be estimated by the sh2 calibrated equations or the other calibrated equation?
-HWSPs <- HWSPsDF[which(HWSPsDF$endo == "su1" | HWSPsDF$endo == "se"),]
+HWSPs <- HWSPsDF[which(HWSPsDF$endo == "su1" | HWSPsDF$endo == "se" | (is.na(HWSPsDF$endo)& (HWSPsDF$Year== "15"|HWSPsDF$Year == "14"))),]
 LWSPWFs <- LWSPWFsDF[which(LWSPNFDF$endo != "se" & LWSPNFDF$endo != "su1"),]
 LWSPNFs <- LWSPNFDF[which(LWSPNFDF$endo == "sh2" | LWSPNFDF$endo == "sh2i"),]
+
+#lets look at the validation data that I predicted from kahtleen and Jareds data and output it for further analysis
+jared <- HWSPsDF[which(HWSPsDF$Year == "sc"),]
+write.csv(jared, file = "Data/OutputtedData/JaredsPredictedLineswHWSPeqn.csv")
+kathleen <- HWSPsDF[which(HWSPsDF$Year != "13"&HWSPsDF$Year != "14"&HWSPsDF$Year != "15"&HWSPsDF$Year != "sc"),]
+write.csv(kathleen,file = "Data/OutputtedData/KathleenPredictedLineswHWSPeqn.csv")
 
 #mash it all together 
 CarbInfoExpandedWFDF <- rbind(HWSPs,LWSPWFs)
@@ -100,7 +115,81 @@ CarbDataFrameVis(CleanedInfoWF,"WithField_Cleaned")
 CarbDataFrameVis(CleanedInfoNF,"NoField_Cleaned")
 
 #write the names of the varieties used to a csv file so we can find the corresponding GBS data
-write.csv(file = "Data/OutputtedData/InbredsWithinWSMDPCarbData.csv",unique(CleanedInfoNF[c("Variety", "endo")]))
+write.csv(file = "Data/OutputtedData/InbredsWithinWSMDPCarbDataNF.csv",unique(CleanedInfoNF[c("Variety", "endo")]))
+write.csv(file = "Data/OutputtedData/InbredsWithinWSMDPCarbDataWF.csv",unique(CleanedInfoWF[c("Variety", "endo")]))
+
+
+#######Equation Validation!##############
+#Now I have a variable that has all the projected values, for the values used to calibrate the equations. WHat are the statistics on that?
+#set carb to a number 1:7. carb <- c(Fructose, Glucose, Sucrose, Total Sugar, Starch, Total Polysaccharide, WSP)
+EqnStats <- function(DF){
+  
+  Out <- data.frame(Carb = c("Fructose", "Glucose", "Sucrose", "Total Sugar", "Starch", "Total Polysaccharide", "WSP"),
+                    RMSEP = rep(NA,7), 
+                    bias = rep(NA,7),
+                    SEE = rep(NA,7),
+                    slope = rep(NA,7),
+                    intercept = rep(NA,7),
+                    R2 = rep(NA,7))
+  dfpos <- c(2,4,6,8,10,12,14)
+  for(carb in 1:7){
+    Out$RMSEP[carb] <- sqrt(sum((DF[,dfpos[carb]]- DF[,dfpos[carb]-1])^2, na.rm = TRUE)/dim(DF)[1])
+    Out$bias[carb] <- mean(DF[,dfpos[carb]], na.rm = TRUE) - mean(DF[,dfpos[carb]-1],na.rm = TRUE)
+    Out$SEE[carb] <- sqrt((dim(DF)[1]/(dim(DF)[1]-1))*(Out$RMSEP[carb]^2-Out$bias[carb]^2))
+    Out$Carb[carb] <- colnames(DF[dfpos[carb]])
+  }
+  return(Out)
+}
+
+
+#Visualize these
+R2Vis <- function(DF, label, Out){
+  dfpos <- c(2,4,6,8,10,12,14)
+  Carb = c("Fructose", "Glucose", "Sucrose", "Total Sugar", "Starch", "Total Polysaccharide", "WSP")
+  for(i in 1:7){
+    carbCompare  <- lm(DF[,dfpos[i]]~ DF[,dfpos[i]-1])
+    carbFileName <- paste("Figures/wsmdp2021_",label,Carb[i],"_NIR_Eqn_Prediction_vis.png", sep = "")
+    png(carbFileName)
+    par(mfrow=c(1,1))
+    print(summary(carbCompare))
+    rsqua <- summary(carbCompare)$r.squared
+    plot(DF[,dfpos[i]]~ DF[,dfpos[i]-1],
+         pch = 16,
+         xlab = paste(Carb[i]," wetlab (%)",sep = ""),
+         ylab = paste(Carb[i]," NIR Prediction (%)",sep = ""),
+         main = paste("Actual Vs Predicted ",Carb[i]," r^2 =",trunc(rsqua*10^3)/10^3,sep = ""))
+    abline(coefficients(carbCompare), lwd = 2, lty = 2, col = "red")
+    # text(15,max(Prediction[,i])-5,labels = paste("r^2 =",trunc(rsqua*10^3)/10^3))
+    
+    Out$slope[i] <- trunc(10^3*summary(carbCompare)$coefficients[2])/10^3
+    Out$intercept[i] <- trunc(10^3*summary(carbCompare)$coefficients[1])/10^3
+    Out$R2[i] <- trunc(10^3*summary(carbCompare)$r.squared)/10^3
+    
+    
+    dev.off()
+  }
+  return(Out)
+}
+
+
+
+wetlabDF <- read.csv("Data/WSMDP_Wetlab_StarchSugarData_FormatedForWinISI_WithR.csv")
+colnames(wetlabDF)[1] <- "Samples"
+WFWL <- merge(CleanedInfoWF, wetlabDF, by = "Samples")
+NFWL <- merge(CleanedInfoNF, wetlabDF, by = "Samples")
+WFWLdf <- WFWL[,c(1,9,18,8,19,10,20,11,21,5,22,6,23,7,24)]
+NFWLdf <- NFWL[,c(1,9,18,8,19,10,20,11,21,5,22,6,23,7,24)]
+WFWLdfEqnStatsR <- R2Vis(WFWLdf[,2:15], "CleanedWSPeqnWF_PredVsWetlab_for_Calibration_Samples", EqnStats(WFWLdf[,2:15]))
+NFWLdfEqnStatsR <- R2Vis(NFWLdf[,2:15], "CleanedWSPeqnNF_PredVsWetlab_for_Calibration_Samples", EqnStats(NFWLdf[,2:15]))
+
+valwetlabDF <- read.csv("Data/WSMDP_EqnValidation_Wetlab_Data.csv")
+colnames(valwetlabDF)[1] <- "Samples"
+WFValWL <- merge(CleanedInfoWF, valwetlabDF, by = "Samples")
+NFValWL <- merge(CleanedInfoNF, valwetlabDF, by = "Samples")
+WFValWLdf <- WFValWL[,c(1,9,23,8,22,10,24,11,25,5,19,6,20,7,21)]
+NFValWLdf <- NFValWL[,c(1,9,23,8,22,10,24,11,25,5,19,6,20,7,21)]
+WFValWLdfEqnStatsR <- R2Vis(WFValWLdf[,2:15], "CleanedWSPeqnWF_PredVsWetlab_ValidationSubset", EqnStats(WFValWLdf[,2:15]))
+NFValWLdfEqnStatsR <- R2Vis(NFValWLdf[,2:15], "CleanedWSPeqnNF_PredVsWetlab_ValidationSubset", EqnStats(NFValWLdf[,2:15]))
 
 
 
@@ -146,4 +235,23 @@ barchart(~value|variable, group = factor(Carb), data= VarDFMelt,main = "Percent 
 dev.off()
 
 
-length(which(CleanedInfoWF$endo   == "field"))
+
+
+
+########GWAS ZONE##########
+##First things first in the GWAS zone. Find the GBS Names associated with the variety
+vcfFilename <- "Data/RawData/WSMDP_SCMV_SeqE_Vcf.vcf"
+system.time(vcf <- readVcf(vcfFilename))
+snpmat <- genotypeToSnpMatrix(vcf)
+Matrix <- snpmat$genotypes@.Data
+myY <- CleanedInfoNF[,c(14,5:11)]#,"class","tbl")
+myG <- read.delim("Data/RawData/WSMDP_SCMV_SeqE.hmp.txt", head = FALSE)
+myG<-gsub(myG, pattern = ":.*", replacement = "")
+
+
+myGAPIT <- GAPIT(
+  Y=myY,
+  G=myG,
+  PCA.total=3,
+)
+
