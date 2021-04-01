@@ -255,11 +255,18 @@ myY <- CleanedInfoNFwGeno[,c(19,6:12)]#,"class","tbl")
 myG <- read.delim("Data/RawData/WSMDP_SCMV_SeqE.hmp.txt", head = FALSE)
 myGnames <- myG[1,]
 myGnames<-gsub(myGnames, pattern = ":.*", replacement = "")
-myG[1,] <- 
+myG[1,] <- myGnames
 
+
+#A plain GAPIT MLM
 myGAPIT <- GAPIT(
   Y=myY,
   G=myG,
   PCA.total=3,
+  file.path="Data/OutputtedData/GAPIT",
+  model = c("MLM","FARMCPU")
 )
+
+#GAPIT to analyze phenotype info
+myPhenotypes <- GAPIT.Phenotype.View(myY = myY,)
 
