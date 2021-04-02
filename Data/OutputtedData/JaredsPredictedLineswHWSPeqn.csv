@@ -1,4 +1,4 @@
-"","Samples","Year","Row","Rep","Starch","Total.Polysaccharides","WSP","Glucose","Fructose","Sucrose","Total.Sugar","Location","NIRBase","Variety","endo"
+"","Samples","Year","Row","Rep","Starch","Total.Polysaccharides","WSP","Glucose","Fructose","Sucrose","Total.Sugar","Location","NIRBase","endo","Variety"
 "1","sc.jz.10001.","sc","jz","10001",10.9621162,19.8207245,8.86203,7.4138179,7.9619884,13.4566689,29.663166,"W","scWjz",NA,NA
 "2","sc.jz.10002.","sc","jz","10002",10.3213348,20.8054237,9.4265671,6.2937999,5.7233467,8.1213875,25.0736961,"W","scWjz",NA,NA
 "3","sc.jz.10005.","sc","jz","10005",14.4545937,22.1298676,7.1163177,5.5110488,5.5323625,5.3444061,17.6162815,"W","scWjz",NA,NA

@@ -31,7 +31,7 @@ library(reshape2)#for multiple groups in GGplot
 library(outliers)
 library(lattice)
 library(PopGenome)
-BiocManager::install("VariantAnnotation")
+# BiocManager::install("VariantAnnotation")
 library("VariantAnnotation")
 library("snpStats")
 library("compiler") #needed to make GAPIT work
@@ -197,6 +197,8 @@ NFWLdf <- NFWL[,c(1,9,18,8,19,10,20,11,21,5,22,6,23,7,24)]
 WFWLdfEqnStatsR <- R2Vis(WFWLdf[,2:15], "CleanedWSPeqnWF_PredVsWetlab_for_Calibration_Samples", EqnStats(WFWLdf[,2:15]))
 NFWLdfEqnStatsR <- R2Vis(NFWLdf[,2:15], "CleanedWSPeqnNF_PredVsWetlab_for_Calibration_Samples", EqnStats(NFWLdf[,2:15]))
 
+write.csv(WFWLdfEqnStatsR, "Data/OutputtedData/EqnFitStatisticsAllWetlabWF.csv")
+write.csv(NFWLdfEqnStatsR, "Data/OutputtedData/EqnFitStatisticsAllWetlabNF.csv")
 
 ######Visualize the validation. Only the samples that were NOT used to create the equation
 valwetlabDF <- read.csv("Data/WSMDP_EqnValidation_Wetlab_Data.csv")
@@ -208,7 +210,8 @@ NFValWLdf <- NFValWL[,c(1,9,23,8,22,10,24,11,25,5,19,6,20,7,21)]
 WFValWLdfEqnStatsR <- R2Vis(WFValWLdf[,2:15], "CleanedWSPeqnWF_PredVsWetlab_ValidationSubset", EqnStats(WFValWLdf[,2:15]))
 NFValWLdfEqnStatsR <- R2Vis(NFValWLdf[,2:15], "CleanedWSPeqnNF_PredVsWetlab_ValidationSubset", EqnStats(NFValWLdf[,2:15]))
 
-
+write.csv(WFValWLdfEqnStatsR, "Data/OutputtedData/EqnFitStatisticsValidationWF.csv")
+write.csv(NFValWLdfEqnStatsR, "Data/OutputtedData/EqnFitStatisticsValidationNF.csv")
 
 
 ##########Linear Model Analysis!##########
@@ -279,53 +282,56 @@ myGnames<-gsub(myGnames, pattern = ":.*", replacement = "")
 myG[1,] <- myGnames
 
 
-
-CleanedInfoNFwGeno <- merge(CleanedInfoNF,genoinfo, by = "Variety")
-myY <- CleanedInfoNFwGeno[,c(19,6:12)]#,"class","tbl")
-######GWAS ALL TOGETHER #######
-setwd("C:/Users/LHislop/Documents/GitHub/WSMDP_Carb/Data/OutputtedData/GAPIT")
-#A plain GAPIT MLM
+# 
+# CleanedInfoNFwGeno <- merge(CleanedInfoNF,genoinfo, by = "Variety")
+# myY <- CleanedInfoNFwGeno[,c(19,6:12)]#,"class","tbl")
+# ######GWAS ALL TOGETHER #######
+# setwd("C:/Users/LHislop/Documents/GitHub/WSMDP_Carb/Data/OutputtedData/GAPIT")
+# #A plain GAPIT MLM
+# # system.time(
+# # myGAPIT <- GAPIT(
+# #     Y=myY,
+# #     G=myG,
+# #     PCA.total=3
+# #     ))
+#   # FarmCPU
 # system.time(
 # myGAPIT <- GAPIT(
+#   Y=myY,
+#   G=myG,
+#   PCA.total=3,
+#   model = "FarmCPU"
+# )
+# )
+# # MLMM & gBlup
+# system.time(
+#   myGAPIT <- GAPIT(
 #     Y=myY,
 #     G=myG,
-#     PCA.total=3
-#     ))
-  # FarmCPU
-system.time(
-myGAPIT <- GAPIT(
-  Y=myY,
-  G=myG,
-  PCA.total=3,
-  model = "FarmCPU"
-)
-)
-# MLMM & gBlup
-system.time(
-  myGAPIT <- GAPIT(
-    Y=myY,
-    G=myG,
-    PCA.total=3,
-    model = c("MLMM","gBLUP")
-  )
-)
+#     PCA.total=3,
+#     model = c("MLMM","gBLUP")
+#   )
+# )
 #GAPIT to analyze phenotype info
-myPhenotypes <- GAPIT.Phenotype.View(myY = myY,)
+# myPhenotypes <- GAPIT.Phenotype.View(myY = myY,)
 
 ######Function to look at HWSP, LWSP subsets seperately######
 GAPITRunner <- function(DF, label){
 setwd("C:/Users/LHislop/Documents/GitHub/WSMDP_Carb")
 CleanedDF <- CarbOutlierCleanup(DF,label,alpha = 0.05)
 CleanedDFwGeno <- merge(CleanedDF,genoinfo, by = "Variety")
-myY <- CleanedDFwGeno[,c(18,6:12)]
+c1 <- which(colnames(CleanedDFwGeno)=="Starch")
+c2 <- which(colnames(CleanedDFwGeno)=="Total.Sugar")
+c3 <- which(colnames(CleanedDFwGeno)=="GenoName")
+myY <- CleanedDFwGeno[,c(c3,c1:c2)]
 
 setwd(paste("C:/Users/LHislop/Documents/GitHub/WSMDP_Carb/Data/OutputtedData/GAPIT/",label,sep = ""))
-system.time(myGAPIT <- GAPIT(
+myGAPIT <- GAPIT(
     Y=myY,
     G=myG,
     PCA.total=3,
     model = c("MLMM","gBLUP")#,"FarmCPU")
-  )
+  
 )
 }
 system.time({
@@ -334,3 +340,6 @@ GAPITRunner(CarbInfoExpandedNFDF, "NF")
 GAPITRunner(HWSPs,"HWSP")
 GAPITRunner(LWSPWFs,"LWSPWF")
 GAPITRunner(LWSPNFs,"LWSPNF")})
+
+
+
