@@ -1,0 +1,341 @@
+---
+title: "WSMDP Carbohydrate Analysis"
+author: "Lillian Hislop"
+date: "4/8/2021"
+output: bookdown::html_document2
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+```{r, include = FALSE}
+rm(list=ls())
+library(dplyr)
+library(lme4)
+library(ggplot2)#for making pretty graphs
+library(ggpmisc)
+library(grDevices)
+library(tidyr) #for separate
+library(stringr)#str_remove
+library(psych)
+library(reshape2)#for multiple groups in GGplot
+library(outliers)
+library(lattice)
+library(PopGenome)
+# BiocManager::install("VariantAnnotation")
+library("VariantAnnotation")
+library("snpStats")
+library("compiler") #needed to make GAPIT work
+source("http://zzlab.net/GAPIT/gapit_functions.txt")
+source("http://zzlab.net/FarmCPU/FarmCPU_functions.txt")
+getwd()
+setwd("C:/Users/LHislop/Documents/GitHub/WSMDP_Carb")
+
+#Read in packages made for these codesets
+source("R/CarbEquationComparison.R")
+source("R/PredictionCulling.R")
+source("R/MixedEndoEqnValidation.R")
+source("R/AgPredOutput.R")
+source("R/CarbOutlierCleanup.R")
+source("R/CarbDataFrameVis.R")
+
+
+```
+# Introduction
+This study focuses on the carbohydrate content and genetic associations within the Wisconsin Sweet Maize Diversity Panel (WSMDP). Sweet maize was derived from Teosinte, a wild and cultivated grass, by Indigenous Americans. It was and is used in all manners of dishes, as a sweetener and beverage. Sweet maize was an important cultural symbol, with the Aztecan god Centeōtl responsible for maize and sustinance. Sweet maize was traded and transported across North America by Indigenous peoples. Today, it is the third most eaten vegetable in the United States. Eating quality is the most important breeding factor in sweet maize, and the majority of the eating quality is derived from the carbohydrate composition of the kernels. By studying carbohydrate composition and associated genetics markers, this can lead, with further study, to breeders more finely controling their lines' eating quality or quickly categorize the eating quality of their established germplasm. 
+```{r, echo=FALSE}
+setwd("C:/Users/LHislop/Documents/GitHub/WSMDP_Carb")
+#Read in the sample information.
+#this file containes the year, location,variety and endosperm of every sample
+SampleInfo <- read.csv("Data/WSMDP_2014-2015_WINY_SampleInfo.csv")
+#Fix the sample numbers that are labeled in the NY style e.g " 14A0255" or "15A0005" and change to just the row numbers
+SampleInfo$Row <- SampleInfo$Sample.Number
+SampleInfo$Row[which(nchar(SampleInfo$Row)>6)] <- substr(SampleInfo$Row[which(nchar(SampleInfo$Row)>6)],4,15)
+# tail(SampleInfo)
+#Generate NIR Code. NIR codes are all YearLocationRow - Rep
+SampleInfo$NIRBase <- paste(substr(SampleInfo$year,3,4), ifelse(SampleInfo$location == "Wisconsin", "W","NY"), SampleInfo$Row,sep = "")
+SampleInfo$Envi <- paste(SampleInfo$year, SampleInfo$location, sep = "")
+# tail(SampleInfo)
+```
+# Materials and Methods
+The WSMDP consists of `r length(unique(SampleInfo$Variety))` sweet maize inbreds. They were grown in 2014 and 2015 in Ithica, New York and Madison, Wisconsin in a super block field layout. The number of samples in each environment were as follows:
+```{r}
+summary.factor(SampleInfo$Envi)
+```
+A wide variety of endosperm mutants were represented:
+```{r}
+summary.factor(SampleInfo$endo)
+```
+Ears were harvested at eating stage, 400 growing degree days (GDD), flash frozen in liquid nitrogen, and lyophilized. Then all samples were finely ground and scanned on a Near Infared Spectroscopy machine. Ten percent of the samples were analyzed in wetlab for sugar content through an Megazyme assay kit and 100 samples were analyzed for starch content using a megazyme assay kit. Samples were grouped into three different pools based around water soluble polysaccharide (WSP) content to generate equations linking the carbohydrate content informed by the enzyme assays with the NIR spectroscopy wavelength data. The high WSP group (HWSP) was calibrated with samples with *sugary1* (*su1*) and *sugary enhancer* (*se*) endosperm mutant types. There were two versions of the low WSP groupings. The low WSP endosperm mutants include *shrunken2* (*sh2*), *shrunken2-intermediate* (*sh2i*), ae-dull-waxy (*aeduwx*), and field maize inbreds. In one grouping field maize inbreds were included in the calibration and in the other grouping field maize inbred lines were excluded from the calibrations and from analysis. These were the low WSP with field (LWSPWF) and low wsp with no field line (LWSPNF) groupings.The calibration equations were used to predict the carbohydrate content of the samples within each respective group, i.e. the predictions from the HWSP calibration equation were used to predict *su1* samples, and the prediction from the LWSPWF groupings were used to predict the *sh2i* samples.
+
+# Results
+```{r, include = FALSE}
+setwd("C:/Users/LHislop/Documents/GitHub/WSMDP_Carb")
+#########Read in the output from NIR##########
+####Copied pasted and modified from Hislop_carb_eqn_validation.R
+#6 files types. The starch and sugar predictions and the equations made by calibrating with only high wsp lines, high wsp var sug, high wsp high sug
+CarbCombos <- c("hwspsu","hwspst","lwspwfsu","lwspwfst","lwspnfsu","lwspwfst")
+
+#establish DF to hold the file readins 
+CarbDF <- list()
+
+#iterate throught the 5 file types and read them in. skip the first 9 lines which are all file descriptors, no the data
+for(i in 1:6){CarbDF[[i]] <- read.csv(paste("Data/RawData/wsmdp",CarbCombos[i],"pls_predA-G.txt",sep = ""), skip = 9)}
+
+########now match up these predicted values with the sample info and mash it all up into one########
+#combine the starch and sugar files for each equation type. Condense takes all the repeated scans of the same sample and averages them
+HWSPsDF <- AgPredOutput(StarchDF = CarbDF[[1]], SugDF = CarbDF[[2]], condense = TRUE)
+LWSPWFsDF <- AgPredOutput(StarchDF = CarbDF[[3]], SugDF = CarbDF[[4]], condense = TRUE)
+LWSPNFDF <- AgPredOutput(StarchDF = CarbDF[[5]], SugDF = CarbDF[[6]], condense = TRUE)
+
+#Add the endosperm and variety info from the SampleInfo DF to each DF
+HWSPsDF$endo <- SampleInfo$endo[match(HWSPsDF$NIRBase, SampleInfo$NIRBase, nomatch = NA)]
+HWSPsDF$Variety <- SampleInfo$Variety[match(HWSPsDF$NIRBase, SampleInfo$NIRBase, nomatch = NA)]
+LWSPWFsDF$endo <- SampleInfo$endo[match(LWSPWFsDF$NIRBase, SampleInfo$NIRBase, nomatch = NA)]
+LWSPWFsDF$Variety <- SampleInfo$Variety[match(LWSPWFsDF$NIRBase, SampleInfo$NIRBase, nomatch = NA)]
+LWSPNFDF$endo <- SampleInfo$endo[match(LWSPNFDF$NIRBase, SampleInfo$NIRBase, nomatch = NA)]
+LWSPNFDF$Variety <- SampleInfo$Variety[match(LWSPNFDF$NIRBase, SampleInfo$NIRBase, nomatch = NA)]
+
+#Eliminate irrelivant endosperm mutants from each df. We don't want to include sh2 samples that were predicted by the HWSP calibrated equations
+#should sh2i samples be estimated by the sh2 calibrated equations or the other calibrated equation?
+HWSPs <- HWSPsDF[which(HWSPsDF$endo == "su1" | HWSPsDF$endo == "se" | (is.na(HWSPsDF$endo)& (HWSPsDF$Year== "15"|HWSPsDF$Year == "14"))),]
+# HWSPs <- HWSPsDF[which(HWSPsDF$endo == "su1" | HWSPsDF$endo == "se" | is.na(HWSPsDF$endo)),]
+LWSPWFs <- LWSPWFsDF[which(LWSPNFDF$endo != "se" & LWSPNFDF$endo != "su1"),]
+LWSPNFs <- LWSPNFDF[which(LWSPNFDF$endo == "sh2" | LWSPNFDF$endo == "sh2i"),]
+
+#lets look at the validation data that I predicted from kahtleen and Jareds data and output it for further analysis
+jared <- HWSPsDF[which(HWSPsDF$Year == "sc"),]
+write.csv(jared, file = "Data/OutputtedData/JaredsPredictedLineswHWSPeqn.csv")
+kathleen <- HWSPsDF[which(HWSPsDF$Year != "13"&HWSPsDF$Year != "14"&HWSPsDF$Year != "15"&HWSPsDF$Year != "sc"),]
+write.csv(kathleen,file = "Data/OutputtedData/KathleenPredictedLineswHWSPeqn.csv")
+
+########mash it all together ######
+#All the predictions with the field lines
+CarbInfoExpandedWFDF <- rbind(HWSPs,LWSPWFs)
+#all the predictions without the field lines
+CarbInfoExpandedNFDF <- rbind(HWSPs,LWSPNFs)
+
+#add in a year/location environment factor
+CarbInfoExpandedWFDF$Envi <- paste(CarbInfoExpandedWFDF$Year,CarbInfoExpandedWFDF$Location)
+CarbInfoExpandedNFDF$Envi <- paste(CarbInfoExpandedNFDF$Year,CarbInfoExpandedNFDF$Location)
+
+#visualize these data sets pre cleaning
+CarbDataFrameVis(CarbInfoExpandedWFDF,"WithField_WithOutliers")
+CarbDataFrameVis(CarbInfoExpandedNFDF,"NoField_WithOutliers")
+
+#clean up the predictive data frames. Reassign or delete outliers 
+CleanedInfoWF <- CarbOutlierCleanup(CarbInfoExpandedWFDF,"WF",alpha = 0.05)
+CleanedInfoNF <- CarbOutlierCleanup(CarbInfoExpandedNFDF,"NF",alpha = 0.05)
+
+#revisualize the dataframes 
+CarbDataFrameVis(CleanedInfoWF,"WithField_Cleaned")
+CarbDataFrameVis(CleanedInfoNF,"NoField_Cleaned")
+
+#write the names of the varieties used to a csv file so we can find the corresponding GBS data
+write.csv(file = "Data/OutputtedData/InbredsWithinWSMDPCarbDataNF.csv",unique(CleanedInfoNF[c("Variety", "endo")]))
+write.csv(file = "Data/OutputtedData/InbredsWithinWSMDPCarbDataWF.csv",unique(CleanedInfoWF[c("Variety", "endo")]))
+
+EqnStats <- function(DF){
+  
+  #establish dataframe used to record stats
+  Out <- data.frame(Carb = c("Fructose", "Glucose", "Sucrose", "Total Sugar", "Starch", "Total Polysaccharide", "WSP"),
+                    RMSEP = rep(NA,7), 
+                    bias = rep(NA,7),
+                    SEE = rep(NA,7),
+                    slope = rep(NA,7),
+                    intercept = rep(NA,7),
+                    R2 = rep(NA,7))
+  dfpos <- c(2,4,6,8,10,12,14)
+  for(carb in 1:7){
+    #Calculated the RMSEP
+    Out$RMSEP[carb] <- sqrt(sum((DF[,dfpos[carb]]- DF[,dfpos[carb]-1])^2, na.rm = TRUE)/dim(DF)[1])
+    #Calculate the Bias
+    Out$bias[carb] <- mean(DF[,dfpos[carb]], na.rm = TRUE) - mean(DF[,dfpos[carb]-1],na.rm = TRUE)
+    #Calculated the SEE
+    Out$SEE[carb] <- sqrt((dim(DF)[1]/(dim(DF)[1]-1))*(Out$RMSEP[carb]^2-Out$bias[carb]^2))
+    Out$Carb[carb] <- colnames(DF[dfpos[carb]])
+  }
+  return(Out)
+}
+
+
+#Visualize these
+R2Vis <- function(DF, label, Out){
+  dfpos <- c(2,4,6,8,10,12,14)
+  Carb = c("Fructose", "Glucose", "Sucrose", "Total Sugar", "Starch", "Total Polysaccharide", "WSP")
+  for(i in 1:7){
+    carbCompare  <- lm(DF[,dfpos[i]]~ DF[,dfpos[i]-1])
+    carbFileName <- paste("Figures/wsmdp2021_",label,Carb[i],"_NIR_Eqn_Prediction_vis.png", sep = "")
+    png(carbFileName)
+    par(mfrow=c(1,1))
+    print(summary(carbCompare))
+    rsqua <- summary(carbCompare)$r.squared
+    plot(DF[,dfpos[i]]~ DF[,dfpos[i]-1],
+         pch = 16,
+         xlab = paste(Carb[i]," wetlab (%)",sep = ""),
+         ylab = paste(Carb[i]," NIR Prediction (%)",sep = ""),
+         main = paste("Actual Vs Predicted ",Carb[i]," r^2 =",trunc(rsqua*10^3)/10^3,sep = ""))
+    abline(coefficients(carbCompare), lwd = 2, lty = 2, col = "red")
+    # text(15,max(Prediction[,i])-5,labels = paste("r^2 =",trunc(rsqua*10^3)/10^3))
+    
+    Out$slope[i] <- trunc(10^3*summary(carbCompare)$coefficients[2])/10^3
+    Out$intercept[i] <- trunc(10^3*summary(carbCompare)$coefficients[1])/10^3
+    Out$R2[i] <- trunc(10^3*summary(carbCompare)$r.squared)/10^3
+    
+    
+    dev.off()
+  }
+  return(Out)
+}
+
+
+######Visualize the validation. Look at all the samples that were wetlabbed and used to calibrate the equation
+wetlabDF <- read.csv("Data/WSMDP_Wetlab_StarchSugarData_FormatedForWinISI_WithR.csv")
+colnames(wetlabDF)[1] <- "Samples"
+WFWL <- merge(CleanedInfoWF, wetlabDF, by = "Samples")
+NFWL <- merge(CleanedInfoNF, wetlabDF, by = "Samples")
+WFWLdf <- WFWL[,c(1,9,18,8,19,10,20,11,21,5,22,6,23,7,24)]
+NFWLdf <- NFWL[,c(1,9,18,8,19,10,20,11,21,5,22,6,23,7,24)]
+WFWLdfEqnStatsR <- R2Vis(WFWLdf[,2:15], "CleanedWSPeqnWF_PredVsWetlab_for_Calibration_Samples", EqnStats(WFWLdf[,2:15]))
+NFWLdfEqnStatsR <- R2Vis(NFWLdf[,2:15], "CleanedWSPeqnNF_PredVsWetlab_for_Calibration_Samples", EqnStats(NFWLdf[,2:15]))
+
+write.csv(WFWLdfEqnStatsR, "Data/OutputtedData/EqnFitStatisticsAllWetlabWF.csv")
+write.csv(NFWLdfEqnStatsR, "Data/OutputtedData/EqnFitStatisticsAllWetlabNF.csv")
+
+######Visualize the validation. Only the samples that were NOT used to create the equation
+valwetlabDF <- read.csv("Data/WSMDP_EqnValidation_Wetlab_Data.csv")
+colnames(valwetlabDF)[1] <- "Samples"
+WFValWL <- merge(CleanedInfoWF, valwetlabDF, by = "Samples")
+NFValWL <- merge(CleanedInfoNF, valwetlabDF, by = "Samples")
+WFValWLdf <- WFValWL[,c(1,9,23,8,22,10,24,11,25,5,19,6,20,7,21)]
+NFValWLdf <- NFValWL[,c(1,9,23,8,22,10,24,11,25,5,19,6,20,7,21)]
+WFValWLdfEqnStatsR <- R2Vis(WFValWLdf[,2:15], "CleanedWSPeqnWF_PredVsWetlab_ValidationSubset", EqnStats(WFValWLdf[,2:15]))
+NFValWLdfEqnStatsR <- R2Vis(NFValWLdf[,2:15], "CleanedWSPeqnNF_PredVsWetlab_ValidationSubset", EqnStats(NFValWLdf[,2:15]))
+
+write.csv(WFValWLdfEqnStatsR, "Data/OutputtedData/EqnFitStatisticsValidationWF.csv")
+write.csv(NFValWLdfEqnStatsR, "Data/OutputtedData/EqnFitStatisticsValidationNF.csv")
+
+
+####With Jared WetlabDATA
+HWSPsJ <- HWSPsDF[which(HWSPsDF$endo == "su1" | HWSPsDF$endo == "se" | is.na(HWSPsDF$endo)),]
+CarbInfoExpandedWFJDF <- rbind(HWSPsJ,LWSPWFs)
+CarbInfoExpandedNFJDF <- rbind(HWSPsJ,LWSPNFs)
+WFValWLJ <- merge(CarbInfoExpandedWFJDF, valwetlabDF, by = "Samples")
+NFValWLJ <- merge(CarbInfoExpandedNFJDF, valwetlabDF, by = "Samples")
+WFValWLJdf <- WFValWLJ[,c(1,9,21,8,20,10,22,11,23,5,17,6,18,7,19)]
+NFValWLJdf <- NFValWLJ[,c(1,9,21,8,20,10,22,11,23,5,17,6,18,7,19)]
+WFValWLdfJEqnStatsR <- R2Vis(WFValWLJdf[,2:15], "UnCleanedWSPeqnWF_PredVsWetlab_ValidationSubset_WJared", EqnStats(WFValWLdf[,2:15]))
+NFValWLdfJEqnStatsR <- R2Vis(NFValWLJdf[,2:15], "UnCleanedWSPeqnNF_PredVsWetlab_ValidationSubset_WJared", EqnStats(NFValWLdf[,2:15]))
+
+write.csv(WFValWLdfJEqnStatsR, "Data/OutputtedData/EqnFitStatisticsValidationWF_WJared.csv")
+write.csv(NFValWLdfJEqnStatsR, "Data/OutputtedData/EqnFitStatisticsValidationNF_WJared.csv")
+
+
+
+
+```
+When the HWSP and LWSP groups are combined to included all the samples to analyze, `r dim(CarbInfoExpandedWFDF)[1]` samples were predicted and included within the WF group and `r dim(CarbInfoExpandedNFDF)[1] ` samples were predicted and included within the NF group. 
+
+## Equation Validation
+
+A portion of the samples (`r dim(WFValWLJdf)[1]`) had their carbohydrates were analyzed in both wetlab and predicted through NIR but were not used to calibrate the equation. These samples were used for validating the quality of the equation. This included `r length(which(nchar(WFValWLJdf$Samples)>11))` samples from Jared Zystros *se* dataset for the purpose of validation and  `r (dim(WFValWLJdf)[1] - length(which(nchar(WFValWLJdf$Samples)>11)))` were from the WSMDP sample set. 
+
+With Field Equation Validation Statistics for all predicted Carbohydrates:
+```{r}
+#With Field Equation Validation Statistics for all predicted Carbohydrates
+WFValWLdfJEqnStatsR
+```
+Non Field Equation Validation Statistics for all predicted Carbohydrates:
+```{r}
+#Non Field Equation Validation Statistics for all predicted Carbohydrates
+NFValWLdfJEqnStatsR
+```
+
+
+We found the RSquared values for all carbohydrate prediction abilities to be acceptable. The average prediction ability among all the carbohydrates in the WF group is `r mean(WFValWLdfJEqnStatsR$R2)`.The r^2 value among the different datasets can be summarized as follows:
+``` {r}
+r2sum <- data.frame(cbind(WFWLdfEqnStatsR$R2,NFWLdfEqnStatsR$R2, WFValWLdfEqnStatsR$R2, NFValWLdfEqnStatsR$R2, WFValWLdfJEqnStatsR$R2, NFValWLdfJEqnStatsR$R2))
+r2sum<- (r2sum %>%
+  bind_rows(summarise_all(., ~if(is.numeric(.)) mean(.) else "Total")))
+rownames(r2sum) <- c("Fructose", "Glucose", "Sucrose", "Total Sugar", "Starch", "Total Polysaccharide", "WSP", "Average R^2")
+colnames(r2sum) <- c("WF All Wetlab Samples","NF All Wetlab Samples","WF Validation Wetlab Samples","NF Validaion Wetlab Samples","WF Validation Wetlab and Zystro Samples","NF Validation Wetlab and Zystro Samples" )
+
+knitr::kable(r2sum, digits = 3)
+```
+We found that the inclusion or exclusion of the field maize inbred lines did not have a significant impact on the predictive ability of the equation. Due to this finding, we used the with field calibrations for the remainder of the analysis. To demonstrate how the validation samples performed visually, we have included the following example: 
+``` {r, fig.cap = "Wetlab vs Predicted Starch Percentage of validation wetlab and Zystro Validation set"}
+ DF <- WFValWLJdf[,2:15]
+ dfpos <- c(2,4,6,8,10,12,14)
+  Carb = c("Fructose", "Glucose", "Sucrose", "Total Sugar", "Starch", "Total Polysaccharide", "WSP")
+  # for(i in 1:7){
+   i = 5
+    carbCompare  <- lm(DF[,dfpos[i]]~ DF[,dfpos[i]-1])
+    # carbFileName <- paste("Figures/wsmdp2021_",label,Carb[i],"_NIR_Eqn_Prediction_vis.png", sep = "")
+    # png(carbFileName)
+    # par(mfrow=c(1,1))
+    # print(summary(carbCompare))
+    rsqua <- summary(carbCompare)$r.squared
+    plot(DF[,dfpos[i]]~ DF[,dfpos[i]-1],
+         pch = 16,
+         xlab = paste(Carb[i]," wetlab (%)",sep = ""),
+         ylab = paste(Carb[i]," NIR Prediction (%)",sep = ""),
+         main = paste("Actual Vs Predicted ",Carb[i]," r^2 =",trunc(rsqua*10^3)/10^3,sep = ""))
+    abline(coefficients(carbCompare), lwd = 2, lty = 2, col = "red")
+    # text(15,max(Prediction[,i])-5,labels = paste("r^2 =",trunc(rsqua*10^3)/10^3))
+    
+    # Out$slope[i] <- trunc(10^3*summary(carbCompare)$coefficients[2])/10^3
+    # Out$intercept[i] <- trunc(10^3*summary(carbCompare)$coefficients[1])/10^3
+    # Out$R2[i] <- trunc(10^3*summary(carbCompare)$r.squared)/10^3
+    # 
+    
+    # dev.off()
+    ```
+
+## Carbohydrate Distribution
+Lets look at the distribution of carbohydrate content and correlations before cleaning for outliers.
+To further demonstrate the non-impact of including the field lines in the calibration set, we have compared the WF and NF carbohydrate distributions side by side 
+
+``` {r, fig.show="hold", out.width="50%",fig.cap = "Distribution and Correlation of the Uncleaned Predicted Carbohydrates within the WF and NF grouping"}
+pairs.panels(CarbInfoExpandedWFDF[5:11],scale = TRUE)
+pairs.panels(CarbInfoExpandedNFDF[5:11],scale = TRUE)
+```
+
+
+```  {r, fig.show="hold", out.width="50%",fig.cap = "Distribution of Uncleaned Predicted Polysaccharide and Sugars within the WF grouping by endosperm type"}
+ByEndoPolyVis <- function(CarbDF, TitleQuality){
+
+   dat.m <- melt(CarbDF, id.vars = "endo", measure.vars = c('Starch', 'WSP', 'Total.Polysaccharides') )
+  
+    p <- ggplot(dat.m) +
+    geom_boxplot(aes(x = endo, y = value, color = variable))
+    print( p + labs(title = paste("Polysaccharide Content by Endosperm Type",TitleQuality)) + xlab("Endosperm Mutant") + ylab("Percentage of Kernel"))
+}
+ByEndoPolyVis(CarbInfoExpandedWFDF, "WithField_WithOutliers")
+
+ByEndoSugVis <- function(CarbDF, TitleQuality){
+ 
+ dat.m <- melt(CarbDF, id.vars = "endo", measure.vars = c('Glucose', 'Fructose', 'Sucrose', 'Total.Sugar') )
+  p <- ggplot(dat.m) +
+    geom_boxplot(aes(x = endo, y = value, color = variable))
+  print(p + labs(title = paste("Sugar Content by Endosperm Type",TitleQuality)) + xlab("Endosperm Mutant") + ylab("Percentage of Kernel"))
+}
+ByEndoSugVis(CarbInfoExpandedWFDF, "WithField_WithOutliers")
+
+  
+
+``` {r, fig.show="hold", out.width="50%",fig.cap = "Distribution of Uncleaned Predicted Sugars within the WF and NF grouping by environment"}
+ByEnviSugVis <- function(CarbDF, TitleQuality){
+ 
+ dat.m <- melt(CarbDF, id.vars = "endo", measure.vars = c('Glucose', 'Fructose', 'Sucrose', 'Total.Sugar') )
+  p <- ggplot(dat.m) +
+    geom_boxplot(aes(x = endo, y = value, color = variable))
+  print(p + labs(title = paste("Sugar Content by Endosperm Type",TitleQuality)) + xlab("Endosperm Mutant") + ylab("Percentage of Kernel"))
+}
+ByEnviSugVis(CarbInfoExpandedWFDF, "WithField_WithOutliers")
+ByEnviSugVis(CarbInfoExpandedNFDF, "NoField_WithOutliers")
+
+  
+```
+The data was cleaned by analyzing outliers below 0% for each carbohydrate type  and either eliminating them if they were outliers compared to other samples of the same variety or by reclassifying the carbohydrate as 0% since < 0% is not biologically possible. 
+
+# Conclusion

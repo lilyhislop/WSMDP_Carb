@@ -62,7 +62,8 @@ tail(SampleInfo)
 #Generate NIR Code. NIR codes are all YearLocationRow - Rep
 SampleInfo$NIRBase <- paste(substr(SampleInfo$year,3,4), ifelse(SampleInfo$location == "Wisconsin", "W","NY"), SampleInfo$Row,sep = "")
 tail(SampleInfo)
-
+summary.factor(SampleInfo$endo)
+length(unique(SampleInfo$Variety))
 
 #########Read in the output from NIR##########
 ####Copied pasted and modified from Hislop_carb_eqn_validation.R
@@ -214,6 +215,22 @@ write.csv(WFValWLdfEqnStatsR, "Data/OutputtedData/EqnFitStatisticsValidationWF.c
 write.csv(NFValWLdfEqnStatsR, "Data/OutputtedData/EqnFitStatisticsValidationNF.csv")
 
 
+####With Jared WetlabDATA
+HWSPsJ <- HWSPsDF[which(HWSPsDF$endo == "su1" | HWSPsDF$endo == "se" | is.na(HWSPsDF$endo)),]
+CarbInfoExpandedWFJDF <- rbind(HWSPsJ,LWSPWFs)
+CarbInfoExpandedNFJDF <- rbind(HWSPsJ,LWSPNFs)
+WFValWLJ <- merge(CarbInfoExpandedWFJDF, valwetlabDF, by = "Samples")
+NFValWLJ <- merge(CarbInfoExpandedNFJDF, valwetlabDF, by = "Samples")
+WFValWLJdf <- WFValWLJ[,c(1,9,21,8,20,10,22,11,23,5,17,6,18,7,19)]
+NFValWLJdf <- NFValWLJ[,c(1,9,21,8,20,10,22,11,23,5,17,6,18,7,19)]
+WFValWLdfJEqnStatsR <- R2Vis(WFValWLJdf[,2:15], "UnCleanedWSPeqnWF_PredVsWetlab_ValidationSubset_WJared", EqnStats(WFValWLdf[,2:15]))
+NFValWLdfJEqnStatsR <- R2Vis(NFValWLJdf[,2:15], "UnCleanedWSPeqnNF_PredVsWetlab_ValidationSubset_WJared", EqnStats(NFValWLdf[,2:15]))
+
+write.csv(WFValWLdfJEqnStatsR, "Data/OutputtedData/EqnFitStatisticsValidationWF_WJared.csv")
+write.csv(NFValWLdfJEqnStatsR, "Data/OutputtedData/EqnFitStatisticsValidationNF_WJared.csv")
+
+
+
 ##########Linear Model Analysis!##########
 head(CleanedInfoWF)
 
@@ -262,7 +279,16 @@ barchart(~value|variable, group = factor(Carb), data= VarDFMelt,main = "Percent 
 dev.off()
 
 
+########Plot Correlations########
+justthebitsNF <- CleanedInfoNF[5:11]
+png(paste("Figures/WSMDP_AllNIRPred_MixedEqn_CorrelationfromPSYCH_NoField.png",sep=""), width = 500, height = 500)
+pairs.panels(justthebitsNF, scale = TRUE)
+dev.off()
 
+justthebitsWF <- CleanedInfoWF[5:11]
+png(paste("Figures/WSMDP_AllNIRPred_MixedEqn_CorrelationfromPSYCH_WithField.png",sep=""), width = 500, height = 500)
+pairs.panels(justthebitsWF, scale = TRUE)
+dev.off()
 
 
 ########GWAS ZONE##########
@@ -274,8 +300,8 @@ dev.off()
 
 
 
-genoinfo <- read.csv("Data/InbredsWithinWSMDPCarbDataWFGenoQuery.txt",head = FALSE)
-colnames(genoinfo) <- c("Variety","endo","GenoName","source","notes","varietyagain")
+genoinfo <- read.csv("Data/WSMDP_Inbreds.txt",head = FALSE)
+colnames(genoinfo) <- c("Variety","","","","","","","GenoName","source","endo","notes","Region","Program")
 myG <- read.delim("Data/RawData/WSMDP_SCMV_SeqE.hmp.txt", head = FALSE)
 myGnames <- myG[1,]
 myGnames<-gsub(myGnames, pattern = ":.*", replacement = "")
