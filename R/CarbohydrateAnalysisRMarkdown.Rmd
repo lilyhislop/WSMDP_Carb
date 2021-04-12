@@ -336,6 +336,8 @@ ByEnviSugVis(CarbInfoExpandedNFDF, "NoField_WithOutliers")
 
   
 ```
-The data was cleaned by analyzing outliers below 0% for each carbohydrate type  and either eliminating them if they were outliers compared to other samples of the same variety or by reclassifying the carbohydrate as 0% since < 0% is not biologically possible. 
+The data was cleaned by analyzing outliers below 0% for each carbohydrate type and either eliminating them if they were outliers compared to other samples of the same inbred or by reclassifying the carbohydrate as 0% since < 0% is not biologically possible. Any carbohydrate datapoint above 3SD of the mean were similarly analyzed. They were removed if found to be outliers in context, but kept if found to be not an outlier. 
+
+Distrubution of the 
 
 # Conclusion

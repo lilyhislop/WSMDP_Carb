@@ -254,6 +254,10 @@ VarDF[i,j+1] <- (out$`Sum Sq`[j]/SStotal)}
 }
 VarDFMelt <- melt(VarDF)
 
+
+
+
+
 #########The thing below but worse#######
 # # VarDFMelt %>%
 # #   gather(Carb,value) %>%
@@ -277,7 +281,63 @@ barchart(~value|variable, group = factor(Carb), data= VarDFMelt,main = "Percent 
          key = simpleKey(text = colnames(CleanedInfoWF)[5:11],
                          rectangles = TRUE, points = FALSE, space = "right"))
 dev.off()
+#########Some Other Stats########
+carbs <- colnames(CleanedInfoWF)[5:11]
+h2DF <- data.frame("Carb" = colnames(CleanedInfoWF)[5:11],"mean" = c(1:7), "SD" = c(1:7),"min" = c(1:7),"max" = c(1:7),"h2" = c(1:7))
+#establish dataframe to store variances from each factor
+VarDF <- data.frame("Carb" = colnames(CleanedInfoWF)[5:11],"Variety" = rep(NA,7),"Envi" = rep(NA,7), "Rep" = rep(NA,7),"endo" = rep(NA,7),"Variety:Envi" = rep(NA,7),"Residuals"= rep(NA,7))
 
+
+
+for(carb in carbs){
+normality <- shapiro.test(pull(CleanedInfoWF[,carb]))
+  out <- capture.output(normality)
+
+
+model <- lmer(get(carb) ~ (1|Variety) + (1|Envi) + (1|Envi/Rep)+ (1|Variety:Envi),data=CleanedInfoWF, REML = TRUE)
+summary(model, correlation = FALSE)
+random_effects <- ranef(model)
+
+#Write out the blups
+write.table(random_effects$Variety, paste0("Data/OutputtedData/blups_", carb, ".csv"), col.names=F, row.names=F, sep=",")
+summary <- summary(model, correlation = FALSE)
+
+#Write out the residuals
+write.table(resid(model), paste0("Data/OutputtedData/resids_", carb, ".csv"), col.names=F, row.names=F, sep=",")
+
+#####Code for heritibility taken from jonathan Renk
+# Calculate hertiability 
+model_variances <- as.data.frame(VarCorr(model))
+h2 <- model_variances$vcov[2]/(model_variances$vcov[2]+(model_variances$vcov[1]/4)+(model_variances$vcov[6]/8))
+####Record Data
+h2DF[which(h2DF$Carb == carb),"h2"] <- h2
+h2DF[which(h2DF$Carb == carb),"mean"] <- mean(pull(CleanedInfoWF[,carb]),na.rm = TRUE)
+h2DF[which(h2DF$Carb == carb),"min"] <- min(pull(CleanedInfoWF[,carb]),na.rm = TRUE)
+h2DF[which(h2DF$Carb == carb),"max"] <- max(pull(CleanedInfoWF[,carb]),na.rm = TRUE)
+h2DF[which(h2DF$Carb == carb),"SD"] <- SD(pull(CleanedInfoWF[,carb]),na.rm = TRUE)
+out <- capture.output(h2)
+cat(out, file=paste0("Data/OutputtedData/h2_",carb,".txt"), sep="\n", append=TRUE)
+
+pdf(paste0("Figures/assumptions_", carb, ".pdf"), width = 15, height = 5)
+par(mfrow=c(1,2))
+
+
+# Model Fit with REML
+plot(fitted(model), residuals(model), pch=19, col="dark blue", ylab="Residuals", xlab="Predicted")
+abline(h=0,col="red", lwd=1, lty=1)
+# histogram of residuals
+hist(residuals(model),main="Histogram of residuals",freq=F, xlab="Residuals", ylab= "Freq", col="palegreen", col.main="darkblue")
+x=seq(-5e-15,9e-15,5e-15)
+curve(dnorm(x,mean(residuals(model)),sd(residuals(model))),add=T,lwd=2, col="red", lty=1)
+# # qq plot
+# qqPlot(residuals(model), pch=19, col="dark blue", col.lines="red", xlab="Pred quantiles", ylab="Obs quantiles") 
+
+dev.off()
+
+
+}
+
+write.csv(h2DF, file=paste0("Data/OutputtedData/h2_ALLCarb.txt"), append=FALSE)
 
 ########Plot Correlations########
 justthebitsNF <- CleanedInfoNF[5:11]
@@ -351,12 +411,18 @@ c2 <- which(colnames(CleanedDFwGeno)=="Total.Sugar")
 c3 <- which(colnames(CleanedDFwGeno)=="GenoName")
 myY <- CleanedDFwGeno[,c(c3,c1:c2)]
 
-setwd(paste("C:/Users/LHislop/Documents/GitHub/WSMDP_Carb/Data/OutputtedData/GAPIT/",label,sep = ""))
+setwd(paste("C:/Users/LHislop/Documents/GitHub/WSMDP_Carb/Data/OutputtedData/GAPIT/",label,"FarmCPU",sep = ""))
+# myGAPIT <- GAPIT(
+#     Y=myY,
+#     G=myG,
+#     PCA.total=3,
+#     model = c("MLMM","gBLUP")#,"FarmCPU")
 myGAPIT <- GAPIT(
     Y=myY,
     G=myG,
-    PCA.total=3,
-    model = c("MLMM","gBLUP")#,"FarmCPU")
+    PCA.total=5,
+    method.bin = "optimum",
+    model = "FarmCPU"
   
 )
 }
@@ -368,4 +434,38 @@ GAPITRunner(LWSPWFs,"LWSPWF")
 GAPITRunner(LWSPNFs,"LWSPNF")})
 
 
+CleanedDFwGeno <- merge(CleanedInfoWF,genoinfo, by = "Variety")
+c1 <- which(colnames(CleanedDFwGeno)=="Starch")
+c2 <- which(colnames(CleanedDFwGeno)=="Total.Sugar")
+c3 <- which(colnames(CleanedDFwGeno)=="GenoName")
+myY <- CleanedDFwGeno[,c(c3,c1:c2)]
+setwd("C:/Users/LHislop/Documents/GitHub/WSMDP_Carb/Data/OutputtedData/GAPIT/WF/FarmCPU")
+myGAPIT <- GAPIT(
+  G = myG, output.numerical = TRUE
+)
+myGD <- read.big.matrix("GAPIT.Genotype.Numerical.txt", type="char", sep="\t", head = TRUE)
+myGM <- read.table("GAPIT.Genotype.map.txt", head = TRUE)
 
+myGAPIT <- GAPIT( 
+  Y=myY[,c(1,2)], 
+  GD=myGD,
+  GM=myGM,
+  PCA.total=5,
+  method.bin="optimum",
+  model="FarmCPU"
+)
+
+pvals <- FarmCPU.P.Threshold(
+  Y=myY[,c(1,2)], #only two columns allowed, the first column is taxa name and the second is phenotype
+  GD = myGD,
+  GM = myGM,
+  trait="Starch", #name of the trait, only used for the output file name
+  theRep=100 #number of permutation times 
+)
+
+
+
+#######Renaming files
+old.files <- list.files("C:/Users/LHislop/Documents/GitHub/WSMDP_Carb/Data/OutputtedData/GAPIT/WF/", pattern = "*.pdf", full.name = TRUE)
+new.files <- gsub(old.files, pattern = "*.pdf", replacement = ".png")
+pdf2png(old.files[1], new.files[1], res = 300)
