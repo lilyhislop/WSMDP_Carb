@@ -37,7 +37,8 @@ library("snpStats")
 library("compiler") #needed to make GAPIT work
 source("http://zzlab.net/GAPIT/gapit_functions.txt")
 source("http://zzlab.net/FarmCPU/FarmCPU_functions.txt")
-# library("bigmemory") #to make a matrix big
+library(GWASpoly)
+library("bigmemory") #to make a matrix big
 # library(rrBLUP)
 
 getwd()
@@ -50,6 +51,9 @@ source("R/MixedEndoEqnValidation.R")
 source("R/AgPredOutput.R")
 source("R/CarbOutlierCleanup.R")
 source("R/CarbDataFrameVis.R")
+source("R/GWASPolyVis.R")
+source("R/GWASPolyRunner.R")
+source("R/WritePhenoGenotoFile.R")
 
 
 #Read in the sample information.
@@ -368,6 +372,7 @@ myGnames<-gsub(myGnames, pattern = ":.*", replacement = "")
 myG[1,] <- myGnames
 
 
+
 # 
 # CleanedInfoNFwGeno <- merge(CleanedInfoNF,genoinfo, by = "Variety")
 # myY <- CleanedInfoNFwGeno[,c(19,6:12)]#,"class","tbl")
@@ -401,8 +406,8 @@ myG[1,] <- myGnames
 #GAPIT to analyze phenotype info
 # myPhenotypes <- GAPIT.Phenotype.View(myY = myY,)
 
-######Function to look at HWSP, LWSP subsets seperately######
-GAPITRunner <- function(DF, label){
+######Function to look at HWSP, LWSP subsets separateluy######
+GAPITRunner <- function(DF, label,Seq){
 setwd("C:/Users/LHislop/Documents/GitHub/WSMDP_Carb")
 CleanedDF <- CarbOutlierCleanup(DF,label,alpha = 0.05)
 CleanedDFwGeno <- merge(CleanedDF,genoinfo, by = "Variety")
@@ -410,28 +415,34 @@ c1 <- which(colnames(CleanedDFwGeno)=="Starch")
 c2 <- which(colnames(CleanedDFwGeno)=="Total.Sugar")
 c3 <- which(colnames(CleanedDFwGeno)=="GenoName")
 myY <- CleanedDFwGeno[,c(c3,c1:c2)]
-
-setwd(paste("C:/Users/LHislop/Documents/GitHub/WSMDP_Carb/Data/OutputtedData/GAPIT/",label,"FarmCPU",sep = ""))
+myY <- myY[-which(myY$GenoName == ""),]
+myYMerged <- myY %>%
+  group_by(GenoName) %>%
+  summarise(Starch = mean(Starch,na.rm = T),Total.Polysaccharides = mean(Total.Polysaccharides,na.rm = T), 
+            WSP = mean(WSP,na.rm = T), Glucose =mean(Glucose,na.rm = T), Fructose = mean(Fructose,na.rm = T),
+            Sucrose = mean(Sucrose,na.rm = T), Total.Sugar = mean(Total.Sugar,na.rm = T))
+  
+setwd(paste("C:/Users/LHislop/Documents/GitHub/WSMDP_Carb/Data/OutputtedData/GAPIT/",label,"/",Seq,sep = ""))
+myGAPIT <- GAPIT(
+    Y=myY,
+    G=myGB,
+    PCA.total=3,
+    model = c("MLMM","gBLUP"))#,"FarmCPU")
 # myGAPIT <- GAPIT(
 #     Y=myY,
 #     G=myG,
-#     PCA.total=3,
-#     model = c("MLMM","gBLUP")#,"FarmCPU")
-myGAPIT <- GAPIT(
-    Y=myY,
-    G=myG,
-    PCA.total=5,
-    method.bin = "optimum",
-    model = "FarmCPU"
-  
-)
+#     PCA.total=5,
+#     method.bin = "optimum",
+#     model = "FarmCPU"
+#   
+# )
 }
 system.time({
-GAPITRunner(CarbInfoExpandedWFDF, "WF")
-GAPITRunner(CarbInfoExpandedNFDF, "NF")
-GAPITRunner(HWSPs,"HWSP")
-GAPITRunner(LWSPWFs,"LWSPWF")
-GAPITRunner(LWSPNFs,"LWSPNF")})
+GAPITRunner(CarbInfoExpandedWFDF, "WF","SeqB")
+GAPITRunner(CarbInfoExpandedNFDF, "NF","SeqB")
+GAPITRunner(HWSPs,"HWSP","SeqB")
+GAPITRunner(LWSPWFs,"LWSPWF","SeqB")
+GAPITRunner(LWSPNFs,"LWSPNF","SeqB")})
 
 
 CleanedDFwGeno <- merge(CleanedInfoWF,genoinfo, by = "Variety")
@@ -464,8 +475,119 @@ pvals <- FarmCPU.P.Threshold(
 )
 
 
+######with GenoSeq B#########
+myGB <- read.delim("Data/RawData/WSMDP_SCMV_SeqB.hmp.txt", head = FALSE)
+myGBnames <- myGB[1,]
+myGBnames<-gsub(myGBnames, pattern = ":.*", replacement = "")
+myGB[1,] <- myGBnames
 
-#######Renaming files
-old.files <- list.files("C:/Users/LHislop/Documents/GitHub/WSMDP_Carb/Data/OutputtedData/GAPIT/WF/", pattern = "*.pdf", full.name = TRUE)
-new.files <- gsub(old.files, pattern = "*.pdf", replacement = ".png")
-pdf2png(old.files[1], new.files[1], res = 300)
+
+CleanedDFwGeno <- merge(CleanedInfoWF,genoinfo, by = "Variety")
+c1 <- which(colnames(CleanedDFwGeno)=="Starch")
+c2 <- which(colnames(CleanedDFwGeno)=="Total.Sugar")
+c3 <- which(colnames(CleanedDFwGeno)=="GenoName")
+myY <- CleanedDFwGeno[,c(c3,c1:c2)]
+setwd("C:/Users/LHislop/Documents/GitHub/WSMDP_Carb/Data/OutputtedData/GAPIT/WF/FarmCPU")
+myGAPIT <- GAPIT(
+  G = myGB, output.numerical = TRUE
+)
+myGD <- read.big.matrix("GAPIT.Genotype.Numerical.txt", type="char", sep="\t", head = TRUE)
+myGM <- read.table("GAPIT.Genotype.map.txt", head = TRUE)
+
+
+myFarmCPU<-FarmCPU(Y=myYMerged[,c(1,3)],
+                         GD=myGD,
+                         GM=myGM)
+myGAPIT <- GAPIT( 
+  Y=myYMerged[,c(1,2)], 
+  GD=myGD,
+  GM=myGM,
+  PCA.total=5,
+  method.bin="optimum",
+  model="FarmCPU"
+)
+
+pvals <- FarmCPU.P.Threshold(
+  Y=myYMerged[,c(1,2)], #only two columns allowed, the first column is taxa name and the second is phenotype
+  GD = myGD,
+  GM = myGM,
+  trait="Starch", #name of the trait, only used for the output file name
+  theRep=100 #number of permutation times 
+)
+
+
+
+
+
+
+
+#########GWASPOLY RUNNING#########
+#read in genetic info post MAF and LD pruning. Pruning done by SNPrelate package. Outputted previously as a plink format, converted to Hapmap by tassel and read back in
+hmppath <- "Data/RawData/WSMDP_SCMV_SeqB.hmp.txt"
+SCMV_geno <- fread(hmppath,skip = "rs#")
+geno_scmv <- SCMV_geno
+
+str(geno_scmv)
+colnames(geno_scmv)<-gsub(colnames(geno_scmv), pattern = ":.*", replacement = "")
+str(geno_scmv)
+
+
+#########################
+### GWASPoly Function ###
+#########################
+#trait to analyze
+# CleanedDF <- CarbOutlierCleanup(DF,label,alpha = 0.05)
+CleanedDFwGeno <- merge(CleanedInfoWF,genoinfo, by = "Variety")
+c1 <- which(colnames(CleanedDFwGeno)=="Starch")
+c2 <- which(colnames(CleanedDFwGeno)=="Total.Sugar")
+c3 <- which(colnames(CleanedDFwGeno)=="GenoName")
+c4 <- which(colnames(CleanedDFwGeno)=="endo.x")
+myYWF <- CleanedDFwGeno[,c(c3,c1:c2,c4)]
+myYWF <- myYWF[-which(myYWF$GenoName == ""),]
+myYWFmerged <- myYWF %>%
+  group_by(GenoName) %>%
+  summarise(Starch = mean(Starch,na.rm = T),Total.Polysaccharides = mean(Total.Polysaccharides,na.rm = T), 
+            WSP = mean(WSP,na.rm = T), Glucose =mean(Glucose,na.rm = T), Fructose = mean(Fructose,na.rm = T),
+            Sucrose = mean(Sucrose,na.rm = T), Total.Sugar = mean(Total.Sugar,na.rm = T), endo.x = first(endo.x))
+
+CleanedDFwGeno <- merge(CleanedInfoNF,genoinfo, by = "Variety")
+c1 <- which(colnames(CleanedDFwGeno)=="Starch")
+c2 <- which(colnames(CleanedDFwGeno)=="Total.Sugar")
+c3 <- which(colnames(CleanedDFwGeno)=="GenoName")
+c4 <- which(colnames(CleanedDFwGeno)=="endo.x")
+myYNF <- CleanedDFwGeno[,c(c3,c1:c2,c4)]
+myYNF <- myYNF[-which(myYNF$GenoName == ""),]
+
+myYNFmerged <- myYNF %>%
+  group_by(GenoName) %>%
+  summarise(Starch = mean(Starch,na.rm = T),Total.Polysaccharides = mean(Total.Polysaccharides,na.rm = T), 
+            WSP = mean(WSP,na.rm = T), Glucose =mean(Glucose,na.rm = T), Fructose = mean(Fructose,na.rm = T),
+            Sucrose = mean(Sucrose,na.rm = T), Total.Sugar = mean(Total.Sugar,na.rm = T), endo.x = first(endo.x))
+
+
+CleanedDF <- CarbOutlierCleanup(HWSPs,"HWSPs",alpha = 0.05)
+CleanedDFwGeno <- merge(CleanedDF,genoinfo, by = "Variety")
+c1 <- which(colnames(CleanedDFwGeno)=="Starch")
+c2 <- which(colnames(CleanedDFwGeno)=="Total.Sugar")
+c3 <- which(colnames(CleanedDFwGeno)=="GenoName")
+c4 <- which(colnames(CleanedDFwGeno)=="endo.x")
+myYHWSP <- CleanedDFwGeno[,c(c3,c1:c2,c4)]
+myYHWSP <- myYHWSP[-which(myYHWSP$GenoName == ""),]
+myYHWSPMerged <- myYHWSP %>%
+  group_by(GenoName) %>%
+  summarise(Starch = mean(Starch,na.rm = T),Total.Polysaccharides = mean(Total.Polysaccharides,na.rm = T), 
+            WSP = mean(WSP,na.rm = T), Glucose =mean(Glucose,na.rm = T), Fructose = mean(Fructose,na.rm = T),
+            Sucrose = mean(Sucrose,na.rm = T), Total.Sugar = mean(Total.Sugar,na.rm = T), endo.x = first(endo.x))
+
+system.time(
+for(carb in carbs){
+GWASPolyRunner(myYWFmerged[,1:8],geno_scmv,carb,"NoFixedEffect_PermThresh","SeqB","WFMeaned")
+GWASPolyRunner(myYWFmerged,geno_scmv,carb,"EndoFixedEffect_PermThresh","SeqB","WFMeaned","endo.x","factor")
+GWASPolyRunner(myYNFmerged[,1:8],geno_scmv,carb,"NoFixedEffect_PermThresh","SeqB","NFMeaned")
+GWASPolyRunner(myYNFmerged,geno_scmv,carb,"EndoFixedEffect_PermThresh","SeqB","NFMeaned","endo.x","factor")
+GWASPolyRunner(myYHWSPMerged[,1:8],geno_scmv,carb,"NoFixedEffect_PermThresh","SeqB","HWSPMeaned")
+GWASPolyRunner(myYHWSPMerged,geno_scmv,carb,"EndoFixedEffect_PermThresh","SeqB","HWSPMeaned","endo.x","factor")
+
+}
+)
+
