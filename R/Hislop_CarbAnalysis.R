@@ -450,6 +450,15 @@ c1 <- which(colnames(CleanedDFwGeno)=="Starch")
 c2 <- which(colnames(CleanedDFwGeno)=="Total.Sugar")
 c3 <- which(colnames(CleanedDFwGeno)=="GenoName")
 myY <- CleanedDFwGeno[,c(c3,c1:c2)]
+myY <- myY[-which(myY$GenoName == ""),]
+myYMerged <- myY %>%
+  group_by(GenoName) %>%
+  summarise(Starch = mean(Starch,na.rm = T),Total.Polysaccharides = mean(Total.Polysaccharides,na.rm = T), 
+            WSP = mean(WSP,na.rm = T), Glucose =mean(Glucose,na.rm = T), Fructose = mean(Fructose,na.rm = T),
+            Sucrose = mean(Sucrose,na.rm = T), Total.Sugar = mean(Total.Sugar,na.rm = T))
+post <- data.frame(myYMerged)
+
+
 setwd("C:/Users/LHislop/Documents/GitHub/WSMDP_Carb/Data/OutputtedData/GAPIT/WF/FarmCPU")
 myGAPIT <- GAPIT(
   G = myG, output.numerical = TRUE
@@ -458,7 +467,7 @@ myGD <- read.big.matrix("GAPIT.Genotype.Numerical.txt", type="char", sep="\t", h
 myGM <- read.table("GAPIT.Genotype.map.txt", head = TRUE)
 
 myGAPIT <- GAPIT( 
-  Y=myY[,c(1,2)], 
+  Y=post[,c(1,2)], 
   GD=myGD,
   GM=myGM,
   PCA.total=5,
@@ -467,7 +476,7 @@ myGAPIT <- GAPIT(
 )
 
 pvals <- FarmCPU.P.Threshold(
-  Y=myY[,c(1,2)], #only two columns allowed, the first column is taxa name and the second is phenotype
+  Y=myYMerged[,c(1,2)], #only two columns allowed, the first column is taxa name and the second is phenotype
   GD = myGD,
   GM = myGM,
   trait="Starch", #name of the trait, only used for the output file name
