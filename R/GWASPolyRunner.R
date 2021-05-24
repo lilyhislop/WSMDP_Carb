@@ -1,5 +1,4 @@
 GWASPolyRunner <- function(phenoSubsetGeno,geno_scmv,trait,RunName,filename,adendum,fixedeffect = NULL,fixedType = NULL){
-
   GWASPolyRunVersion <- RunName
 
 #read in hmp data, output numeric format that GWASPoly likes

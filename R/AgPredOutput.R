@@ -36,14 +36,33 @@ wetlabPredictedOut$NIRBase <- paste(wetlabPredictedOut$Year,wetlabPredictedOut$L
 #Visualize the distribution of the traits from the NIR predicted outputs
 summary(wetlabPredictedOut)
 colnames(wetlabPredictedOut)
+wetlabPredictedOut$Year <- as.integer(wetlabPredictedOut$Year)
 
 if(condense){
 #the NIR scanned the wetlab samples multiple times. Average all the wetlab preditions. This also orders the samples alphanumerically
+  # first suddenly stopped working. Make a work around
   wetlabPredictedOutSum <- wetlabPredictedOut %>%
   group_by(Samples) %>%
-  summarise(Year = first(Year), Row = first(Row), Rep = first(Rep), Starch = mean(Starch), Total.Polysaccharides = mean(Total.Polysaccharides), 
-            WSP = mean(WSP), Glucose =mean(Glucose), Fructose = mean(Fructose),
-            Sucrose = mean(Sucrose), Total.Sugar = mean(Total.Sugar), Location = first(Location), NIRBase = first(NIRBase))
+  # summarise(Year = first(Year), Row = first(Row), Rep = first(Rep), Starch = mean(Starch), Total.Polysaccharides = mean(Total.Polysaccharides), 
+  #           WSP = mean(WSP), Glucose =mean(Glucose), Fructose = mean(Fructose),
+  #           Sucrose = mean(Sucrose), Total.Sugar = mean(Total.Sugar), Location = first(Location), NIRBase = first(NIRBase))
+    summarise( Starch = mean(Starch), Total.Polysaccharides = mean(Total.Polysaccharides), 
+              WSP = mean(WSP), Glucose =mean(Glucose), Fructose = mean(Fructose),
+              Sucrose = mean(Sucrose), Total.Sugar = mean(Total.Sugar))
+  
+  wetlabPredictedOutSum <- separate(wetlabPredictedOutSum, Samples, into = c("Year","Row","Rep"), sep = "([W.Y.-])", remove = FALSE)
+  wetlabPredictedOutSum$Location <- "W"
+  wetlabPredictedOutSum$Location[which(grepl("N",wetlabPredictedOutSum$Year))] = "NY"
+  wetlabPredictedOutSum$Year<-str_remove(wetlabPredictedOutSum$Year,"N")
+  
+  tail(wetlabPredictedOutSum)
+  # CarbNIREqnOut$Year <- as.numeric(CarbNIREqnOut$Year)
+  wetlabPredictedOutSum$NIRBase <- paste(wetlabPredictedOutSum$Year,wetlabPredictedOutSum$Location, wetlabPredictedOutSum$Row, sep = "")
+  #Visualize the distribution of the traits from the NIR predicted outputs
+  
+    }
+if(!condense){
+  wetlabPredictedOutSum <- wetlabPredictedOut
 }
 wetlabPredictedOutSum <- wetlabPredictedOutSum[-c(1:2),]
 return(wetlabPredictedOutSum)

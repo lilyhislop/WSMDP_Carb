@@ -15,7 +15,7 @@ CarbDataFrameVis <- function(CarbDF, TitleQuality = ""){
   
   #endomutants 
   png(paste("Figures/WSMDP_AllNIRPred_",TitleQuality,"Starch_byEndo_Boxplot.png",sep=""), width = 750, height = 500)
-  dat.m <- melt(CarbDF, id.vars = "endo", measure.vars = c('Starch', 'WSP', 'Total.Polysaccharides') )
+  dat.m <- reshape2::melt(CarbDF, id.vars = "endo", measure.vars = c('Starch', 'WSP', 'Total.Polysaccharides') )
   
     p <- ggplot(dat.m) +
     geom_boxplot(aes(x = endo, y = value, color = variable))
@@ -24,7 +24,7 @@ CarbDataFrameVis <- function(CarbDF, TitleQuality = ""){
   
   
   png(paste("Figures/WSMDP_AllNIRPred_",TitleQuality,"Sugar_byEndo_Boxplot.png",sep=""), width = 1000, height = 500)
-  dat.m <- melt(CarbDF, id.vars = "endo", measure.vars = c('Glucose', 'Fructose', 'Sucrose', 'Total.Sugar') )
+  dat.m <- reshape2::melt(CarbDF, id.vars = "endo", measure.vars = c('Glucose', 'Fructose', 'Sucrose', 'Total.Sugar') )
   p <- ggplot(dat.m) +
     geom_boxplot(aes(x = endo, y = value, color = variable))
   print(p + labs(title = paste("Sugar Content by Endosperm Type",TitleQuality)) + xlab("Endosperm Mutant") + ylab("Percentage of Kernel"))
@@ -32,7 +32,7 @@ CarbDataFrameVis <- function(CarbDF, TitleQuality = ""){
   
   ###environment
   png(paste("Figures/WSMDP_AllNIRPred_",TitleQuality,"Starch_byEnvi_Boxplot.png",sep=""), width = 750, height = 500)
-  dat.m <- melt(CarbDF, id.vars = "Envi", measure.vars = c('Starch', 'WSP', 'Total.Polysaccharides') )
+  dat.m <- reshape2::melt(CarbDF, id.vars = "Envi", measure.vars = c('Starch', 'WSP', 'Total.Polysaccharides') )
   
   p <- ggplot(dat.m) +
     geom_boxplot(aes(x = Envi, y = value, color = variable))
@@ -40,7 +40,7 @@ CarbDataFrameVis <- function(CarbDF, TitleQuality = ""){
   dev.off()
   
   png(paste("Figures/WSMDP_AllNIRPred_",TitleQuality,"Sugar_byEnvi_Boxplot.png",sep=""), width = 1000, height = 500)
-  dat.m <- melt(CarbDF, id.vars = "Envi", measure.vars = c('Glucose', 'Fructose', 'Sucrose', 'Total.Sugar') )
+  dat.m <- reshape2::melt(CarbDF, id.vars = "Envi", measure.vars = c('Glucose', 'Fructose', 'Sucrose', 'Total.Sugar') )
   p <- ggplot(dat.m) +
     geom_boxplot(aes(x = Envi, y = value, color = variable))
   print(p + labs(title = paste("Sugar Content by Environment",TitleQuality)) + xlab("Enviroment") + ylab("Percentage of Kernel"))

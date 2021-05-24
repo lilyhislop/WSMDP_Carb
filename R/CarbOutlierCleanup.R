@@ -24,7 +24,11 @@ CarbOutlierCleanup <- function(CarbDataFrame,DFType = NA, alpha = 0.05){
     ProbSamples <- rbind(ProbSamples,out)
     return(ProbSamples)
   }
-  
+##### Remove samples with incorrect rep types
+BadRepPos <- which(CarbDataFrame$SampleRep > 4 )
+print(paste("The Sample Replicate number above 4 mean it was taken after fresh harvest time. Remove all of these sample.", length(BadRepPos), "samples removed."))
+CarbDataFrame <- CarbDataFrame[-BadRepPos,]  
+
 ##########Iterate through Carb lower Outliers First##########
 Carbs <- c("Starch","Total.Polysaccharides", "WSP","Glucose","Fructose","Sucrose","Total.Sugar")
 for(c in 1:length(Carbs)){
@@ -209,5 +213,6 @@ Carbs <- c("Starch","Total.Polysaccharides", "WSP","Glucose","Fructose","Sucrose
 colnames(ProbSamples) <- c("Position", colnames(CarbDataFrame[PosOutliers[i],Subset]),"Edit")
 write.csv(file = paste("Data/OutputtedData/EdittedSampleRecords_",DFType,".csv",sep = ""),ProbSamples)
 sink()
+
 return(CarbDataFrame)
 }

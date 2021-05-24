@@ -1,32 +1,8 @@
 GWASPolyVis <- function(GWASPolyRunVersion,trait,data3,filename,adendum){
   visfileprefix <- paste0("Figures/GWASpoly/WSMDP_Carb_GWASpoly_",filename,"_",adendum,"_",GWASPolyRunVersion,"_",trait)
-  #look at the QQplots for each tested model
-  # QQplotfile <- paste(visfileprefix,"_QQplot.png", sep = "")
-  # png(QQplotfile)
-  # print({
-  #   par(mfrow=c(2,1))
-  # models <- c("additive","general")#,"1-dom-alt-alt","1-dom-alt-ref","1-dom-ref-alt","1-dom-ref-ref")
-  # #ONE TRAIT AT A TIME
-  # for (i in 1:2) {
-  #   qq.plot(data3,trait=trait,model=models[i])
-  # }
-  # 
-  #    })
-  # dev.off()
-  # 
-  # QQplotfile <- paste(visfileprefix,"_QQplot_Additive.png", sep = "")
-  # png(QQplotfile)
-  # print({
-  # par(mfrow=c(1,1))
-  # models <- c("additive","general")#,"1-dom-alt-alt","1-dom-alt-ref","1-dom-ref-alt","1-dom-ref-ref")
-  # qq.plot(data3,trait=trait,model=models[1])
-  # 
-  # # })
-  # dev.off()
   
   QQplotfile <- paste(visfileprefix,"_QQplot_General.png", sep = "")
   png(QQplotfile)
-  
   #,"1-dom-alt-alt","1-dom-alt-ref","1-dom-ref-alt","1-dom-ref-ref")
   qq.plot(data3,trait=trait,model="general")
   dev.off()
