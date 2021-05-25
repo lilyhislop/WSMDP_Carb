@@ -7,7 +7,7 @@ GWASPolyVis <- function(GWASPolyRunVersion,trait,data3,filename,adendum){
   qq.plot(data3,trait=trait,model="general")
   dev.off()
   
-  data4 <- set.threshold(data3,method="permute",level=0.05)
+  data4 <- set.threshold(data3,method="FDR",level=0.05)
   #Here's the QTLS found
   print(get.QTL(data4))
   

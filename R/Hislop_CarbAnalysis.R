@@ -273,11 +273,11 @@ write.csv(NFValWLdfJEqnStatsR, "Data/OutputtedData/EqnFitStatisticsValidationNF_
 ##########Linear Model Analysis!##########
 head(CleanedInfoWF)
 
-# Which model is best? function
+########## Which model is best? function ########
 ModelCheck <- function(DF){
   bestAIC <- 10000000
   bestModel <- "Test"
-# first, lets clean up the data so its readable and good
+########## first, lets clean up the data so its readable and good ########
 DFSubset <- subset(DF, !is.na(IsExperimental))
 str(DFSubset)
 colnames(DFSubset)
@@ -291,61 +291,70 @@ DFSubset$block <- as.factor(DFSubset$block)
 DFSubset$Rep <- as.factor(DFSubset$Rep)
 DFSubset$PlotNum <- as.factor(DFSubset$PlotNum)
 
+########## Compare Many model options to eachother ########
 # Firstmodel: Most basic
-
+formula <- paste0(carb,)
 # ModelA
 # G, E, GxE, row and column in environment
 #with block, superblock as stand alone fixed effects, envi as random
-modelA <- lmer(Total.Sugar ~ Check + (1|Variety) + Envi + (1|Envi/Row) + (1|Envi/Col),data=DFSubset, REML = TRUE)
+formulaA <- paste0(carb,"~ Check + (1|Variety) + Envi + (1|Envi/Row) + (1|Envi/Col)")
+modelA <- lmer(formulaA,data=DFSubset, REML = TRUE)
 AIC(modelA)
 if(AIC(modelA) < bestAIC){bestAIC = AIC(modelA)
 bestModel = "A"}
 
 # ModelB
 #with block, superblock, row, column as stand alone fixed effects, envi as random
-modelB <- lmer(Total.Sugar ~ Check + (1|Variety) + (1|Variety:Envi) + (1|Envi) + superblock + Row + Col + block, data=DFSubset, REML = TRUE)
+formulaB <- paste0(carb,"~ Check + (1|Variety) + (1|Variety:Envi) + (1|Envi) + superblock + Row + Col + block")
+modelB <- lmer(formulaB , data=DFSubset, REML = TRUE)
 AIC(modelB)
 if(AIC(modelB) < bestAIC){bestAIC = AIC(modelB)
 bestModel = "B"}
 
 # ModelC
 #with block, superblock as stand alone fixed effects, envi as random
-modelC <- lmer(Total.Sugar ~ Check + (1|Variety) + (1|Variety:Envi) + (1|Envi) + superblock + block, data=DFSubset, REML = TRUE)
+formulaC <- paste0(carb," ~ Check + (1|Variety) + (1|Variety:Envi) + (1|Envi) + superblock + block")
+modelC <- lmer(formulaC, data=DFSubset, REML = TRUE)
 AIC(modelC)
 if(AIC(modelC) < bestAIC){bestAIC = AIC(modelC)
 bestModel = "C"}
 
 # Model D
 #with block, superblock, row, column as stand alone fixed effects, envi as random
-modelD <- lmer(Total.Sugar ~ Check + (1|Variety) + (1|Variety:Envi) + (1|Envi) + superblock + Row + Col + block, data=DFSubset, REML = TRUE)
+formulaD <- paste0(carb," ~ Check + (1|Variety) + (1|Variety:Envi) + (1|Envi) + superblock + Row + Col + block")
+modelD <- lmer(formulaD, data=DFSubset, REML = TRUE)
 AIC(modelD)
 if(AIC(modelD) < bestAIC){bestAIC = AIC(modelD)
 bestModel = "D"}
 
 # Model E
 #with block, superblock, row,  as stand alone fixed effects, envi as random
-modelE <- lmer(Total.Sugar ~ Check + (1|Variety) + (1|Variety:Envi) + (1|Envi) + superblock + Row +  block, data=DFSubset, REML = TRUE)
+formulaE <- paste0(carb,"~ Check + (1|Variety) + (1|Variety:Envi) + (1|Envi) + superblock + Row +  block")
+modelE <- lmer(formulaE , data=DFSubset, REML = TRUE)
 AIC(modelE)
 if(AIC(modelE) < bestAIC){bestAIC = AIC(modelE)
 bestModel = "E"}
 
 # Model F
 #with block, superblock, row, column  effects and envi all as random
-modelF <- lmer(Total.Sugar ~ Check + (1|Variety) + (1|Variety:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col) , data=DFSubset, REML = TRUE)
+formulaF <- paste0(carb,"~ Check + (1|Variety) + (1|Variety:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col) ")
+modelF <- lmer(formulaF , data=DFSubset, REML = TRUE)
 AIC(modelF)
 if(AIC(modelF) < bestAIC){bestAIC = AIC(modelF)
 bestModel = "F"}
 
 # Model G
 #with block, superblock nested random effect
-modelG <- lmer(Total.Sugar ~ Check + (1|Variety) + (1|Variety:Envi) + (1|Envi/superblock/block), data=DFSubset, REML = TRUE)
+formulaG <- paste0(carb,"~ Check + (1|Variety) + (1|Variety:Envi) + (1|Envi/superblock/block)")
+modelG <- lmer(formulaG , data=DFSubset, REML = TRUE)
 AIC(modelG)
 if(AIC(modelG) < bestAIC){bestAIC = AIC(modelG)
 bestModel = "G"}
 
 # Model H
-#model worked out with raegan
-modelH<- lmer(Total.Sugar ~  (1|superblock:Variety) + (1+Envi|Variety) + (1|superblock/block), 
+#model worked out with raegan\
+formulaH <- paste0(carb,"~  (1|superblock:Variety) + (1+Envi|Variety) + (1|superblock/block)")
+modelH<- lmer(formulaH , 
                 data=DFSubset, REML = TRUE)
 AIC(modelH)
 if(AIC(modelH) < bestAIC){bestAIC = AIC(modelH)
@@ -353,7 +362,8 @@ bestModel = "H"}
 
 # Model J
 #model worked out with raegan
-modelJ<- lmer(Total.Sugar ~  Check + (1|Variety) + (1|Variety:Envi) + superblock + (1|Envi/superblock/block), 
+formulaJ <- paste0(carb,"~  Check + (1|Variety) + (1|Variety:Envi) + superblock + (1|Envi/superblock/block)")
+modelJ<- lmer(formulaJ , 
               data=DFSubset, REML = TRUE)
 AIC(modelJ)
 if(AIC(modelJ) < bestAIC){bestAIC = AIC(modelJ)
@@ -361,14 +371,16 @@ bestModel = "J"}
 
 # Model I
 #model worked out with raegan
-modelI<- lmer(Total.Sugar ~  Check + (1|Envi/Variety) + (1|superblock) + (1|superblock:Envi) + (1|Envi/block), 
+formulaI <- paste0(carb," ~  Check + (1|Envi/Variety) + (1|superblock) + (1|superblock:Envi) + (1|Envi/block)")
+modelI<- lmer(formulaI, 
               data=DFSubset, REML = TRUE)
 AIC(modelI)
 if(AIC(modelI) < bestAIC){bestAIC = AIC(modelI)
 bestModel = "I"}
 
-# Model K. This is the one from the stats adviser
-modelK<- lmer(Total.Sugar ~  Check + Envi + (1|Envi:Variety) + (1|superblock/Variety) + superblock + (1|superblock/block), 
+# Model K. This is the one from the stats adviser\formula <- paste0(carb,)
+formulaK <- paste0(carb,"~  Check + Envi + (1|Envi:Variety) + (1|superblock/Variety) + superblock + (1|superblock/block)")
+modelK<- lmer(formulaK , 
               data=DFSubset, REML = TRUE)
 AIC(modelK)
 if(AIC(modelK) < bestAIC){bestAIC = AIC(modelK)
@@ -379,9 +391,9 @@ return(bestModel)
 }
 
 
-
-ModelCheck(CleanedInfoWF)
-ModelCheck(CleanedInfoNF)
+######## What are the mlm best models for the two datasets? #######
+ModelCheck(CleanedInfoWF, carb)
+ModelCheck(CleanedInfoNF, carb)
 
 # best model is B
 modelB <- lmer(Total.Sugar ~ Check + (1|Variety) + (1|Variety:Envi) + (1|Envi) + superblock + Row + Col + block, data=CleanedInfoWF, REML = TRUE)
@@ -404,7 +416,7 @@ qqnorm(residuals(modelBaseggio))
 
 anova(modelBaseggio, modelB)
 
-#ok, lets go with matts model
+####### ok, lets go with matts model #######
 
 
 #establish dataframe to store variances from each factor
@@ -413,13 +425,13 @@ VarDF <- data.frame("Carb" = colnames(CleanedInfoWF)[5:11],"Variety" = rep(NA,7)
 #for each carb version, look what factors are incluencing the variation
 for(i in 1:7){
   #formula is carb ~ Gene + Envi + Gene*Envi + rep + endosperm type + error. Should add block in as well 
-  formula1 <- paste(colnames(CleanedInfoWF)[i+4],"~ Variety*Envi + Rep + endo")
-  fit1 <- lm(formula1,data=CleanedInfoWF)
-AIC1 <- extractAIC(modelBaseggio)
+formula1 <- paste0(colnames(CleanedInfoWF)[i+4],"~ Variety*Envi + block%in%Envi + superblock%in%Envi + Row%in%Envi+ Col%in%Envi")
+fit1 <- lm(formula1,data=CleanedInfoWF)
+AIC1 <- extractAIC(fit1)
 AIC1
-summary(modelBaseggio)$r.square
-print(anova(modelBaseggio))
-out <- anova(modelBaseggio)
+summary(fit1)$r.square
+print(anova(fit1))
+out <- anova(fit1)
 SStotal <- sum(out$`Sum Sq`)
 for(j in 1:6){
   #variance explained is caluclated by the sum of squares divided by the sum of squares total
