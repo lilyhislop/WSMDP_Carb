@@ -470,10 +470,39 @@ qqnorm(residuals(modelBaseggio))
 
 anova(modelBaseggio, bestModel)
 
-# ####### stepwise model selection
-# lmMod <- lm(WSP ~ ., data = CleanedInfoWF, na.action = na.exclude)
-# selectedMod <- step(lmMod)
-# summary(selectedMod)
+#########################
+###Baseggio model with endosperm beforehand###
+#########################
+endotypes <- c("aeduwx","field","su1","sh2","sh2i","se")
+# for(endo in endotypes){
+  CleanedInfoWFae <- CleanedInfoWF[which(CleanedInfoWF$endo == "aeduwx"),]
+  CleanedInfoWFF <- CleanedInfoWF[which(CleanedInfoWF$endo == "field"),]
+  CleanedInfoWFse <- CleanedInfoWF[which(CleanedInfoWF$endo == "se"),]
+  CleanedInfoWFsh2 <- CleanedInfoWF[which(CleanedInfoWF$endo == "sh2"),]
+  CleanedInfoWFsh2i <- CleanedInfoWF[which(CleanedInfoWF$endo == "sh2i"),]
+  CleanedInfoWFsu1 <- CleanedInfoWF[which(CleanedInfoWF$endo == "su1"),]
+# }
+  modelBaseggiosu1 <- lmer(Total.Sugar ~ Check + (1|Envi/superblock/block) + (1|Variety) + (1|Variety:Envi) + (1|Envi:Row) + (1|Envi:Col),
+                        data=CleanedInfoWFsu1, REML = TRUE)
+  summary(modelBaseggiosu1)
+
+modelBaseggio <- lmer(Total.Sugar ~ Check + (1|Envi/superblock/block) + (1|Variety) + (1|Variety:Envi) + (1|Envi:Row) + (1|Envi:Col), data=CleanedInfoWF, REML = TRUE)
+AIC(modelBaseggio)
+summary(modelBaseggio)
+plot(modelBaseggio)
+qqmath(ranef(modelBaseggio, condVar=TRUE))
+#looks pretty ok, probably don't need tranformation
+qqnorm(residuals(modelBaseggio))
+
+#endo
+modelJustEndo <- lm(Total.Sugar ~ endo, data=CleanedInfoWF)
+AIC(modelJustEndo)
+summary(modelJustEndo)
+anova(modelJustEndo)
+
+
+
+
 
 #########################
 ###Linear Model Assumptions###
@@ -551,11 +580,13 @@ summary(modelBaseggio)
 #########################
 ###Finding the means###
 #########################
+####NOT WORKING! WHY NOT#####
 formulaL <- paste0("WSP ~ endo + superblock%in%block%in%Envi + superblock%in%Envi+ Variety*Envi ")
 fitL <- lm(formulaL,data=CleanedInfoWF)
 CleanedInfoWFMeans <- emmeans(fitL, ~ Envi:Variety)
 
 CleanedDF <- CarbOutlierCleanup(HWSPs,"HWSPs",alpha = 0.05)
+CleanedDF$Envi <- paste(CleanedDF$Year,CleanedDF$Location)
 fitL_HWPs <- lm(formulaL,data=CleanedDF)
 CleanedInfoHWPsMeans <- emmeans(fitL_HWPs, ~Envi:Variety)
 #########################
@@ -605,3 +636,66 @@ system.time(
     GWASPolyRunner(myYWFmerged,geno_scmv,carb,"EndoEnviFixedEffect_FDRThresh_20210526","SeqB","WFMeaned",c("Envi","endo.x"),c("factor","factor"))
   }
 )
+#########################
+###GapitKinship Matrix###
+#########################
+#####Altered from Baseggio's code GWAS_sweet_toco_univ_withcovariate_20180202.R
+### Genotypes
+setwd("C:/Users/LHislop/Documents/GitHub/WSMDP_Carb")
+path.to.res <- "C:/Users/LHislop/Documents/GitHub/WSMDP_Carb/Data/OutputtedData/GapitOut/"
+
+nbtraits <- 7
+# pheno <- read.table('sweetcorn_toco384_nodent_noHi_NA_20180715.txt', header=T, sep="\t", colClasses=c('factor',rep('numeric', nbtraits)), as.is=T)
+nlines <- nrow(myYWFmerged)
+
+geno <- read.table("Data/RawData/WSMDP_SCMV_SeqB.hmp.txt", header=FALSE, sep = "\t")
+str(geno)
+colnames(geno)<-gsub(colnames(geno), pattern = ":.*", replacement = "")
+str(geno)
+setwd(path.to.res)
+
+kin.alg <- "VanRaden"
+res <- GAPIT( G = geno_scmv, kinship.cluster = c("average"), kinship.group = c("Mean"), kinship.algorithm = kin.alg,SNP.impute = "Middle", Major.allele.zero = TRUE)
+
+
+############################################
+####### Run GWAS for TOCOCHROMANOLS ########
+############################################
+
+## Read the files
+# setwd("/local/workdir/mb2446/GWAS/")
+
+
+covariates <- rbind.data.frame(c('Starch','Starch'),
+                               c('Total.Polysaccharides','Total.Polysaccharides'),
+                               c('WSP','WSP'),
+                               c('Glucose','Glucose'),
+                               c('Fructose','Fructose'),
+                               c('Sucrose','Sucrose'),
+                               c('Total.Sugar','Total.Sugar'))
+colnames(covariates) <- c('trait','snp')
+
+# geno <- read.delim('sweet_parimp_toco384_174K.hmp.txt', header=FALSE, sep='\t')
+
+nbtraits <- 7
+# pheno <- read.table('sweetcorn_toco384_nodent_noHi_NA_20180715.txt', header=T, sep="\t", colClasses=c('factor',rep('numeric', nbtraits)), as.is=T)
+
+# path.to.res <- "/local/workdir/mb2446/GWAS/Univariate/Toco/0PC.2yr.K11.174K.384taxa.middle.na.KernelType.20180715/"
+
+# parent.dir <- "/local/workdir/mb2446/GWAS/"
+pheno <- myYWFmerged
+
+
+for (i in seq(1,7)) {
+    #### Current trait ####
+    curr.trait <- colnames(pheno[ (1 + i) ])
+    # curr.trait <- as.character(covariates[i,1])
+    # system(paste('mkdir -p ', path.to.res, curr.trait, sep=''))
+    setwd(paste(path.to.res, curr.trait, sep=''))
+    j <- which(colnames(pheno)==curr.trait)
+    curr.pheno = pheno[,c(1,j)]
+    #### User input Kinship
+    myKI <- read.table(paste(path.to.res, '/GAPIT.Kin.VanRaden.csv', sep=''), header=FALSE, sep=',')
+    # myCV <- read.table(paste('/local/workdir/mb2446/GWAS/Covariates/KernelType.txt', sep=''), header=T, sep='\t')
+    res <- GAPIT( Y = curr.pheno, G = geno_scmv, KI=myKI, PCA.total=3, plot.style="Ocean")
+  }
