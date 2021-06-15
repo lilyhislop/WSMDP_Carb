@@ -513,6 +513,36 @@ write.csv(h2DF, file=paste0("Data/OutputtedData/h2_ALLCarb.txt"), append=FALSE)
 str(unique(CleanedInfoWF$Samples))
 #Number of varieties included
 str(unique(CleanedInfoWF$Variety))
+#   modelBaseggiosu1 <- lmer(Total.Sugar ~ Check + (1|Envi/superblock/block) + (1|Variety) + (1|Variety:Envi) + (1|Envi:Row) + (1|Envi:Col),
+#                         data=CleanedInfoWFsu1, REML = TRUE)
+#   summary(modelBaseggiosu1)
+# 
+# modelBaseggio <- lmer(Total.Sugar ~ Check + (1|Envi/superblock/block) + (1|Variety) + (1|Variety:Envi) + (1|Envi:Row) + (1|Envi:Col), data=CleanedInfoWF, REML = TRUE)
+# AIC(modelBaseggio)
+# summary(modelBaseggio)
+# plot(modelBaseggio)
+# qqmath(ranef(modelBaseggio, condVar=TRUE))
+# #looks pretty ok, probably don't need tranformation
+# qqnorm(residuals(modelBaseggio))
+# 
+# #endo
+# modelJustEndo <- lm(Total.Sugar ~ endo, data=CleanedInfoWF)
+# AIC(modelJustEndo)
+# summary(modelJustEndo)
+# anova(modelJustEndo)
+
+
+#########################
+###Linear Model Assumptions###
+#########################
+
+
+# residual error effect assumed to be independent and identically distributed according to a normal distribution with a mean of zero and variance
+# bestModel
+# plot(bestModel)
+# qqmath(ranef(bestModel, condVar=TRUE))
+# qqnorm(residuals(bestModel))
+# anova(bestModel)
 
 ########Plot Correlations########
 justthebitsNF <- CleanedInfoNF[5:11]
@@ -524,6 +554,33 @@ justthebitsWF <- CleanedInfoWF[5:11]
 png(paste("Figures/WSMDP_AllNIRPred_MixedEqn_CorrelationfromPSYCH_WithField.png",sep=""), width = 500, height = 500)
 pairs.panels(justthebitsWF, scale = TRUE)
 dev.off()
+
+VarDF <- data.frame("Carb" = colnames(CleanedInfoWF)[5:11],"endo" = rep(NA,7),"Variety" = rep(NA,7),"Envi" = rep(NA,7), "superblock" = rep(NA,7), "Variety:Envi" = rep(NA,7), "block" = rep(NA,7), "Residuals"= rep(NA,7))
+#for each carb version, look what factors are incluencing the variation
+for(i in 1:7){
+  #formula is carb ~ Gene + Envi + Gene*Envi + rep + endosperm type + error. Should add block in as well 
+  formula1 <- paste0(colnames(CleanedInfoWF)[i+4],"~ endo + superblock%in%block%in%Envi + superblock%in%Envi+ Variety*Envi ")
+  fit1 <- lm(formula1,data=CleanedInfoWF)
+  AIC1 <- extractAIC(fit1)
+  AIC1
+  summary(fit1)$r.square
+  print(anova(fit1))
+  out <- anova(fit1)
+  SStotal <- sum(out$`Sum Sq`)
+  for(j in 1:6){
+    #variance explained is caluclated by the sum of squares divided by the sum of squares total
+    VarDF[i,j+1] <- (out$`Sum Sq`[j]/SStotal)}
+}
+VarDFMelt <- melt(VarDF)
+
+
+#######Graph the different variances explained by different factors######
+png(paste("Figures/WSMDP_AllNIRPred_MixedEqn_PercentVarianceExplainedby_Factors_WithField.png",sep=""), width = 1000, height = 500)
+barchart(~value|variable, group = factor(Carb), data= VarDFMelt,reverse.rows = TRUE,main = "Percent Phenotypic Variance Explained",layout = c(6,1),
+         key = simpleKey(text = colnames(CleanedInfoWF)[5:11],
+                         rectangles = TRUE, points = FALSE, space = "right"))
+dev.off()
+
 
 
 ########GWAS ZONE##########

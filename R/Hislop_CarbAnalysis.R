@@ -40,9 +40,11 @@ source("http://zzlab.net/FarmCPU/FarmCPU_functions.txt")
 library("devtools")#for intsalling from github
 install_github("jendelman/GWASpoly")
 library(GWASpoly)#for running Gwas
-library("bigmemory") #to make a matrix big
+# library("bigmemory") #to make a matrix big
 # library(rrBLUP)
 library(emmeans)
+library(bigmemory)
+
 
 getwd()
 setwd("C:/Users/LHislop/Documents/GitHub/WSMDP_Carb")
@@ -473,48 +475,55 @@ anova(modelBaseggio, bestModel)
 #########################
 ###Baseggio model with endosperm beforehand###
 #########################
-endotypes <- c("aeduwx","field","su1","sh2","sh2i","se")
-# for(endo in endotypes){
-  CleanedInfoWFae <- CleanedInfoWF[which(CleanedInfoWF$endo == "aeduwx"),]
-  CleanedInfoWFF <- CleanedInfoWF[which(CleanedInfoWF$endo == "field"),]
-  CleanedInfoWFse <- CleanedInfoWF[which(CleanedInfoWF$endo == "se"),]
-  CleanedInfoWFsh2 <- CleanedInfoWF[which(CleanedInfoWF$endo == "sh2"),]
-  CleanedInfoWFsh2i <- CleanedInfoWF[which(CleanedInfoWF$endo == "sh2i"),]
-  CleanedInfoWFsu1 <- CleanedInfoWF[which(CleanedInfoWF$endo == "su1"),]
-# }
-  modelBaseggiosu1 <- lmer(Total.Sugar ~ Check + (1|Envi/superblock/block) + (1|Variety) + (1|Variety:Envi) + (1|Envi:Row) + (1|Envi:Col),
-                        data=CleanedInfoWFsu1, REML = TRUE)
-  summary(modelBaseggiosu1)
+# endoseparatedmodels
 
-modelBaseggio <- lmer(Total.Sugar ~ Check + (1|Envi/superblock/block) + (1|Variety) + (1|Variety:Envi) + (1|Envi:Row) + (1|Envi:Col), data=CleanedInfoWF, REML = TRUE)
-AIC(modelBaseggio)
-summary(modelBaseggio)
-plot(modelBaseggio)
-qqmath(ranef(modelBaseggio, condVar=TRUE))
-#looks pretty ok, probably don't need tranformation
-qqnorm(residuals(modelBaseggio))
+# Can't get models to work for whatever reason. Ug. Frustrated and annoyed. Error in model.frame.default(data = CleanedInfoWFendo, drop.unused.levels = TRUE,  : 
+#   variable lengths differ (found for 'Envi')
 
-#endo
-modelJustEndo <- lm(Total.Sugar ~ endo, data=CleanedInfoWF)
-AIC(modelJustEndo)
-summary(modelJustEndo)
-anova(modelJustEndo)
+CleanedInfoWF$superblock <- as.factor(CleanedInfoWF$superblock)
+CleanedInfoWF$Col <- as.factor(CleanedInfoWF$Col)
+CleanedInfoWF$Row <- as.factor(CleanedInfoWF$Row)
+CleanedInfoWF$Year <- as.factor(CleanedInfoWF$Year)
+CleanedInfoWF$Envi <- as.factor(CleanedInfoWF$Envi)
+CleanedInfoWF$Check <- as.factor(CleanedInfoWF$Check)
+CleanedInfoWF$block <- as.factor(CleanedInfoWF$block)
+CleanedInfoWF$Rep <- as.factor(CleanedInfoWF$Rep)
+CleanedInfoWF$endo <- as.factor(CleanedInfoWF$endo)
+CleanedInfoWF$PlotNum <- as.factor(CleanedInfoWF$PlotNum)
+endotypes <- c("aeduwx","field","su1","sh2","sh2i","se",NA)
+# endotypes <- c("su1","sh2","sh2i","se", NA)
+carbs = colnames(CleanedInfoWF)[5:11]
+BLUPS <- data.frame("Variety" = NA)
+modelFEfvector <- matrix(data = NA, nrow = 7, ncol = 7)
+modelREfvectorBLUPS <- matrix(data = NA, nrow = 7, ncol = 7)
+for(i in 1:length(endotypes)){
+  for(j in 1:length(carbs)){
+  endo <- endotypes[i]
+  if(i<7){CleanedInfoWFendo <- CleanedInfoWF[which(CleanedInfoWF$endo == endo ),]}
+  if(i == 7 ){CleanedInfoWFendo <- CleanedInfoWF[which(is.na(CleanedInfoWF$endo)),] }
+
+  CleanedInfoWFendo <- CleanedInfoWFendo[which(!is.na(CleanedInfoWFendo[j+4])),]
+  modelpastecheck<-  paste0(carbs[j], " ~ Check + (1|Envi/superblock/block) + (1|BookInbred) + (1|BookInbred:Envi) + (1|Envi:Row) + (1|Envi:Col)")
+  modelpastenocheck<-  paste0(carbs[j], " ~ (1|Envi/superblock/block) + (1|BookInbred) + (1|BookInbred:Envi) + (1|Envi:Row) + (1|Envi:Col)")
+
+  if((endo == "su1" || endo == "se") && !is.na(endo)){
+  model <- lmer(modelpastecheck,
+                           data=CleanedInfoWFendo, REML = TRUE)}
+  if((endo != "su1" && endo != "se") || is.na(endo)){
+  model <- lmer(modelpastenocheck,
+                            data=CleanedInfoWFendo, REML = TRUE)
+  }
+  modelFEfvector[i][j] <- fixef(model)
+  randomeffects <- ranef(model)
+  modelREfvectorBLUPS[i][j] <- randomeffects$BookInbred
+  blupHolder <- data.frame(rownames(randomeffects$BookInbred),randomeffects$BookInbred)
+  colnames(blupHolder) <- c("Variety",carb)
+  
+  }
+}
 
 
 
-
-
-#########################
-###Linear Model Assumptions###
-#########################
-
-
-# residual error effect assumed to be independent and identically distributed according to a normal distribution with a mean of zero and variance
-bestModel
-plot(bestModel)
-qqmath(ranef(bestModel, condVar=TRUE))
-qqnorm(residuals(bestModel))
-anova(bestModel)
 
 
 #########################
@@ -541,39 +550,8 @@ vc <- as.data.frame(vc)
 broadH <- vc$vcov[which(vc$grp=="Variety")]/(vc$vcov[which(vc$grp=="Variety")]+vc$vcov[which(vc$grp=="Residual")]/2)
 
 
-VarDF <- data.frame("Carb" = colnames(CleanedInfoWF)[5:11],"endo" = rep(NA,7),"Variety" = rep(NA,7),"Envi" = rep(NA,7), "superblock" = rep(NA,7), "Variety:Envi" = rep(NA,7), "block" = rep(NA,7), "Residuals"= rep(NA,7))
-#for each carb version, look what factors are incluencing the variation
-for(i in 1:7){
-  #formula is carb ~ Gene + Envi + Gene*Envi + rep + endosperm type + error. Should add block in as well 
-  formula1 <- paste0(colnames(CleanedInfoWF)[i+4],"~ endo + superblock%in%block%in%Envi + superblock%in%Envi+ Variety*Envi ")
-  fit1 <- lm(formula1,data=CleanedInfoWF)
-  AIC1 <- extractAIC(fit1)
-  AIC1
-  summary(fit1)$r.square
-  print(anova(fit1))
-  out <- anova(fit1)
-  SStotal <- sum(out$`Sum Sq`)
-  for(j in 1:6){
-    #variance explained is caluclated by the sum of squares divided by the sum of squares total
-    VarDF[i,j+1] <- (out$`Sum Sq`[j]/SStotal)}
-}
-VarDFMelt <- melt(VarDF)
 
 
-#######Graph the different variances explained by different factors######
-png(paste("Figures/WSMDP_AllNIRPred_MixedEqn_PercentVarianceExplainedby_Factors_WithField.png",sep=""), width = 1000, height = 500)
-barchart(~value|variable, group = factor(Carb), data= VarDFMelt,reverse.rows = TRUE,main = "Percent Phenotypic Variance Explained",layout = c(6,1),
-         key = simpleKey(text = colnames(CleanedInfoWF)[5:11],
-                         rectangles = TRUE, points = FALSE, space = "right"))
-dev.off()
-
-
-
-
-
-######Assumptions#####
-aov(fit1)
-summary(modelBaseggio)
 
 
 
@@ -589,21 +567,22 @@ CleanedDF <- CarbOutlierCleanup(HWSPs,"HWSPs",alpha = 0.05)
 CleanedDF$Envi <- paste(CleanedDF$Year,CleanedDF$Location)
 fitL_HWPs <- lm(formulaL,data=CleanedDF)
 CleanedInfoHWPsMeans <- emmeans(fitL_HWPs, ~Envi:Variety)
+
+
 #########################
 ###Genomic Info###
 #########################
 genoinfo <- read.csv("Data/WSMDP_Inbreds.txt",head = FALSE)
 colnames(genoinfo) <- c("Variety","","","","","","","GenoName","source","endo","notes","Region","Program")
-myG <- read.delim("Data/RawData/WSMDP_SCMV_SeqE.hmp.txt", head = FALSE)
-myGnames <- myG[1,]
-myGnames<-gsub(myGnames, pattern = ":.*", replacement = "")
-myG[1,] <- myGnames
+# myG <- read.delim("Data/RawData/WSMDP_SCMV_SeqE.hmp.txt", head = FALSE)
+# myGnames <- myG[1,]
+# myGnames<-gsub(myGnames, pattern = ":.*", replacement = "")
+# myG[1,] <- myGnames
 
-#read in genetic info post MAF and LD pruning. Pruning done by SNPrelate package. Outputted previously as a plink format, converted to Hapmap by tassel and read back in
+#read in genetic info post MAF 
 hmppath <- "Data/RawData/WSMDP_SCMV_SeqB.hmp.txt"
 SCMV_geno <- fread(hmppath,skip = "rs#")
 geno_scmv <- SCMV_geno
-
 str(geno_scmv)
 colnames(geno_scmv)<-gsub(colnames(geno_scmv), pattern = ":.*", replacement = "")
 str(geno_scmv)
