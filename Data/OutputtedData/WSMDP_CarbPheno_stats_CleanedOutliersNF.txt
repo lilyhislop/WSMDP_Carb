@@ -1,0 +1,572 @@
+Phenotypic Statistics for the Carbohydrates of CleanedOutliersNF Through Mixed Linear Modeling.
+     Starch      
+ Min.   :-3.169  
+ 1st Qu.:10.147  
+ Median :14.527  
+ Mean   :14.764  
+ 3rd Qu.:18.748  
+ Max.   :56.948  
+ NA's   :13      
+Starch ~ Check + (1|BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)
+Linear mixed model fit by REML ['lmerMod']
+Formula: Starch ~ Check + (1 | BookInbred) + (1 | BookInbred:Envi) + (1 |      Envi/superblock/block) + (1 | Envi:Row) + (1 | Envi:Col)
+   Data: SampleDFtoModel
+Control: strict_tol
+
+REML criterion at convergence: 21199.4
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-3.8996 -0.4983 -0.0518  0.4380  4.9347 
+
+Random effects:
+ Groups                  Name        Variance  Std.Dev. 
+ BookInbred:Envi         (Intercept) 5.897e+00 2.428e+00
+ BookInbred              (Intercept) 2.495e+01 4.995e+00
+ Envi:Col                (Intercept) 2.249e-02 1.500e-01
+ block:(superblock:Envi) (Intercept) 7.066e-09 8.406e-05
+ Envi:Row                (Intercept) 0.000e+00 0.000e+00
+ superblock:Envi         (Intercept) 4.750e-01 6.892e-01
+ Envi                    (Intercept) 4.599e+00 2.145e+00
+ Residual                            1.773e+01 4.211e+00
+Number of obs: 3436, groups:  
+BookInbred:Envi, 1481; BookInbred, 432; Envi:Col, 130; block:(superblock:Envi), 114; Envi:Row, 104; superblock:Envi, 12; Envi, 4
+
+Fixed effects:
+            Estimate Std. Error t value
+(Intercept)    6.964      5.308   1.312
+Check2         6.924      7.318   0.946
+Check3        10.798      7.321   1.475
+Check4         5.786      7.344   0.788
+Check99        8.063      5.202   1.550
+optimizer (nloptwrap) convergence code: 0 (OK)
+boundary (singular) fit: see ?isSingular
+
+[1] NA
+Model Comparison, with and without Endosperm Term
+Starch ~ Check + (1|endo/BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)
+Linear mixed model fit by REML ['lmerMod']
+Formula: Starch ~ Check + (1 | endo/BookInbred) + (1 | BookInbred:Envi) +  
+    (1 | Envi/superblock/block) + (1 | Envi:Row) + (1 | Envi:Col)
+   Data: SampleDFtoModel
+Control: strict_tol
+
+REML criterion at convergence: 19991.3
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-4.0032 -0.4994 -0.0442  0.4464  4.9354 
+
+Random effects:
+ Groups                  Name        Variance Std.Dev.
+ BookInbred:Envi         (Intercept)  6.26941 2.5039  
+ BookInbred:endo         (Intercept) 20.52104 4.5300  
+ Envi:Col                (Intercept)  0.04611 0.2147  
+ block:(superblock:Envi) (Intercept)  0.00000 0.0000  
+ Envi:Row                (Intercept)  0.00000 0.0000  
+ superblock:Envi         (Intercept)  0.51273 0.7161  
+ Envi                    (Intercept)  4.16391 2.0406  
+ endo                    (Intercept) 23.78583 4.8771  
+ Residual                            15.84279 3.9803  
+Number of obs: 3286, groups:  
+BookInbred:Envi, 1450; BookInbred:endo, 433; Envi:Col, 130; block:(superblock:Envi), 112; Envi:Row, 102; superblock:Envi, 12; Envi, 4; endo, 4
+
+Fixed effects:
+            Estimate Std. Error t value
+(Intercept)  13.4703     5.4923   2.453
+Check2       -0.4194     6.7615  -0.062
+Check3        3.5066     6.7635   0.518
+Check4       -1.4816     6.7873  -0.218
+Check99       0.9587     4.8393   0.198
+optimizer (nloptwrap) convergence code: 0 (OK)
+boundary (singular) fit: see ?isSingular
+
+ Total.Polysaccharides
+ Min.   : 0.00        
+ 1st Qu.:21.84        
+ Median :28.80        
+ Mean   :27.01        
+ 3rd Qu.:33.25        
+ Max.   :51.85        
+ NA's   :106          
+Total.Polysaccharides ~ Check + (1|BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)
+Linear mixed model fit by REML ['lmerMod']
+Formula: Total.Polysaccharides ~ Check + (1 | BookInbred) + (1 | BookInbred:Envi) +  
+    (1 | Envi/superblock/block) + (1 | Envi:Row) + (1 | Envi:Col)
+   Data: SampleDFtoModel
+Control: strict_tol
+
+REML criterion at convergence: 21029.3
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-5.1208 -0.5244  0.0083  0.4945  4.5377 
+
+Random effects:
+ Groups                  Name        Variance  Std.Dev. 
+ BookInbred:Envi         (Intercept) 2.815e+00 1.678e+00
+ BookInbred              (Intercept) 5.755e+01 7.586e+00
+ Envi:Col                (Intercept) 2.127e-09 4.611e-05
+ block:(superblock:Envi) (Intercept) 1.879e-01 4.334e-01
+ Envi:Row                (Intercept) 0.000e+00 0.000e+00
+ superblock:Envi         (Intercept) 1.119e-01 3.346e-01
+ Envi                    (Intercept) 1.358e+00 1.166e+00
+ Residual                            1.984e+01 4.454e+00
+Number of obs: 3343, groups:  
+BookInbred:Envi, 1462; BookInbred, 432; Envi:Col, 130; block:(superblock:Envi), 114; Envi:Row, 104; superblock:Envi, 12; Envi, 4
+
+Fixed effects:
+            Estimate Std. Error t value
+(Intercept)   17.637      7.698   2.291
+Check2        11.428     10.832   1.055
+Check3        13.353     10.833   1.233
+Check4        13.678     10.849   1.261
+Check99        8.801      7.685   1.145
+optimizer (nloptwrap) convergence code: 0 (OK)
+boundary (singular) fit: see ?isSingular
+
+[1] NA
+Model Comparison, with and without Endosperm Term
+Total.Polysaccharides ~ Check + (1|endo/BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)
+Linear mixed model fit by REML ['lmerMod']
+Formula: Total.Polysaccharides ~ Check + (1 | endo/BookInbred) + (1 |  
+    BookInbred:Envi) + (1 | Envi/superblock/block) + (1 | Envi:Row) +      (1 | Envi:Col)
+   Data: SampleDFtoModel
+Control: strict_tol
+
+REML criterion at convergence: 19625.6
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-5.2630 -0.5258  0.0059  0.4802  4.2120 
+
+Random effects:
+ Groups                  Name        Variance Std.Dev.
+ BookInbred:Envi         (Intercept)  3.1889  1.7857  
+ BookInbred:endo         (Intercept) 20.4414  4.5212  
+ Envi:Col                (Intercept)  0.0000  0.0000  
+ block:(superblock:Envi) (Intercept)  0.2503  0.5003  
+ Envi:Row                (Intercept)  0.0000  0.0000  
+ superblock:Envi         (Intercept)  0.2078  0.4558  
+ Envi                    (Intercept)  1.4453  1.2022  
+ endo                    (Intercept) 44.3039  6.6561  
+ Residual                            18.6584  4.3195  
+Number of obs: 3193, groups:  
+BookInbred:Envi, 1428; BookInbred:endo, 433; Envi:Col, 130; block:(superblock:Envi), 112; Envi:Row, 102; superblock:Envi, 12; Envi, 4; endo, 4
+
+Fixed effects:
+            Estimate Std. Error t value
+(Intercept)   15.958      5.819   2.742
+Check2         4.558      6.645   0.686
+Check3         6.524      6.646   0.982
+Check4         7.178      6.673   1.076
+Check99        5.605      4.763   1.177
+optimizer (nloptwrap) convergence code: 0 (OK)
+boundary (singular) fit: see ?isSingular
+
+      WSP        
+ Min.   :-4.242  
+ 1st Qu.: 6.738  
+ Median :13.711  
+ Mean   :12.547  
+ 3rd Qu.:18.195  
+ Max.   :35.101  
+ NA's   :90      
+WSP ~ Check + (1|BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)
+Linear mixed model fit by REML ['lmerMod']
+Formula: WSP ~ Check + (1 | BookInbred) + (1 | BookInbred:Envi) + (1 |      Envi/superblock/block) + (1 | Envi:Row) + (1 | Envi:Col)
+   Data: SampleDFtoModel
+Control: strict_tol
+
+REML criterion at convergence: 20940.7
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-3.5237 -0.5169 -0.0389  0.4906  3.9937 
+
+Random effects:
+ Groups                  Name        Variance  Std.Dev.
+ BookInbred:Envi         (Intercept)  2.583304 1.60727 
+ BookInbred              (Intercept) 41.074317 6.40892 
+ Envi:Col                (Intercept)  0.088512 0.29751 
+ block:(superblock:Envi) (Intercept)  0.375610 0.61287 
+ Envi:Row                (Intercept)  0.012960 0.11384 
+ superblock:Envi         (Intercept)  0.003216 0.05671 
+ Envi                    (Intercept)  1.353963 1.16360 
+ Residual                            19.409862 4.40566 
+Number of obs: 3359, groups:  
+BookInbred:Envi, 1464; BookInbred, 432; Envi:Col, 130; block:(superblock:Envi), 114; Envi:Row, 104; superblock:Envi, 12; Envi, 4
+
+Fixed effects:
+            Estimate Std. Error t value
+(Intercept)   10.662      6.533   1.632
+Check2         4.818      9.176   0.525
+Check3         2.117      9.177   0.231
+Check4         8.222      9.195   0.894
+Check99        1.290      6.514   0.198
+[1] NA
+Model Comparison, with and without Endosperm Term
+WSP ~ Check + (1|endo/BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)
+Linear mixed model fit by REML ['lmerMod']
+Formula: WSP ~ Check + (1 | endo/BookInbred) + (1 | BookInbred:Envi) +  
+    (1 | Envi/superblock/block) + (1 | Envi:Row) + (1 | Envi:Col)
+   Data: SampleDFtoModel
+Control: strict_tol
+
+REML criterion at convergence: 19319.4
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-3.4899 -0.4856  0.0321  0.4635  4.1157 
+
+Random effects:
+ Groups                  Name        Variance Std.Dev.
+ BookInbred:Envi         (Intercept)  2.76719 1.6635  
+ BookInbred:endo         (Intercept)  9.69004 3.1129  
+ Envi:Col                (Intercept)  0.15456 0.3931  
+ block:(superblock:Envi) (Intercept)  0.20280 0.4503  
+ Envi:Row                (Intercept)  0.14471 0.3804  
+ superblock:Envi         (Intercept)  0.04558 0.2135  
+ Envi                    (Intercept)  1.35095 1.1623  
+ endo                    (Intercept) 70.19855 8.3785  
+ Residual                            17.59743 4.1949  
+Number of obs: 3209, groups:  
+BookInbred:Envi, 1431; BookInbred:endo, 433; Envi:Col, 130; block:(superblock:Envi), 112; Envi:Row, 102; superblock:Envi, 12; Envi, 4; endo, 4
+
+Fixed effects:
+            Estimate Std. Error t value
+(Intercept)    3.277      5.398   0.607
+Check2         5.215      4.686   1.113
+Check3         2.485      4.688   0.530
+Check4         8.878      4.722   1.880
+Check99        4.818      3.375   1.428
+    Glucose       
+ Min.   : 0.3509  
+ 1st Qu.: 3.9003  
+ Median : 4.8881  
+ Mean   : 5.0769  
+ 3rd Qu.: 6.0372  
+ Max.   :12.9193  
+ NA's   :18       
+Glucose ~ Check + (1|BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)
+Linear mixed model fit by REML ['lmerMod']
+Formula: Glucose ~ Check + (1 | BookInbred) + (1 | BookInbred:Envi) +      (1 | Envi/superblock/block) + (1 | Envi:Row) + (1 | Envi:Col)
+   Data: SampleDFtoModel
+Control: strict_tol
+
+REML criterion at convergence: 11906.5
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-3.8996 -0.4974  0.0269  0.5396  3.9023 
+
+Random effects:
+ Groups                  Name        Variance Std.Dev.
+ BookInbred:Envi         (Intercept) 0.171773 0.41446 
+ BookInbred              (Intercept) 1.622144 1.27363 
+ Envi:Col                (Intercept) 0.000000 0.00000 
+ block:(superblock:Envi) (Intercept) 0.023124 0.15207 
+ Envi:Row                (Intercept) 0.000000 0.00000 
+ superblock:Envi         (Intercept) 0.007135 0.08447 
+ Envi                    (Intercept) 0.125720 0.35457 
+ Residual                            1.300292 1.14030 
+Number of obs: 3431, groups:  
+BookInbred:Envi, 1479; BookInbred, 432; Envi:Col, 130; block:(superblock:Envi), 114; Envi:Row, 104; superblock:Envi, 12; Envi, 4
+
+Fixed effects:
+            Estimate Std. Error t value
+(Intercept)    7.840      1.320   5.939
+Check2        -3.484      1.840  -1.894
+Check3        -3.410      1.841  -1.853
+Check4        -3.241      1.847  -1.755
+Check99       -2.567      1.310  -1.960
+optimizer (nloptwrap) convergence code: 0 (OK)
+boundary (singular) fit: see ?isSingular
+
+[1] NA
+Model Comparison, with and without Endosperm Term
+Glucose ~ Check + (1|endo/BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)
+Linear mixed model fit by REML ['lmerMod']
+Formula: Glucose ~ Check + (1 | endo/BookInbred) + (1 | BookInbred:Envi) +  
+    (1 | Envi/superblock/block) + (1 | Envi:Row) + (1 | Envi:Col)
+   Data: SampleDFtoModel
+Control: strict_tol
+
+REML criterion at convergence: 10957.3
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-4.1378 -0.5010  0.0228  0.5490  4.0822 
+
+Random effects:
+ Groups                  Name        Variance Std.Dev.
+ BookInbred:Envi         (Intercept) 0.197655 0.44458 
+ BookInbred:endo         (Intercept) 0.869605 0.93253 
+ Envi:Col                (Intercept) 0.000000 0.00000 
+ block:(superblock:Envi) (Intercept) 0.021237 0.14573 
+ Envi:Row                (Intercept) 0.000000 0.00000 
+ superblock:Envi         (Intercept) 0.004455 0.06675 
+ Envi                    (Intercept) 0.127469 0.35703 
+ endo                    (Intercept) 0.846184 0.91988 
+ Residual                            1.171569 1.08239 
+Number of obs: 3281, groups:  
+BookInbred:Envi, 1448; BookInbred:endo, 433; Envi:Col, 130; block:(superblock:Envi), 112; Envi:Row, 102; superblock:Envi, 12; Envi, 4; endo, 4
+
+Fixed effects:
+            Estimate Std. Error t value
+(Intercept)   7.7420     1.1082   6.986
+Check2       -2.1425     1.3887  -1.543
+Check3       -2.0682     1.3891  -1.489
+Check4       -1.9668     1.3968  -1.408
+Check99      -1.7701     0.9983  -1.773
+optimizer (nloptwrap) convergence code: 0 (OK)
+boundary (singular) fit: see ?isSingular
+
+    Fructose      
+ Min.   : 0.3653  
+ 1st Qu.: 3.9663  
+ Median : 5.0527  
+ Mean   : 5.1700  
+ 3rd Qu.: 6.4004  
+ Max.   :11.4129  
+ NA's   :1        
+Fructose ~ Check + (1|BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)
+Linear mixed model fit by REML ['lmerMod']
+Formula: Fructose ~ Check + (1 | BookInbred) + (1 | BookInbred:Envi) +  
+    (1 | Envi/superblock/block) + (1 | Envi:Row) + (1 | Envi:Col)
+   Data: SampleDFtoModel
+Control: strict_tol
+
+REML criterion at convergence: 12424.8
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-4.2309 -0.4216  0.0207  0.5023  4.6851 
+
+Random effects:
+ Groups                  Name        Variance Std.Dev.
+ BookInbred:Envi         (Intercept) 0.114383 0.33821 
+ BookInbred              (Intercept) 1.458466 1.20767 
+ Envi:Col                (Intercept) 0.005422 0.07363 
+ block:(superblock:Envi) (Intercept) 0.076944 0.27739 
+ Envi:Row                (Intercept) 0.000000 0.00000 
+ superblock:Envi         (Intercept) 0.012668 0.11255 
+ Envi                    (Intercept) 0.110656 0.33265 
+ Residual                            1.556161 1.24746 
+Number of obs: 3448, groups:  
+BookInbred:Envi, 1482; BookInbred, 432; Envi:Col, 130; block:(superblock:Envi), 114; Envi:Row, 104; superblock:Envi, 12; Envi, 4
+
+Fixed effects:
+            Estimate Std. Error t value
+(Intercept)    8.185      1.249   6.551
+Check2        -4.221      1.741  -2.425
+Check3        -3.603      1.742  -2.069
+Check4        -3.872      1.750  -2.213
+Check99       -2.934      1.239  -2.367
+optimizer (nloptwrap) convergence code: 0 (OK)
+boundary (singular) fit: see ?isSingular
+
+[1] NA
+Model Comparison, with and without Endosperm Term
+Fructose ~ Check + (1|endo/BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)
+Linear mixed model fit by REML ['lmerMod']
+Formula: Fructose ~ Check + (1 | endo/BookInbred) + (1 | BookInbred:Envi) +  
+    (1 | Envi/superblock/block) + (1 | Envi:Row) + (1 | Envi:Col)
+   Data: SampleDFtoModel
+Control: strict_tol
+
+REML criterion at convergence: 11377.3
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-4.5300 -0.4453  0.0183  0.5148  5.0498 
+
+Random effects:
+ Groups                  Name        Variance  Std.Dev. 
+ BookInbred:Envi         (Intercept) 1.243e-01 0.3525515
+ BookInbred:endo         (Intercept) 7.381e-01 0.8591110
+ Envi:Col                (Intercept) 4.416e-04 0.0210141
+ block:(superblock:Envi) (Intercept) 6.444e-02 0.2538475
+ Envi:Row                (Intercept) 2.903e-08 0.0001704
+ superblock:Envi         (Intercept) 1.430e-02 0.1195844
+ Envi                    (Intercept) 1.124e-01 0.3352508
+ endo                    (Intercept) 7.706e-01 0.8778225
+ Residual                            1.391e+00 1.1795820
+Number of obs: 3298, groups:  
+BookInbred:Envi, 1451; BookInbred:endo, 433; Envi:Col, 130; block:(superblock:Envi), 112; Envi:Row, 102; superblock:Envi, 12; Envi, 4; endo, 4
+
+Fixed effects:
+            Estimate Std. Error t value
+(Intercept)   7.8355     1.0259   7.638
+Check2       -2.5889     1.2743  -2.032
+Check3       -1.9906     1.2749  -1.561
+Check4       -2.3876     1.2852  -1.858
+Check99      -1.8504     0.9169  -2.018
+optimizer (nloptwrap) convergence code: 0 (OK)
+Model failed to converge with max|grad| = 0.00242416 (tol = 0.002, component 1)
+
+    Sucrose      
+ Min.   :-2.551  
+ 1st Qu.: 6.862  
+ Median :10.297  
+ Mean   :11.750  
+ 3rd Qu.:16.181  
+ Max.   :34.365  
+ NA's   :14      
+Sucrose ~ Check + (1|BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)
+Linear mixed model fit by REML ['lmerMod']
+Formula: Sucrose ~ Check + (1 | BookInbred) + (1 | BookInbred:Envi) +      (1 | Envi/superblock/block) + (1 | Envi:Row) + (1 | Envi:Col)
+   Data: SampleDFtoModel
+Control: strict_tol
+
+REML criterion at convergence: 18796.5
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-5.9938 -0.4314 -0.0174  0.4600  5.1907 
+
+Random effects:
+ Groups                  Name        Variance  Std.Dev. 
+ BookInbred:Envi         (Intercept) 1.874e+00 1.369e+00
+ BookInbred              (Intercept) 2.872e+01 5.359e+00
+ Envi:Col                (Intercept) 1.440e-09 3.795e-05
+ block:(superblock:Envi) (Intercept) 6.151e-02 2.480e-01
+ Envi:Row                (Intercept) 0.000e+00 0.000e+00
+ superblock:Envi         (Intercept) 2.193e-01 4.683e-01
+ Envi                    (Intercept) 5.028e+00 2.242e+00
+ Residual                            8.280e+00 2.878e+00
+Number of obs: 3435, groups:  
+BookInbred:Envi, 1480; BookInbred, 432; Envi:Col, 130; block:(superblock:Envi), 114; Envi:Row, 104; superblock:Envi, 12; Envi, 4
+
+Fixed effects:
+            Estimate Std. Error t value
+(Intercept)   19.028      5.543   3.433
+Check2       -12.875      7.662  -1.680
+Check3       -11.453      7.663  -1.495
+Check4        -9.558      7.674  -1.246
+Check99       -6.729      5.433  -1.239
+optimizer (nloptwrap) convergence code: 0 (OK)
+boundary (singular) fit: see ?isSingular
+
+[1] NA
+Model Comparison, with and without Endosperm Term
+Sucrose ~ Check + (1|endo/BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)
+Linear mixed model fit by REML ['lmerMod']
+Formula: Sucrose ~ Check + (1 | endo/BookInbred) + (1 | BookInbred:Envi) +  
+    (1 | Envi/superblock/block) + (1 | Envi:Row) + (1 | Envi:Col)
+   Data: SampleDFtoModel
+Control: strict_tol
+
+REML criterion at convergence: 17034.2
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-6.2314 -0.4649 -0.0136  0.4871  5.9015 
+
+Random effects:
+ Groups                  Name        Variance  Std.Dev. 
+ BookInbred:Envi         (Intercept) 2.171e+00 1.473e+00
+ BookInbred:endo         (Intercept) 8.568e+00 2.927e+00
+ Envi:Col                (Intercept) 8.388e-10 2.896e-05
+ block:(superblock:Envi) (Intercept) 3.444e-02 1.856e-01
+ Envi:Row                (Intercept) 4.360e-02 2.088e-01
+ superblock:Envi         (Intercept) 3.825e-01 6.185e-01
+ Envi                    (Intercept) 4.607e+00 2.146e+00
+ endo                    (Intercept) 2.414e+01 4.913e+00
+ Residual                            6.530e+00 2.555e+00
+Number of obs: 3285, groups:  
+BookInbred:Envi, 1449; BookInbred:endo, 433; Envi:Col, 130; block:(superblock:Envi), 112; Envi:Row, 102; superblock:Envi, 12; Envi, 4; endo, 4
+
+Fixed effects:
+            Estimate Std. Error t value
+(Intercept)   20.006      4.094   4.887
+Check2        -7.265      4.342  -1.673
+Check3        -5.976      4.344  -1.376
+Check4        -4.317      4.360  -0.990
+Check99       -3.891      3.108  -1.252
+optimizer (nloptwrap) convergence code: 0 (OK)
+boundary (singular) fit: see ?isSingular
+
+  Total.Sugar    
+ Min.   :-1.202  
+ 1st Qu.:15.557  
+ Median :19.579  
+ Mean   :22.010  
+ 3rd Qu.:28.875  
+ Max.   :51.631  
+ NA's   :33      
+Total.Sugar ~ Check + (1|BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)
+Linear mixed model fit by REML ['lmerMod']
+Formula: Total.Sugar ~ Check + (1 | BookInbred) + (1 | BookInbred:Envi) +  
+    (1 | Envi/superblock/block) + (1 | Envi:Row) + (1 | Envi:Col)
+   Data: SampleDFtoModel
+Control: strict_tol
+
+REML criterion at convergence: 22366.1
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-5.1324 -0.4127  0.0443  0.5342  4.2637 
+
+Random effects:
+ Groups                  Name        Variance Std.Dev.
+ BookInbred:Envi         (Intercept)  0.5316  0.7291  
+ BookInbred              (Intercept) 66.8785  8.1779  
+ Envi:Col                (Intercept)  0.0000  0.0000  
+ block:(superblock:Envi) (Intercept)  0.2250  0.4744  
+ Envi:Row                (Intercept)  0.0000  0.0000  
+ superblock:Envi         (Intercept)  0.0000  0.0000  
+ Envi                    (Intercept)  9.7374  3.1205  
+ Residual                            28.1598  5.3066  
+Number of obs: 3416, groups:  
+BookInbred:Envi, 1475; BookInbred, 432; Envi:Col, 130; block:(superblock:Envi), 114; Envi:Row, 104; superblock:Envi, 12; Envi, 4
+
+Fixed effects:
+            Estimate Std. Error t value
+(Intercept)   34.433      8.389   4.104
+Check2       -19.515     11.625  -1.679
+Check3       -17.567     11.626  -1.511
+Check4       -16.154     11.646  -1.387
+Check99      -11.095      8.253  -1.344
+optimizer (nloptwrap) convergence code: 0 (OK)
+boundary (singular) fit: see ?isSingular
+
+[1] NA
+Model Comparison, with and without Endosperm Term
+Total.Sugar ~ Check + (1|endo/BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)
+Linear mixed model fit by REML ['lmerMod']
+Formula: Total.Sugar ~ Check + (1 | endo/BookInbred) + (1 | BookInbred:Envi) +  
+    (1 | Envi/superblock/block) + (1 | Envi:Row) + (1 | Envi:Col)
+   Data: SampleDFtoModel
+Control: strict_tol
+
+REML criterion at convergence: 20585.5
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-5.3502 -0.4244  0.0421  0.5431  4.7572 
+
+Random effects:
+ Groups                  Name        Variance Std.Dev.
+ BookInbred:Envi         (Intercept)  0.80977 0.8999  
+ BookInbred:endo         (Intercept) 24.88489 4.9885  
+ Envi:Col                (Intercept)  0.00000 0.0000  
+ block:(superblock:Envi) (Intercept)  0.47566 0.6897  
+ Envi:Row                (Intercept)  0.00000 0.0000  
+ superblock:Envi         (Intercept)  0.08608 0.2934  
+ Envi                    (Intercept)  8.94939 2.9916  
+ endo                    (Intercept) 52.82336 7.2680  
+ Residual                            23.48826 4.8465  
+Number of obs: 3266, groups:  
+BookInbred:Envi, 1444; BookInbred:endo, 433; Envi:Col, 130; block:(superblock:Envi), 112; Envi:Row, 102; superblock:Envi, 12; Envi, 4; endo, 4
+
+Fixed effects:
+            Estimate Std. Error t value
+(Intercept)   35.783      6.479   5.523
+Check2       -11.165      7.225  -1.545
+Check3        -9.260      7.226  -1.281
+Check4        -8.202      7.256  -1.130
+Check99       -6.791      5.181  -1.311
+optimizer (nloptwrap) convergence code: 0 (OK)
+boundary (singular) fit: see ?isSingular
+
