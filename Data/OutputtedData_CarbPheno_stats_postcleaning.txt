@@ -1,0 +1,8 @@
+  Total.Sugar    
+ Min.   :-1.202  
+ 1st Qu.:15.671  
+ Median :19.742  
+ Mean   :21.877  
+ 3rd Qu.:28.890  
+ Max.   :52.843  
+ NA's   :36      

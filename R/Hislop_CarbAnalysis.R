@@ -287,286 +287,81 @@ write.csv(NFValWLdfJEqnStatsR, "Data/OutputtedData/EqnFitStatisticsValidationNF_
 #########################
 ###Linear Model Analysis###
 #########################
-########## Which model is best? function ########
-ModelCheck <- function(DF,carb){
-  bestAIC <- 10000000
-  bestModel <- "Test"
-  ########## first, lets clean up the data so its readable and good ########
-  DFSubset <- subset(DF, !is.na(IsExperimental))
-  str(DFSubset)
-  colnames(DFSubset)
-  
-  DFSubset$superblock <- as.factor(DFSubset$superblock)
-  DFSubset$Col <- as.factor(DFSubset$Col)
-  DFSubset$Row <- as.factor(DFSubset$Row)
-  DFSubset$Year <- as.factor(DFSubset$Year)
-  DFSubset$Check <- as.factor(DFSubset$Check)
-  DFSubset$block <- as.factor(DFSubset$block)
-  DFSubset$Rep <- as.factor(DFSubset$Rep)
-  DFSubset$endo <- as.factor(DFSubset$endo)
-  DFSubset$PlotNum <- as.factor(DFSubset$PlotNum)
-  
-  ########## Compare Many model options to eachother ########
-  # Firstmodel: Most basic
-  # formula <- paste0(carb,)
-  # ModelA
-  # G, E, GxE, row and column in environment
-  #with block, superblock as stand alone fixed effects, envi as random
-  formulaA <- paste0(carb,"~ Check + (1|Variety) + Envi + (1|Envi:Row) + (1|Envi:Col)")
-  modelA <- lmer(formulaA,data=DFSubset, REML = TRUE)
-  AIC(modelA)
-  summary(modelA)
-  if(AIC(modelA) < bestAIC){bestAIC = AIC(modelA)
-  bestModel = modelA}
-  
-  # ModelB
-  #with block, superblock, row, column as stand alone fixed effects, envi as random
-  formulaB <- paste0(carb,"~ Check + (1|Variety) + (1|Variety:Envi) + (1|Envi) + superblock + Row + Col + block")
-  modelB <- lmer(formulaB , data=DFSubset, REML = TRUE)
-  AIC(modelB)
-  if(AIC(modelB) < bestAIC){bestAIC = AIC(modelB)
-  bestModel = modelB}
-  
-  # ModelC
-  #with block, superblock as stand alone fixed effects, envi as random
-  formulaC <- paste0(carb," ~ Check + (1|Variety) + (1|Variety:Envi) + (1|Envi) + superblock + block")
-  modelC <- lmer(formulaC, data=DFSubset, REML = TRUE)
-  AIC(modelC)
-  if(AIC(modelC) < bestAIC){bestAIC = AIC(modelC)
-  bestModel = modelC}
-  
-  # Model D
-  #with block, superblock, row, column as stand alone fixed effects, envi as random
-  formulaD <- paste0(carb," ~ Check + (1|Variety) + (1|Variety:Envi) + (1|Envi) + superblock + Row + Col + block")
-  modelD <- lmer(formulaD, data=DFSubset, REML = TRUE)
-  AIC(modelD)
-  if(AIC(modelD) < bestAIC){bestAIC = AIC(modelD)
-  bestModel = modelD}
-  
-  # Model E
-  #with block, superblock, row,  as stand alone fixed effects, envi as random
-  formulaE <- paste0(carb,"~ Check + (1|Variety) + (1|Variety:Envi) + (1|Envi) + superblock + Row +  block")
-  modelE <- lmer(formulaE , data=DFSubset, REML = TRUE)
-  AIC(modelE)
-  if(AIC(modelE) < bestAIC){bestAIC = AIC(modelE)
-  bestModel = modelE}
-  
-  # Model F
-  #with block, superblock, row, column  effects and envi all as random
-  formulaF <- paste0(carb,"~ Check + (1|Variety) + (1|Variety:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col) ")
-  modelF <- lmer(formulaF , data=DFSubset, REML = TRUE)
-  AIC(modelF)
-  if(AIC(modelF) < bestAIC){bestAIC = AIC(modelF)
-  bestModel = modelF}
-  
-  # Model G
-  #with block, superblock nested random effect
-  formulaG <- paste0(carb,"~ Check + (1|Variety) + (1|Variety:Envi) + (1|Envi/superblock/block)")
-  modelG <- lmer(formulaG , data=DFSubset, REML = TRUE)
-  AIC(modelG)
-  if(AIC(modelG) < bestAIC){bestAIC = AIC(modelG)
-  bestModel = modelG}
-  
-  # Model H
-  #model worked out with raegan\
-  formulaH <- paste0(carb,"~  (1|superblock:Variety) + (1+Envi|Variety) + (1|superblock/block)")
-  modelH<- lmer(formulaH , 
-                data=DFSubset, REML = TRUE)
-  AIC(modelH)
-  if(AIC(modelH) < bestAIC){bestAIC = AIC(modelH)
-  bestModel = modelH}
-  
-  # Model J
-  #model worked out with raegan
-  formulaJ <- paste0(carb,"~  Check + (1|Variety) + (1|Variety:Envi) + superblock + (1|Envi/superblock/block)")
-  modelJ<- lmer(formulaJ , 
-                data=DFSubset, REML = TRUE)
-  AIC(modelJ)
-  if(AIC(modelJ) < bestAIC){bestAIC = AIC(modelJ)
-  bestModel = modelJ}
-  
-  # Model I
-  #model worked out with raegan
-  formulaI <- paste0(carb," ~  Check + (1|Envi/Variety) + (1|superblock) + (1|superblock:Envi) + (1|Envi/block)")
-  modelI<- lmer(formulaI, 
-                data=DFSubset, REML = TRUE)
-  AIC(modelI)
-  if(AIC(modelI) < bestAIC){bestAIC = AIC(modelI)
-  bestModel = modelI}
-  
-  # Model K. This is the one from the stats adviser\formula <- paste0(carb,)
-  formulaK <- paste0(carb,"~  Check + Envi + (1|Envi:Variety) + (1|superblock/Variety) + superblock + (1|superblock/block)")
-  modelK<- lmer(formulaK , 
-                data=DFSubset, REML = TRUE)
-  AIC(modelK)
-  if(AIC(modelK) < bestAIC){bestAIC = AIC(modelK)
-  bestModel = modelK}
-  
-  # Model L. This is basically Matts from the literature but with endosperm and no row or model
-  formulaL <- paste0(carb,"~ Check + (1|Envi/superblock/block) +  (1|Variety) + (1|Variety:Envi) + endo")
-  modelL<- lmer(formulaL , 
-                data=DFSubset, REML = TRUE)
-  AIC(modelL)
-  if(AIC(modelL) < bestAIC){bestAIC = AIC(modelL)
-  bestModel = modelL}
-  
-  # Model M
-  #with block, superblock, col,  as stand alone fixed effects, envi as random
-  formulaM <- paste0(carb,"~ Check + (1|Variety) + (1|Variety:Envi) + (1|Envi) + superblock + Col +  block")
-  modelM <- lmer(formulaM , data=DFSubset, REML = TRUE)
-  AIC(modelM)
-  if(AIC(modelM) < bestAIC){bestAIC = AIC(modelM)
-  bestModel = modelM}
-  
-  # Model N. This is basically Matts from the literature but with endosperm
-  formulaN <- paste0(carb,"~ Check + endo  + (1|Envi/superblock/block) + (1|Variety) + (1|Variety:Envi) + (1|Envi:Row) + (1|Envi:Col)")
-  modelN<- lmer(formulaN , 
-                data=DFSubset, REML = TRUE)
-  AIC(modelN)
-  if(AIC(modelN) < bestAIC){bestAIC = AIC(modelN)
-  bestModel = modelN}
-  
-  # Model O. This is basically Matts from the literature 
-  formulaO <- paste0(carb,"~ Check + (1|Envi/superblock/block) + (1|Variety) + (1|Variety:Envi) + (1|Envi:Row) + (1|Envi:Col)")
-  modelO<- lmer(formulaO , 
-                data=DFSubset, REML = TRUE)
-  AIC(modelO)
-  if(AIC(modelO) < bestAIC){bestAIC = AIC(modelO)
-  bestModel = modelO}
-  
-  # # Model P. This is basically Matts from the literature but with endosperm and no row or modelA and environment fixed
-  # formulaP <- paste0(carb,"~ Check + endo + Envi/superblock/block + (1|Variety) + (1|Variety:Envi)")
-  # modelP<- lmer(formulaP ,
-  #               data=DFSubset, REML = TRUE)
-  # AIC(modelP)
-  # if(AIC(modelP) < bestAIC){bestAIC = AIC(modelP)
-  # bestModel = modelP}
-  return(bestModel)
-  
-}
+####TODO: Make file names better
 
-######## What are the mlm best models for the two datasets? #######
-bestModel <- ModelCheck(CleanedInfoWF, "Total.Sugar")
-bestModel <- ModelCheck(CleanedInfoWF, "WSP")
-bestModel <- ModelCheck(CleanedInfoWF, "Starch")
-bestModel <- ModelCheck(CleanedInfoNF, "Total.Sugar")
-
-# best model
-AIC(bestModel)
-summary(bestModel)
-plot(bestModel)
-qqmath(ranef(bestModel, condVar=TRUE))
-#looks pretty ok, probably don't need tranformation
-qqnorm(residuals(bestModel))
-
-
-
-# Compare this model to the one the Baseggio put in his paper
-modelBaseggio <- lmer(Total.Sugar ~ Check + (1|Envi/superblock/block) + (1|Variety) + (1|Variety:Envi) + (1|Envi:Row) + (1|Envi:Col), data=CleanedInfoWF, REML = TRUE)
-AIC(modelBaseggio)
-summary(modelBaseggio)
-plot(modelBaseggio)
-qqmath(ranef(modelBaseggio, condVar=TRUE))
-#looks pretty ok, probably don't need tranformation
-qqnorm(residuals(modelBaseggio))
-
-anova(modelBaseggio, bestModel)
-
-#########################
-###Baseggio model with endosperm beforehand###
-#########################
-# endoseparatedmodels
-
-# Can't get models to work for whatever reason. Ug. Frustrated and annoyed. Error in model.frame.default(data = CleanedInfoWFendo, drop.unused.levels = TRUE,  : 
-#   variable lengths differ (found for 'Envi')
-
-CleanedInfoWF$superblock <- as.factor(CleanedInfoWF$superblock)
-CleanedInfoWF$Col <- as.factor(CleanedInfoWF$Col)
-CleanedInfoWF$Row <- as.factor(CleanedInfoWF$Row)
-CleanedInfoWF$Year <- as.factor(CleanedInfoWF$Year)
-CleanedInfoWF$Envi <- as.factor(CleanedInfoWF$Envi)
-CleanedInfoWF$Check <- as.factor(CleanedInfoWF$Check)
-CleanedInfoWF$block <- as.factor(CleanedInfoWF$block)
-CleanedInfoWF$Rep <- as.factor(CleanedInfoWF$Rep)
-CleanedInfoWF$endo <- as.factor(CleanedInfoWF$endo)
-CleanedInfoWF$PlotNum <- as.factor(CleanedInfoWF$PlotNum)
-endotypes <- c("aeduwx","field","su1","sh2","sh2i","se",NA)
-# endotypes <- c("su1","sh2","sh2i","se", NA)
-carbs = colnames(CleanedInfoWF)[5:11]
-BLUPS <- data.frame("Variety" = NA)
-modelFEfvector <- matrix(data = NA, nrow = 7, ncol = 7)
-modelREfvectorBLUPS <- matrix(data = NA, nrow = 7, ncol = 7)
-for(i in 1:length(endotypes)){
+linearmodel <- function(SampleDFtoModel){
+  SampleDFtoModel$superblock <- as.factor(SampleDFtoModel$superblock)
+  SampleDFtoModel$Col <- as.factor(SampleDFtoModel$Col)
+  SampleDFtoModel$Row <- as.factor(SampleDFtoModel$Row)
+  SampleDFtoModel$Year <- as.factor(SampleDFtoModel$Year)
+  SampleDFtoModel$Envi <- as.factor(SampleDFtoModel$Envi)
+  SampleDFtoModel$Check <- as.factor(SampleDFtoModel$Check)
+  SampleDFtoModel$block <- as.factor(SampleDFtoModel$block)
+  SampleDFtoModel$Rep <- as.factor(SampleDFtoModel$Rep)
+  SampleDFtoModel$endo <- as.factor(SampleDFtoModel$endo)
+  SampleDFtoModel$PlotNum <- as.factor(SampleDFtoModel$PlotNum)
+  blupHolder <- data.frame("Variety" = sort(unique(SampleDFtoModel$BookInbred)))
+  c1 <- which(colnames(SampleDFtoModel)=="Starch")
+  c2 <- which(colnames(SampleDFtoModel)=="Total.Sugar")
+  carbs <- colnames(SampleDFtoModel)[c1:c2]
   for(j in 1:length(carbs)){
-  endo <- endotypes[i]
-  if(i<7){CleanedInfoWFendo <- CleanedInfoWF[which(CleanedInfoWF$endo == endo ),]}
-  if(i == 7 ){CleanedInfoWFendo <- CleanedInfoWF[which(is.na(CleanedInfoWF$endo)),] }
-
-  CleanedInfoWFendo <- CleanedInfoWFendo[which(!is.na(CleanedInfoWFendo[j+4])),]
-  modelpastecheck<-  paste0(carbs[j], " ~ Check + (1|Envi/superblock/block) + (1|BookInbred) + (1|BookInbred:Envi) + (1|Envi:Row) + (1|Envi:Col)")
-  modelpastenocheck<-  paste0(carbs[j], " ~ (1|Envi/superblock/block) + (1|BookInbred) + (1|BookInbred:Envi) + (1|Envi:Row) + (1|Envi:Col)")
-
-  if((endo == "su1" || endo == "se") && !is.na(endo)){
-  model <- lmer(modelpastecheck,
-                           data=CleanedInfoWFendo, REML = TRUE)}
-  if((endo != "su1" && endo != "se") || is.na(endo)){
-  model <- lmer(modelpastenocheck,
-                            data=CleanedInfoWFendo, REML = TRUE)
-  }
-  modelFEfvector[i][j] <- fixef(model)
-  randomeffects <- ranef(model)
-  modelREfvectorBLUPS[i][j] <- randomeffects$BookInbred
-  blupHolder <- data.frame(rownames(randomeffects$BookInbred),randomeffects$BookInbred)
-  colnames(blupHolder) <- c("Variety",carb)
+    
+  #output the statistics about this trait
+    summary <- summary(SampleDFtoModel[,c1+j-1], )
+    out <- capture.output(summary)
+    cat(out, file="Data/OutputtedData/WSMDP_CarbPheno_stats_postcleaning.txt", sep="\n", append=TRUE)
+    
+    #####Modeling
+    modelpastecheck<-  paste0(carbs[j], " ~ Check + (1|BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)")
+    model <- lmer(modelpastecheck,
+                  data=SampleDFtoModel, REML = TRUE)
+    # Decreasing stopping tolerances
+    strict_tol <- lmerControl(optCtrl=list(xtol_abs=1e-8, ftol_abs=1e-8))
+    if (all(model@optinfo$optimizer=="nloptwrap")) {
+      model <- update(model, control=strict_tol)
+    }
+  RandomEffects <- ranef(model)
+  tempBlup <- data.frame("Variety" = rownames(RandomEffects$BookInbred), "BLUP" = RandomEffects$BookInbred)
+  blupHolder <- merge(blupHolder, tempBlup, by = "Variety", all = TRUE)
+  colnames(blupHolder)[j+1] <- paste0(carbs[j],".BLUP")
   
+  # CheckAssumptions
+  png(paste0("Figures/assumptions_", carbs[j], ".png"), width = 500, height = 250)
+  par(mfrow=c(1,3))
+  
+  # Model Fit with REML
+  plot(fitted(model), residuals(model), pch=19, col="dark blue", ylab="Residuals", xlab="Predicted")
+  abline(h=0,col="red", lwd=1, lty=1)
+  # histogram of residuals
+  hist(residuals(model),main="Histogram of residuals",freq=F, xlab="Residuals", ylab= "Freq", col="palegreen", col.main="darkblue")
+  x=seq(-5e-15,9e-15,5e-15)
+  curve(dnorm(x,mean(residuals(model)),sd(residuals(model))),add=T,lwd=2, col="red", lty=1)
+  # qq plot
+  qqnorm(residuals(model), pch=19, col="dark blue", col.lines="red", xlab="Pred quantiles", ylab="Obs quantiles") 
+  
+  dev.off()
+   # Summary of random effects
+  summary <- summary(model, correlation=FALSE)
+  out <- capture.output(summary)
+  cat(out, file="Data/OutputtedData/WSMDP_CarbPheno_stats_postcleaning.txt", sep="\n", append=TRUE)
+  # Write out residuals from ANOVA
+  write.table(resid(model), paste0("Data/OutputtedData/resids_", carbs[j], ".csv"), col.names=F, row.names=F, sep=",")
+  # Calculate hertiability 
+  model_variances <- as.data.frame(VarCorr(model))
+  h2 <- model_variances$vcov[2]/(model_variances$vcov[2]+(model_variances$vcov[1]/5)+(model_variances$vcov[9]/10))
+  out <- capture.output(h2)
+  cat(out, file= "Data/OutputtedData/WSMDP_CarbPheno_stats_postcleaning.txt", sep="\n", append=TRUE)
   }
+  # Write out BLUPs for Genotypes
+  write.table(blupHolder, file="Data/OutputtedData/WSMDP_CarbPheno_InbredBLUPS_postcleaning.txt", col.names=T, row.names=F, sep=",")
+  
+  return(blupHolder)
 }
 
 
+WFBlups <- linearmodel(CleanedInfoWF)
+NFBlups <- linearmodel(CleanedInfoNF)
 
-
-
-#########################
-###Model Analysis###
-#########################
-
-#Lets get out the BLUES
-BLUES<-fixef(bestModel)
-
-#Now lets get the blups
-#EBLUPS for interpretation and publication.
-#This is the classical way by adding the BLUPS to the intercept, which becomes very complicated as model terms and degrees of freedom increase! Luckly we have great R functions!
-(BLUPs<-BLUES[-1]+BLUES[1])
-
-#### Least Squared Means Comparision aka EBLUPS
-LSD<-lsmeans(bestModel, ~ endo)
-LSD<-cld(LSD,Letters = LETTERS, decreasing=T)
-
-##### Whats the variance associated with this model#####
-#establish dataframe to store variances from each factor
-vc <- VarCorr(bestModel)
-vc <- as.data.frame(vc)
-#Broadsense heritability
-broadH <- vc$vcov[which(vc$grp=="Variety")]/(vc$vcov[which(vc$grp=="Variety")]+vc$vcov[which(vc$grp=="Residual")]/2)
-
-
-
-
-
-
-
-#########################
-###Finding the means###
-#########################
-####NOT WORKING! WHY NOT#####
-formulaL <- paste0("WSP ~ endo + superblock%in%block%in%Envi + superblock%in%Envi+ Variety*Envi ")
-fitL <- lm(formulaL,data=CleanedInfoWF)
-CleanedInfoWFMeans <- emmeans(fitL, ~ Envi:Variety)
-
-CleanedDF <- CarbOutlierCleanup(HWSPs,"HWSPs",alpha = 0.05)
-CleanedDF$Envi <- paste(CleanedDF$Year,CleanedDF$Location)
-fitL_HWPs <- lm(formulaL,data=CleanedDF)
-CleanedInfoHWPsMeans <- emmeans(fitL_HWPs, ~Envi:Variety)
 
 
 #########################
@@ -574,10 +369,6 @@ CleanedInfoHWPsMeans <- emmeans(fitL_HWPs, ~Envi:Variety)
 #########################
 genoinfo <- read.csv("Data/WSMDP_Inbreds.txt",head = FALSE)
 colnames(genoinfo) <- c("Variety","","","","","","","GenoName","source","endo","notes","Region","Program")
-# myG <- read.delim("Data/RawData/WSMDP_SCMV_SeqE.hmp.txt", head = FALSE)
-# myGnames <- myG[1,]
-# myGnames<-gsub(myGnames, pattern = ":.*", replacement = "")
-# myG[1,] <- myGnames
 
 #read in genetic info post MAF 
 hmppath <- "Data/RawData/WSMDP_SCMV_SeqB.hmp.txt"
@@ -587,34 +378,22 @@ str(geno_scmv)
 colnames(geno_scmv)<-gsub(colnames(geno_scmv), pattern = ":.*", replacement = "")
 str(geno_scmv)
 
-CleanedDFwGeno <- merge(CleanedInfoWF,genoinfo, by = "Variety")
-c1 <- which(colnames(CleanedDFwGeno)=="Starch")
-c2 <- which(colnames(CleanedDFwGeno)=="Total.Sugar")
-c3 <- which(colnames(CleanedDFwGeno)=="GenoName")
-c4 <- which(colnames(CleanedDFwGeno)=="endo.x")
-c5 <- which(colnames(CleanedDFwGeno)=="Envi")
-myYWF <- CleanedDFwGeno[,c(c3,c1:c2,c4,c5)]
-myYWF <- myYWF[-which(myYWF$GenoName == ""),]
-myYWFmerged <- myYWF %>%
-  group_by(GenoName) %>%
-  summarise(Starch = mean(Starch,na.rm = T),Total.Polysaccharides = mean(Total.Polysaccharides,na.rm = T), 
-            WSP = mean(WSP,na.rm = T), Glucose =mean(Glucose,na.rm = T), Fructose = mean(Fructose,na.rm = T),
-            Sucrose = mean(Sucrose,na.rm = T), Total.Sugar = mean(Total.Sugar,na.rm = T),
-            endo.x = first(endo.x), Envi = first(Envi))
+WFBlupsGeno <- merge(WFBlups,genoinfo, by = "Variety")
+c1 <- which(colnames(WFBlupsGeno)=="Starch.BLUP")
+c2 <- which(colnames(WFBlupsGeno)=="Total.Sugar.BLUP")
+c3 <- which(colnames(WFBlupsGeno)=="GenoName")
+c4 <- which(colnames(WFBlupsGeno)=="endo")
+
+WFBlupsGenoJustPheno <- WFBlupsGeno[,c(c3,c1:c2,c4)]
+WFBlupsGenoJustPheno <- WFBlupsGenoJustPheno[-which(WFBlupsGenoJustPheno$GenoName == ""),]
+WFBlupsGenoJustPheno$endo <- as.factor(WFBlupsGenoJustPheno$endo)
+blups <- colnames(WFBlupsGeno[c1:c2])
+for(blup in blups){
+GWASPolyRunner(WFBlupsGenoJustPheno[,1:8],geno_scmv,blup,"NoFixedEffect_FDRThresh_20210616","SeqB","WFBLUP")
+GWASPolyRunner(WFBlupsGenoJustPheno,geno_scmv,blup,"EndoFixedEffect_FDRThresh_20210616","SeqB","WFBLUP","endo","factor")
+}
 
 
-
-#########################
-###GWASPoly###
-#########################
-carbs <- colnames(CleanedInfoWF)[5:11]
-system.time(
-  for(carb in carbs){
-    # GWASPolyRunner(myYWFmerged[,1:8],geno_scmv,carb,"NoFixedEffect_FDRThresh_20210526","SeqB","WFMeaned")
-    # GWASPolyRunner(myYWFmerged,geno_scmv,carb,"EndoFixedEffect_FDRThresh_20210526","SeqB","WFMeaned","endo.x","factor")
-    GWASPolyRunner(myYWFmerged,geno_scmv,carb,"EndoEnviFixedEffect_FDRThresh_20210526","SeqB","WFMeaned",c("Envi","endo.x"),c("factor","factor"))
-  }
-)
 #########################
 ###GapitKinship Matrix###
 #########################

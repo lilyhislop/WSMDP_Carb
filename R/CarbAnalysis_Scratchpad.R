@@ -572,7 +572,222 @@ for(i in 1:7){
     VarDF[i,j+1] <- (out$`Sum Sq`[j]/SStotal)}
 }
 VarDFMelt <- melt(VarDF)
+#########################
+###Baseggio model with endosperm beforehand###
+#########################
+# endoseparatedmodels
 
+# Can't get models to work for whatever reason. Ug. Frustrated and annoyed. Error in model.frame.default(data = CleanedInfoWFendo, drop.unused.levels = TRUE,  : 
+#   variable lengths differ (found for 'Envi')
+
+CleanedInfoWF$superblock <- as.factor(CleanedInfoWF$superblock)
+CleanedInfoWF$Col <- as.factor(CleanedInfoWF$Col)
+CleanedInfoWF$Row <- as.factor(CleanedInfoWF$Row)
+CleanedInfoWF$Year <- as.factor(CleanedInfoWF$Year)
+CleanedInfoWF$Envi <- as.factor(CleanedInfoWF$Envi)
+CleanedInfoWF$Check <- as.factor(CleanedInfoWF$Check)
+CleanedInfoWF$block <- as.factor(CleanedInfoWF$block)
+CleanedInfoWF$Rep <- as.factor(CleanedInfoWF$Rep)
+CleanedInfoWF$endo <- as.factor(CleanedInfoWF$endo)
+CleanedInfoWF$PlotNum <- as.factor(CleanedInfoWF$PlotNum)
+endotypes <- c("aeduwx","field","su1","sh2","sh2i","se",NA)
+# endotypes <- c("su1","sh2","sh2i","se", NA)
+carbs = colnames(CleanedInfoWF)[5:11]
+BLUPS <- data.frame("Variety" = NA)
+modelFEfvector <- matrix(data = NA, nrow = 7, ncol = 7)
+modelREfvectorBLUPS <- matrix(data = NA, nrow = 7, ncol = 7)
+for(j in 1:length(carbs)){
+  for(i in 1:length(endotypes)){
+    endo <- endotypes[i]
+    if(i<7){CleanedInfoWFendo <- CleanedInfoWF[which(CleanedInfoWF$endo == endo ),]}
+    if(i == 7 ){CleanedInfoWFendo <- CleanedInfoWF[which(is.na(CleanedInfoWF$endo)),] }
+    
+    CleanedInfoWFendo <- CleanedInfoWFendo[which(!is.na(CleanedInfoWFendo[j+4])),]
+    modelpastecheck<-  paste0(carbs[j], " ~ Check + (1|Envi/superblock/block) + (1|BookInbred) + (1|BookInbred:Envi) + (1|Envi:Row) + (1|Envi:Col)")
+    modelpastenocheck<-  paste0(carbs[j], " ~ (1|Envi/superblock/block) + (1|BookInbred) + (1|BookInbred:Envi) + (1|Envi:Row) + (1|Envi:Col)")
+    
+    if((endo == "su1" || endo == "se") && !is.na(endo)){
+      model <- lmer(modelpastecheck,
+                    data=CleanedInfoWFendo, REML = TRUE)}
+    if((endo != "su1" && endo != "se") || is.na(endo)){
+      model <- lmer(modelpastenocheck,
+                    data=CleanedInfoWFendo, REML = TRUE)
+    }
+    modelFEfvector[i][j] <- fixef(model)
+    randomeffects <- ranef(model)
+    modelREfvectorBLUPS[i][j] <- randomeffects$BookInbred
+    blupHolder <- data.frame(rownames(randomeffects$BookInbred),randomeffects$BookInbred)
+    colnames(blupHolder) <- c("Variety",carb)
+    
+  }
+}
+
+#########################
+###Linear Model Analysis###
+#########################
+########## Which model is best? function ########
+ModelCheck <- function(DF,carb){
+  bestAIC <- 10000000
+  bestModel <- "Test"
+  ########## first, lets clean up the data so its readable and good ########
+  DFSubset <- subset(DF, !is.na(IsExperimental))
+  str(DFSubset)
+  colnames(DFSubset)
+  
+  DFSubset$superblock <- as.factor(DFSubset$superblock)
+  DFSubset$Col <- as.factor(DFSubset$Col)
+  DFSubset$Row <- as.factor(DFSubset$Row)
+  DFSubset$Year <- as.factor(DFSubset$Year)
+  DFSubset$Check <- as.factor(DFSubset$Check)
+  DFSubset$block <- as.factor(DFSubset$block)
+  DFSubset$Rep <- as.factor(DFSubset$Rep)
+  DFSubset$endo <- as.factor(DFSubset$endo)
+  DFSubset$PlotNum <- as.factor(DFSubset$PlotNum)
+  
+  ########## Compare Many model options to eachother ########
+  # Firstmodel: Most basic
+  # formula <- paste0(carb,)
+  # ModelA
+  # G, E, GxE, row and column in environment
+  #with block, superblock as stand alone fixed effects, envi as random
+  formulaA <- paste0(carb,"~ Check + (1|Variety) + Envi + (1|Envi:Row) + (1|Envi:Col)")
+  modelA <- lmer(formulaA,data=DFSubset, REML = TRUE)
+  AIC(modelA)
+  summary(modelA)
+  if(AIC(modelA) < bestAIC){bestAIC = AIC(modelA)
+  bestModel = modelA}
+  
+  # ModelB
+  #with block, superblock, row, column as stand alone fixed effects, envi as random
+  formulaB <- paste0(carb,"~ Check + (1|Variety) + (1|Variety:Envi) + (1|Envi) + superblock + Row + Col + block")
+  modelB <- lmer(formulaB , data=DFSubset, REML = TRUE)
+  AIC(modelB)
+  if(AIC(modelB) < bestAIC){bestAIC = AIC(modelB)
+  bestModel = modelB}
+  
+  # ModelC
+  #with block, superblock as stand alone fixed effects, envi as random
+  formulaC <- paste0(carb," ~ Check + (1|Variety) + (1|Variety:Envi) + (1|Envi) + superblock + block")
+  modelC <- lmer(formulaC, data=DFSubset, REML = TRUE)
+  AIC(modelC)
+  if(AIC(modelC) < bestAIC){bestAIC = AIC(modelC)
+  bestModel = modelC}
+  
+  # Model D
+  #with block, superblock, row, column as stand alone fixed effects, envi as random
+  formulaD <- paste0(carb," ~ Check + (1|Variety) + (1|Variety:Envi) + (1|Envi) + superblock + Row + Col + block")
+  modelD <- lmer(formulaD, data=DFSubset, REML = TRUE)
+  AIC(modelD)
+  if(AIC(modelD) < bestAIC){bestAIC = AIC(modelD)
+  bestModel = modelD}
+  
+  # Model E
+  #with block, superblock, row,  as stand alone fixed effects, envi as random
+  formulaE <- paste0(carb,"~ Check + (1|Variety) + (1|Variety:Envi) + (1|Envi) + superblock + Row +  block")
+  modelE <- lmer(formulaE , data=DFSubset, REML = TRUE)
+  AIC(modelE)
+  if(AIC(modelE) < bestAIC){bestAIC = AIC(modelE)
+  bestModel = modelE}
+  
+  # Model F
+  #with block, superblock, row, column  effects and envi all as random
+  formulaF <- paste0(carb,"~ Check + (1|Variety) + (1|Variety:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col) ")
+  modelF <- lmer(formulaF , data=DFSubset, REML = TRUE)
+  AIC(modelF)
+  if(AIC(modelF) < bestAIC){bestAIC = AIC(modelF)
+  bestModel = modelF}
+  
+  # Model G
+  #with block, superblock nested random effect
+  formulaG <- paste0(carb,"~ Check + (1|Variety) + (1|Variety:Envi) + (1|Envi/superblock/block)")
+  modelG <- lmer(formulaG , data=DFSubset, REML = TRUE)
+  AIC(modelG)
+  if(AIC(modelG) < bestAIC){bestAIC = AIC(modelG)
+  bestModel = modelG}
+  
+  # Model H
+  #model worked out with raegan\
+  formulaH <- paste0(carb,"~  (1|superblock:Variety) + (1+Envi|Variety) + (1|superblock/block)")
+  modelH<- lmer(formulaH , 
+                data=DFSubset, REML = TRUE)
+  AIC(modelH)
+  if(AIC(modelH) < bestAIC){bestAIC = AIC(modelH)
+  bestModel = modelH}
+  
+  # Model J
+  #model worked out with raegan
+  formulaJ <- paste0(carb,"~  Check + (1|Variety) + (1|Variety:Envi) + superblock + (1|Envi/superblock/block)")
+  modelJ<- lmer(formulaJ , 
+                data=DFSubset, REML = TRUE)
+  AIC(modelJ)
+  if(AIC(modelJ) < bestAIC){bestAIC = AIC(modelJ)
+  bestModel = modelJ}
+  
+  # Model I
+  #model worked out with raegan
+  formulaI <- paste0(carb," ~  Check + (1|Envi/Variety) + (1|superblock) + (1|superblock:Envi) + (1|Envi/block)")
+  modelI<- lmer(formulaI, 
+                data=DFSubset, REML = TRUE)
+  AIC(modelI)
+  if(AIC(modelI) < bestAIC){bestAIC = AIC(modelI)
+  bestModel = modelI}
+  
+  # Model K. This is the one from the stats adviser\formula <- paste0(carb,)
+  formulaK <- paste0(carb,"~  Check + Envi + (1|Envi:Variety) + (1|superblock/Variety) + superblock + (1|superblock/block)")
+  modelK<- lmer(formulaK , 
+                data=DFSubset, REML = TRUE)
+  AIC(modelK)
+  if(AIC(modelK) < bestAIC){bestAIC = AIC(modelK)
+  bestModel = modelK}
+  
+  # Model L. This is basically Matts from the literature but with endosperm and no row or model
+  formulaL <- paste0(carb,"~ Check + (1|Envi/superblock/block) +  (1|Variety) + (1|Variety:Envi) + endo")
+  modelL<- lmer(formulaL , 
+                data=DFSubset, REML = TRUE)
+  AIC(modelL)
+  if(AIC(modelL) < bestAIC){bestAIC = AIC(modelL)
+  bestModel = modelL}
+  
+  # Model M
+  #with block, superblock, col,  as stand alone fixed effects, envi as random
+  formulaM <- paste0(carb,"~ Check + (1|Variety) + (1|Variety:Envi) + (1|Envi) + superblock + Col +  block")
+  modelM <- lmer(formulaM , data=DFSubset, REML = TRUE)
+  AIC(modelM)
+  if(AIC(modelM) < bestAIC){bestAIC = AIC(modelM)
+  bestModel = modelM}
+  
+  # Model N. This is basically Matts from the literature but with endosperm
+  formulaN <- paste0(carb,"~ Check + endo  + (1|Envi/superblock/block) + (1|Variety) + (1|Variety:Envi) + (1|Envi:Row) + (1|Envi:Col)")
+  modelN<- lmer(formulaN , 
+                data=DFSubset, REML = TRUE)
+  AIC(modelN)
+  if(AIC(modelN) < bestAIC){bestAIC = AIC(modelN)
+  bestModel = modelN}
+  
+  # Model O. This is basically Matts from the literature 
+  formulaO <- paste0(carb,"~ Check + (1|Envi/superblock/block) + (1|Variety) + (1|Variety:Envi) + (1|Envi:Row) + (1|Envi:Col)")
+  modelO<- lmer(formulaO , 
+                data=DFSubset, REML = TRUE)
+  AIC(modelO)
+  if(AIC(modelO) < bestAIC){bestAIC = AIC(modelO)
+  bestModel = modelO}
+  
+  # # Model P. This is basically Matts from the literature but with endosperm and no row or modelA and environment fixed
+  # formulaP <- paste0(carb,"~ Check + endo + Envi/superblock/block + (1|Variety) + (1|Variety:Envi)")
+  # modelP<- lmer(formulaP ,
+  #               data=DFSubset, REML = TRUE)
+  # AIC(modelP)
+  # if(AIC(modelP) < bestAIC){bestAIC = AIC(modelP)
+  # bestModel = modelP}
+  return(bestModel)
+  
+}
+
+######## What are the mlm best models for the two datasets? #######
+bestModel <- ModelCheck(CleanedInfoWF, "Total.Sugar")
+bestModel <- ModelCheck(CleanedInfoWF, "WSP")
+bestModel <- ModelCheck(CleanedInfoWF, "Starch")
+bestModel <- ModelCheck(CleanedInfoNF, "Total.Sugar")
 
 #######Graph the different variances explained by different factors######
 png(paste("Figures/WSMDP_AllNIRPred_MixedEqn_PercentVarianceExplainedby_Factors_WithField.png",sep=""), width = 1000, height = 500)
@@ -828,3 +1043,46 @@ system.time(
   }
 )
 
+
+
+#########################
+###Model Analysis###
+#########################
+
+#Lets get out the BLUES
+BLUES<-fixef(bestModel)
+
+#Now lets get the blups
+#EBLUPS for interpretation and publication.
+#This is the classical way by adding the BLUPS to the intercept, which becomes very complicated as model terms and degrees of freedom increase! Luckly we have great R functions!
+(BLUPs<-BLUES[-1]+BLUES[1])
+
+#### Least Squared Means Comparision aka EBLUPS
+LSD<-lsmeans(bestModel, ~ endo)
+LSD<-cld(LSD,Letters = LETTERS, decreasing=T)
+
+##### Whats the variance associated with this model#####
+#establish dataframe to store variances from each factor
+vc <- VarCorr(bestModel)
+vc <- as.data.frame(vc)
+#Broadsense heritability
+broadH <- vc$vcov[which(vc$grp=="Variety")]/(vc$vcov[which(vc$grp=="Variety")]+vc$vcov[which(vc$grp=="Residual")]/2)
+
+
+
+
+
+
+
+#########################
+###Finding the means###
+#########################
+####NOT WORKING! WHY NOT#####
+formulaL <- paste0("WSP ~ endo + superblock%in%block%in%Envi + superblock%in%Envi+ Variety*Envi ")
+fitL <- lm(formulaL,data=CleanedInfoWF)
+CleanedInfoWFMeans <- emmeans(fitL, ~ Envi:Variety)
+
+CleanedDF <- CarbOutlierCleanup(HWSPs,"HWSPs",alpha = 0.05)
+CleanedDF$Envi <- paste(CleanedDF$Year,CleanedDF$Location)
+fitL_HWPs <- lm(formulaL,data=CleanedDF)
+CleanedInfoHWPsMeans <- emmeans(fitL_HWPs, ~Envi:Variety)
