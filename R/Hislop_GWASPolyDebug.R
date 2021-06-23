@@ -22,14 +22,14 @@ adendum <- "WFBLUP"
 trait <- "Starch.BLUP"
 
 #No Fixed effect
-GWASPolyRunVersion <- "NoFixedEffect_FDRThresh_2021-06-23"
-fixedeffect <- NULL
-fixedType <- NULL
+# GWASPolyRunVersion <- "NoFixedEffect_FDRThresh_2021-06-23"
+# fixedeffect <- NULL
+# fixedType <- NULL
 
 # #With EndoMutant as Fixed Effect
-# GWASPolyRunVersion <- "EndoFixedEffect_FDRThresh_2021-06-23"
-# fixedEffect <- c("endo")
-# fixedType <- c("factor")
+GWASPolyRunVersion <- "EndoFixedEffect_FDRThresh_2021-06-23"
+fixedEffect <- c("endo")
+fixedType <- c("factor")
 
 outfiles1 <- paste("Data/WSMDP_Carb_GWASpoly_FullPheno_",GWASPolyRunVersion ,".csv",sep = "")
 outfiles2 <- paste("Data/RawData/",filename,adendum,"_",GWASPolyRunVersion,"_numericFormat.csv",sep = "")
@@ -44,14 +44,14 @@ readGPOut <- read.GWASpoly(ploidy=2,
 
 setKOut <- set.K(readGPOut, LOCO=TRUE)
 
-paramsOut <- set.params(fixed=fixedeffect, fixed.type=fixedType, n.PC = 3, MAF = 0.005) #no fixed effects, MAF should do nothing as it's already been filtered
+paramsOut <- set.params(fixed=fixedEffect, fixed.type=fixedType, n.PC = 3, MAF = 0.005) #no fixed effects, MAF should do nothing as it's already been filtered
 
-# THIS IS WHERE THE PROBLEM IS. Error: Error in cbind(X, model.matrix(~x, data.frame(x = xx))[, -1]) : 
+# THIS IS WHERE THE PROBLEM IS IF USING FIXED EFFECTS. Error: Error in cbind(X, model.matrix(~x, data.frame(x = xx))[, -1]) : 
 #   number of rows of matrices must match (see arg 2)
-GPOut <- GWASpoly(setKOut,models=c"general",traits=trait, params=paramsOut)
+GPOut <- GWASpoly(setKOut,models="general",traits=trait, params=paramsOut)
 
 
-#From GWASPolyVis
+#From My GWASPolyVis function
 visfileprefix <- paste0("Figures/GWASpoly/WSMDP_Carb_GWASpoly_",filename,"_",adendum,"_",GWASPolyRunVersion,"_",trait)
 
 QQplotfile <- paste(visfileprefix,"_QQplot_General.png", sep = "")
