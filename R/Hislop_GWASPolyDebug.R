@@ -28,8 +28,8 @@ trait <- "Starch.BLUP"
 
 # #With EndoMutant as Fixed Effect
 GWASPolyRunVersion <- "EndoFixedEffect_FDRThresh_2021-06-23"
-fixedEffect <- c("endo")
-fixedType <- c("factor")
+fixedEffect <- "endo"
+fixedType <- "factor"
 
 outfiles1 <- paste("Data/WSMDP_Carb_GWASpoly_FullPheno_",GWASPolyRunVersion ,".csv",sep = "")
 outfiles2 <- paste("Data/RawData/",filename,adendum,"_",GWASPolyRunVersion,"_numericFormat.csv",sep = "")
@@ -42,9 +42,9 @@ readGPOut <- read.GWASpoly(ploidy=2,
                       n.traits=7,
                       delim=",")
 
-setKOut <- set.K(readGPOut, LOCO=TRUE)
+setKOut <- set.K(readGPOut, LOCO=FALSE)
 
-paramsOut <- set.params(fixed=fixedEffect, fixed.type=fixedType, n.PC = 3, MAF = 0.005) #no fixed effects, MAF should do nothing as it's already been filtered
+paramsOut <- set.params(geno.freq = 1 - 10/957,fixed=fixedEffect, fixed.type=fixedType, n.PC = 3, MAF = 0.005) #no fixed effects, MAF should do nothing as it's already been filtered
 
 # THIS IS WHERE THE PROBLEM IS IF USING FIXED EFFECTS. Error: Error in cbind(X, model.matrix(~x, data.frame(x = xx))[, -1]) : 
 #   number of rows of matrices must match (see arg 2)

@@ -813,10 +813,19 @@ myG <- read.delim("Data/RawData/WSMDP_SCMV_SeqE.hmp.txt", head = FALSE)
 myGnames <- myG[1,]
 myGnames<-gsub(myGnames, pattern = ":.*", replacement = "")
 myG[1,] <- myGnames
+setwd("C:/Users/LHislop/Documents/0 Grad School/0 Lab/Diversity Panel/Carbohydrates/Data")
+Nodatas <- read.csv("20142015DivPanPlantingInbredswithNoMatchinDivPanMembersList.txt")
+unique <- unique(Nodatas)
+write.csv(unique, "20142015DivPanPlantingInbredswithNoMatchinDivPanMembersList.txt")
 
+# WiDivMergedall_sweet_rawcalls_MinSiteCount25_MAF0-005_MinTaxa0-01_sites416762_taxa581.
+getwd()
+setwd("C:/Users/LHislop/Documents/0 Grad School/0 Lab/Diversity Panel/SequenceData")
+fulluntrimmedgenoset <- fread("WSMDP_SeqF.hmp.txt",skip = "rs#")
+fullinbrednames <- colnames(fulluntrimmedgenoset)
+fullinbrednames<-gsub(fullinbrednames, pattern = ":.*", replacement = "")
+write.csv(fullinbrednames,"WSMSP_SeqF_AccessionNames.csv")
 
-
-# 
 # CleanedInfoNFwGeno <- merge(CleanedInfoNF,genoinfo, by = "Variety")
 # myY <- CleanedInfoNFwGeno[,c(19,6:12)]#,"class","tbl")
 # ######GWAS ALL TOGETHER #######

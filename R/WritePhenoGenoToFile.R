@@ -5,7 +5,7 @@ WritePhenoGenoToFile <- function(GWASPolyRunVersion,trait, phenoSubsetGeno,SCMVP
   phenoSubsetGeno_trait_Only <- phenoSubsetGeno[,c('GenoName',trait)]
   
 #read out the phenotype info into a format that GWASpoly will like
-phenooutfilefull <- paste("Data/WSMDP_Carb_GWASpoly_FullPheno_",GWASPolyRunVersion ,".csv",sep = "")
+phenooutfilefull <- paste("Data/WSMDP_Carb_GWASpoly_FullPheno_",GWASPolyRunVersion,Sys.Date(),".csv",sep = "")
 write.table(phenoSubsetGeno_fullpheno,
             append = FALSE,
             file = phenooutfilefull,
@@ -15,7 +15,7 @@ write.table(phenoSubsetGeno_fullpheno,
             col.names = TRUE)
 
 #read out the phenotype info into a format that GWASpoly will like. This time with only susceptibility info incase the other info is confusing
-phenooutfiletrait <- paste("Data/WSMDP_Carb_GWASpoly_Pheno_only_",trait,"_",GWASPolyRunVersion ,".csv",sep = "")
+phenooutfiletrait <- paste("Data/WSMDP_Carb_GWASpoly_Pheno_only_",trait,"_",GWASPolyRunVersion, Sys.Date(),".csv",sep = "")
 write.table(phenoSubsetGeno_trait_Only,
             append = FALSE,
             file = phenooutfiletrait,
@@ -25,7 +25,7 @@ write.table(phenoSubsetGeno_trait_Only,
             col.names = TRUE)
 
 #export as the geno info as CSV
-genooutput <- paste("Data/RawData/",filename,adendum,"_",GWASPolyRunVersion,"_numericFormat.csv",sep = "")
+genooutput <- paste("Data/RawData/",filename,adendum,"_",GWASPolyRunVersion,"_numericFormat",Sys.Date(),".csv",sep = "")
 write.table(SCMVPanel_nwithpos,
             append = FALSE,
             file = genooutput,

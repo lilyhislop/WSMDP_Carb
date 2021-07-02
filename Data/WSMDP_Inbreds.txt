@@ -1,865 +1,865 @@
-"13B-587-68A",0,0,0,1,,0,"PI358522","all_sweet","su1",,"Mdw","IL"
-"14H-588-68B",0,0,0,1,,0,"PI358523","all_sweet","su1",,"Mdw","IL"
-"176",0,0,0,1,,0,"PI233313","all_sweet","su1",,"Mdw","SD"
-"197A-381-68A",1,0,0,1,,0,"PI358526","all_sweet","su1",,"Mdw","IL"
-"2",1,1,1,1,,0,"2","WiDivMerged","su1",,,
-"21-396-68(B)",0,0,1,1,,0,"PI358535","all_sweet","su1",,"Mdw","IL"
-"226",0,0,0,1,,0,"PI233314","all_sweet","su1",,"Mdw","SD"
-"245",1,0,0,1,,0,"SD245","WiDivMerged","su1","Assume same as SD245","Mdw","SD"
-"257A9",1,1,1,0,,0,"257A9","WiDivMerged","su1",,,
-"27A-317-68C",1,0,0,1,,0,"PI358525","all_sweet","su1",,"Mdw","IL"
-"304A",1,1,0,0,,0,"PI358527","all_sweet","su1",,"Mdw","IL"
-"34f",1,1,1,1,,0,"34f","WiDivMerged","su1",,,
-"42",0,0,0,1,,0,"PI233312","all_sweet","su1",,"Mdw","SD"
-"442A-431-68D",1,0,0,1,,0,"PI358528","all_sweet","su1",,"Mdw","IL"
-"469",1,0,0,1,,0,"PI233316","all_sweet","su1",,,"SD"
-"471-U6",1,1,1,1,,0,"471_U6","WiDivMerged","su1",,,"USDA"
-"5261",0,0,0,1,,0,"NSL15405","all_sweet","su1",,"Mdw","IA"
-"592",0,0,0,1,,0,"PI233317","all_sweet","su1",,"Mdw","SD"
-"675A",1,1,0,0,,0,"PI358531","all_sweet","su1",,,
-"676A-348-68B",0,0,0,1,,0,"PI358532","all_sweet","su1",,"Mdw","IL"
-"789",0,0,0,1,,0,"PI233318","all_sweet","su1",,"Mdw","SD"
-"81-1",1,1,1,1,,0,"NSL8581","WiDivMerged","su1",,,"USDA"
-"829",0,0,0,1,,0,"PI233319","all_sweet","su1",,"Mdw","SD"
-"83610b",1,1,1,1,,0,"83610b","WiDivMerged","su1",,,
-"83612b",1,1,1,1,,0,"83612b","WiDivMerged","su1",,,
-"883",0,0,0,1,,0,"PI233320","all_sweet","su1",,"Mdw","SD"
-"908",0,0,0,1,,0,"PI233321","all_sweet","su1",,"Mdw","SD"
-"909",0,0,0,1,,0,"PI233322","all_sweet","su1",,"Mdw","SD"
-"A10579",1,1,1,1,,0,"A10579","WiDivMerged","su1",,,
-"A15",1,1,1,1,,0,"A15","WiDivMerged","su1",,"Mdw","MN"
-"A632",1,1,1,0,,0,"A632","WiDivMerged","field",,"Mdw","MN"
-"A632 su/su",1,0,1,1,,0,,"NA","su1",,"Mdw","MN"
-"A632_sh2sh2",1,0,0,1,,0,,"NA","sh2",,"Mdw","MN"
-"A648",1,1,1,1,,0,"A648","WiDivMerged","su1",,"Mdw","MN"
-"A684su",1,1,1,1,,0,"PI567792","WiDivMerged","su1",,"Mdw","MN"
-"A685su",1,1,1,1,,0,"PI567793","WiDivMerged","su1",,"Mdw","MN"
-"A686su",1,1,1,1,,0,"PI567794","WiDivMerged","su1",,"Mdw","MN"
-"A7",1,1,1,1,,0,"A7","WiDivMerged","su1","NSL42872","Mdw","MN"
-"Amarillo_dulce",1,0,0,1,,0,,"NA","NA",,"Int","MX"
-"Andjar_Bekaa",0,0,0,1,,0,,"NA","NA",,"Int","LB"
-"ARZM_16_011",0,0,0,1,,0,,"NA","NA",,"Int","AR"
-"ARZM_19_051",1,0,0,1,,0,,"NA","NA",,"Int","AR"
-"ARZM_19_057",0,0,0,1,,0,,"NA","NA",,"Int","AR"
-"ARZM_19_069",1,0,0,1,,0,,"NA","NA",,"Int","AR"
-"ARZM_20_005",0,0,0,1,,0,,"NA","NA",,"Int","AR"
-"ARZM_20_006",1,0,0,1,,0,,"NA","NA",,"Int","AR"
-"ARZM_21_002",1,0,0,1,,0,,"NA","NA",,"Int","AR"
-"ARZM_21_006",1,0,0,1,,0,,"NA","NA",,"Int","AR"
-"ARZM_21_007",1,0,0,1,,0,,"NA","NA",,"Int","AR"
-"ARZM_21_008",1,0,0,1,,0,,"NA","NA",,"Int","AR"
-"ARZM_21_009",0,0,0,1,,0,,"NA","NA",,"Int","AR"
-"ARZM_21_013",0,0,0,1,,0,,"NA","NA",,"Int","AR"
-"ARZM_21_014",0,0,0,1,,0,,"NA","NA",,"Int","AR"
-"ARZM_21_018",1,0,0,1,,0,,"NA","NA",,"Int","AR"
-"AS11",1,1,1,1,,0,"AS11","all_sweet","su1",,"Mdw","MN"
-"AS11_Sweet_corn_population",0,0,0,1,,0,,"NA","NA",,"Mdw","MN"
-"AS12",1,0,0,1,,0,,"NA","NA",,"Mdw","MN"
-"Atkinson",1,0,0,1,,0,,"NA","NA",,"Mdw","OH"
-"Aunt_Marys",1,0,0,1,,0,,"NA","NA",,,
-"B5765",1,1,0,1,,0,"B5765","WiDivMerged","se",,"Mdw","IL"
-"B5765 Se",0,0,1,0,,0,"B5765","WiDivMerge","NA",,"Mdw","IL"
-"B5870",1,1,1,1,,0,"B5870","WiDivMerged","su1",,"Mdw","IL"
-"B73",1,1,1,0,,0,"B73","WiDivMerged","field",,"Mdw","IA"
-"B84_plus_su",0,0,0,1,,0,,"NA","NA",,"Mdw","IA"
-"Banting",0,0,0,1,,0,,"NA","NA",,"Mdw","CA"
-"Baxters_Golden_Bantam",0,0,0,1,,0,,"NA","NA",,"Ne","ME"
-"Bi #10",0,0,0,1,,0,,"NA","NA",,,
-"Black_Mexican",0,0,0,1,,0,,"NA","NA",,"Int","AR"
-"BSQ1",0,0,1,0,,0,,"NA","NA",,,
-"BST1",0,0,1,0,,0,,"NA","NA",,,
-"BST2",0,0,1,0,,0,,"NA","NA",,,
-"BST4",0,0,1,0,,0,,"NA","NA",,,
-"Burnell_Golden_Bantam",0,0,0,1,,0,,"NA","NA",,,
-"C12-1",1,1,1,1,,0,"Ames22015","all_sweet","su1",,"Ne","CT"
-"C13",1,1,1,1,,0,"PI587126","all_sweet","su1",,"Ne","CT"
-"C13et-123:68",0,0,1,0,,0,"PI587126","all_sweet","su1",,"Ne","CT"
-"C15",1,1,1,1,,0,"C15","WiDivMerged","su1",,"Ne","CT"
-"C1540",1,1,1,1,,0,"CI540","WiDivMerged","field",,"Ne","CT"
-"C18",1,1,1,1,,0,"Ames22017","all_sweet","su1",,"Ne","CT"
-"C2",1,1,1,1,,0,"C2","WiDivMerged","su1",,"Ne","CT"
-"C22",1,1,1,1,,0,"Ames22018","all_sweet","su1",,"Ne","CT"
-"C23",1,1,1,1,,0,"C23_su","WiDivMerged","su1",,"Ne","CT"
-"C27",1,1,1,1,,0,"Ames22019","all_sweet","su1",,"Ne","CT"
-"C27red",1,1,1,1,,0,"C27red","all_sweet","su1",,"Ne","CT"
-"C3",1,1,1,1,,0,"Ames26812","all_sweet","su1",,"Ne","CT"
-"C30",1,1,1,1,,0,"Ames26815","all_sweet","su1",,"Ne","CT"
-"C31",1,1,1,1,,0,"Ames22020","all_sweet","su1",,"Ne","CT"
-"C38",1,1,1,1,,0,"Ames22021","all_sweet","su1",,"Ne","CT"
-"C4",1,1,1,1,,0,"C4","all_sweet","su1",,"Ne","CT"
-"C40",1,1,1,1,,0,"Ames22022","all_sweet","su1",,"Ne","CT"
-"C42",1,1,1,1,,0,"Ames23507","all_sweet","su1",,"Ne","CT"
-"C5",1,1,1,1,,0,"Ames26813","all_sweet","su1",,"Ne","CT"
-"C5 Ark 1956",0,0,1,0,,0,"Ames22011","all_sweet","su1",,"Ne","CT"
-"C5 Cold Hardy Comp",0,0,1,0,,0,,"NA","NA",,"Ne","CT"
-"C5-NT",1,1,1,0,,0,"C5_NT","WiDivMerged","su1",,"Ne","CT"
-"C65",1,1,1,1,,0,"C65","WiDivMerged","su1",,"Ne","CT"
-"C68",1,1,1,1,,0,"C68","WiDivMerged","su1",,"Ne","CT"
-"C68 su",0,0,1,0,,0,"C68","all_sweet","su1","no explicit C68 su","Ne","CT"
-"C68R",1,1,0,0,,0,"C68Rx_552_63","all_sweet","su1",,"Ne","CT"
-"C68R(x)-552:63",0,1,1,1,,0,"C68Rx_552_63","WiDivMerged","su1",,"Ne","CT"
-"C6A",1,1,1,1,,0,"C6A","all_sweet","su1",,"Ne","CT"
-"C7",1,1,1,1,,0,"Ames22012","all_sweet","su1",,"Ne","CT"
-"C7e",1,1,1,1,,0,"Ames22013","all_sweet","su1",,"Ne","CT"
-"C8 white",0,0,1,0,,0,"C8w","all_sweet","su1","no explicit C8 white. Assuming C8w is same","Ne","CT"
-"C81",1,1,1,1,,0,"C81","all_sweet","su1",,"Ne","CT"
-"C8p",0,1,0,0,,0,"Ames22014","all_sweet","su1","assuming sae as C8psuedo","Ne","CT"
-"C8pseudo",1,0,1,1,,0,"Ames22014","all_sweet","su1",,"Ne","CT"
-"C8w",1,1,0,0,,0,"C8w","all_sweet","su1",,"Ne","CT"
-"C90",1,1,1,1,,0,"Ames22024","all_sweet","su1",,"Ne","CT"
-"Check1",1,1,0,0,,0,,"NA","se",,,
-"Check2",1,1,0,0,,0,,"NA","su1",,,
-"Check3",1,1,0,0,,0,,"NA","su1",,,
-"Check4",1,1,0,0,,0,,"NA","su1",,,
-"Chihuahua_151",1,0,0,1,,0,,"NA","NA",,,
-"Chile_332",0,0,0,1,,0,,"NA","NA",,,
-"Chile_335",1,0,0,1,,0,,"NA","NA",,,
-"Chile_339",1,0,0,1,,0,,"NA","NA",,,
-"CHZM_08_129",1,0,0,1,,0,,"NA","NA",,,
-"CI540",1,0,1,1,,0,"CI540","WiDivMerge","NA",,,
-"COES 25A-1",0,0,0,1,,0,,"NA","NA",,,
-"COES 28A-1",0,0,0,1,,0,,"NA","NA",,,
-"COES 46A-1",0,0,0,1,,0,,"NA","NA",,,
-"Country_Gentleman",0,0,0,1,,0,,"NA","NA",,,
-"CRC_61",0,0,0,1,,0,,"NA","NA",,,
-"CTS6-1",1,0,1,1,,0,"CTS6_1","all_sweet","su1",,,
-"CTS6-2",1,0,1,0,,0,,"NA","NA",,,
-"CTS62_Su",0,0,0,1,,0,,"NA","NA",,,
-"Cubano",0,0,0,1,,0,,"NA","NA",,,
-"Cuzco_suse",1,0,0,1,,0,,"NA","NA",,,
-"DF14",1,1,0,1,,0,"DF14","all_sweet","field",,,
-"DF14 Su",0,0,1,0,,0,"DF14","all_sweet","field","assume same as DF14",,
-"Doce_de_Cuba",1,0,0,1,,0,,"NA","NA",,,
-"DSU 146",0,0,1,0,,0,,"NA","NA",,,
-"Early_Evergreen",1,0,0,1,,0,,"NA","NA",,,
-"Early_June",0,0,0,1,,0,,"NA","NA",,,
-"EP58",1,1,1,1,,0,"EP58","all_sweet","su1",,"Int","SP"
-"EP60",1,1,1,1,,0,"EP60","all_sweet","su1",,"Int","SP"
-"EP61",1,1,1,1,,0,"EP61","all_sweet","su1",,"Int","SP"
-"EP62",1,1,1,1,,0,"EP62","all_sweet","su1",,"Int","SP"
-"EP82",1,1,1,1,,0,"EP82","all_sweet","su1",,"Int","SP"
-"EP83",1,1,1,1,,0,"EP83","all_sweet","su1",,"Int","SP"
-"EP84",1,1,1,1,,0,"EP84","all_sweet","sh2",,"Int","SP"
-"EP85",1,1,1,1,,0,"EP85","all_sweet","sh2",,"Int","SP"
-"Eskisehir",0,0,0,1,,0,,"NA","NA",,,
-"F2",1,1,1,0,,0,,"NA","field",,"Int","FR"
-"F7",1,1,1,1,,0,,"NA","field",,"Int","FR"
-"Fa32B",1,1,1,0,,0,"Fa32B","all_sweet","sh2i",,"Sou","FL"
-"Fa56A",1,1,1,0,,0,"PI644099","all_sweet","sh2i","Assume same as Florida56","Sou","FL"
-"FL32",0,0,0,1,,0,"Fa32B","all_sweet","NA","Assume same as Fa32B","Sou","FL"
-"FL56",0,0,0,1,,0,"PI644099","all_sweet","NA","Assume same as Florida56","Sou","FL"
-"G8",1,1,1,1,,0,"G8","WiDivMerged","su1",,"Mdw","IN"
-"Glancaster_sh2",1,0,0,1,,0,,"NA","NA",,,
-"GMBAB",1,1,1,0,,0,"GMBAB","WiDivMerged","su1",,,
-"Golden_Bantam",0,0,0,1,,0,,"NA","NA",,,
-"Golden_Bantam_WI",1,0,0,1,,0,,"NA","NA",,,
-"Golden_Evergreen",0,0,0,1,,0,,"NA","NA",,,
-"Golden_Gem",0,0,0,1,,0,,"NA","NA",,,
-"Golden_Giant",1,0,0,1,,0,,"NA","NA",,,
-"GSSS_sh2",0,0,0,1,,0,,"NA","sh2",,,
-"GTS1",1,1,1,1,,0,"PI550492","all_sweet","su1",,"Sou","GA"
-"Guanajuato_93",0,0,0,1,,0,,"NA","NA",,,
-"Hawaii Sugar",0,0,0,1,,0,,"NA","NA",,"Int","HI"
-"Hawaiian_Sugar",1,0,0,1,,0,,"NA","NA",,"Int","HI"
-"Hayes_White_Sweet",1,0,0,1,,0,,"NA","NA",,,
-"Hi 38",0,0,0,1,,0,,"NA","NA",,"Int","HI"
-"HI 70",0,0,0,1,,0,,"NA","NA",,"Int","HI"
-"HI 71",0,0,0,1,,0,,"NA","NA",,"Int","HI"
-"HI 73",0,0,0,1,,0,,"NA","NA",,"Int","HI"
-"HI 74",0,0,0,1,,0,,"NA","NA",,"Int","HI"
-"HI 75",0,0,0,1,,0,,"NA","NA",,"Int","HI"
-"HI 76",0,0,0,1,,0,,"NA","NA",,"Int","HI"
-"HI 77",0,0,0,1,,0,,"NA","NA",,"Int","HI"
-"HI 78",0,0,0,1,,0,,"NA","NA",,"Int","HI"
-"HI 79",0,0,0,1,,0,,"NA","NA",,"Int","HI"
-"HI 81",0,0,0,1,,0,,"NA","NA",,"Int","HI"
-"HI 82",0,0,0,1,,0,,"NA","NA",,"Int","HI"
-"Hi BT SYN 3",0,0,0,1,,0,,"NA","NA",,"Int","HI"
-"Hi38C1",0,0,0,1,,0,,"NA","NA",,"Int","HI"
-"HotevillaAzwhitesweetcorn_1",1,0,1,1,,0,"HotevillaAzwhitesweetcorn_1","all_sweet","su1",,,
-"Howling_Mob",1,0,0,1,,0,,"NA","NA",,,
-"I108-2-2-2-2-1-1-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"I112-1-1-2-1-1-1-",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"I136-1-1-1-1-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"I152-1-1-1-1-2-1-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"I182-1-2-1-1-1-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"I22-1-1-1-1-1-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"I237-1-2-1-1-1-1-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"I31-1-1-1-2-1-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"I45",1,1,1,0,,0,"I45","WiDivMerged","su1",,,
-"I58-1-2-2-1-1-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"I817",1,1,1,1,,0,"I817","WiDivMerged","su1",,,
-"I9-1-1-1-1-1-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"I94-1-1-1-1-1-1-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"I97-1-1-1-1-1-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"Ia2003",1,1,1,1,,0,"Ames22028","all_sweet","su1",,"Mdw","IA"
-"Ia2015 (yar) (A)",0,0,1,0,,0,"Ia2015","all_sweet","su1","Assume the same as Ia2015","Mdw","IA"
-"Ia2076",1,1,1,1,,0,"Ames22029","all_sweet","su1",,"Mdw","IA"
-"Ia2132",1,1,1,1,,0,"PI587134","all_sweet","su1",,"Mdw","IA"
-"Ia2256",1,1,1,0,,0,"Ia2256","all_sweet","su1",,"Mdw","IA"
-"Ia2256B",1,1,1,0,,0,,"NA","su1",,"Mdw","IA"
-"Ia2730",1,1,1,1,,0,"Ia2730","all_sweet","su1",,"Mdw","IA"
-"Ia4189",1,1,1,1,,0,"Ia4189","all_sweet","su1",,"Mdw","IA"
-"Ia45-1",1,1,1,1,,0,"Ia45_1","WiDivMerged","su1",,"Mdw","IA"
-"Ia45-2",1,1,1,1,,0,"Ia45_2","WiDivMerged","su1",,"Mdw","IA"
-"Ia453",1,1,1,0,,1,"Ia453","WiDivMerged","su1",,"Mdw","IA"
-"Ia45-3",1,1,1,1,,0,"Ia45_3","WiDivMerged","su1",,"Mdw","IA"
-"Ia453 sh2",1,0,0,1,,1,,"NA","sh2",,"Mdw","IA"
-"Ia453 Su",1,0,0,0,,0,,"NA","NA",,"Mdw","IA"
-"Ia453 su1",0,0,0,1,,0,"Ia453","WiDivMerged","NA","Assume the same as Ia453","Mdw","IA"
-"Ia453 WT",0,0,0,1,,0,,"NA","NA",,"Mdw","IA"
-"Ia5125",1,1,0,1,,0,"PI587135","all_sweet","su1",,"Mdw","IA"
-"Ia5125 (non-fire)",1,0,1,0,,0,"PI587135","all_sweet","su1",,"Mdw","IA"
-"Ia5125 su",0,0,1,0,,0,"PI587135","all_sweet","su1","Assume the same as Ia5125","Mdw","IA"
-"Ia5125B",1,0,0,1,,1,"Ames27117","all_sweet","su1",,"Mdw","IA"
-"Ia5145",1,0,1,1,,0,"Ames22031","all_sweet","NA",,"Mdw","IA"
-"Ia5220",1,1,1,0,,0,"Ia5220","WiDivMerged","su1",,"Mdw","IA"
-"Ia5261",1,1,1,1,,0,"Ia5261","all_sweet","su1",,"Mdw","IA"
-"Ia59",1,1,1,1,,0,"Ia59","all_sweet","su1",,"Mdw","IA"
-"IaCG4189",1,1,1,1,,1,"Ames22025","all_sweet","su1",,"Mdw","IA"
-"IaEV191",1,1,0,1,,1,"Ames22026","all_sweet","su1",,"Mdw","IA"
-"IaEV3002",1,1,1,1,,1,"IaEV3002","all_sweet","su1",,"Mdw","IA"
-"IaEV3004",1,1,1,1,,0,"Ames22027","all_sweet","su1",,"Mdw","IA"
-"IaEV3015",1,1,1,1,,0,"IaEV3015","all_sweet","su1",,"Mdw","IA"
-"If825",1,1,1,1,,1,"If825","WiDivMerged","sh2",,,
-"If853",1,1,1,1,,1,"If853","all_sweet","sh2",,,
-"IL101-dgB-2727:62",0,0,1,0,,0,,"NA","NA",,"Mdw","IL"
-"IL101Q",1,0,1,0,,0,,"NA","NA",,"Mdw","IL"
-"IL101t",1,1,1,1,,1,"Ames27119","all_sweet","su1",,"Mdw","IL"
-"Il101t su",0,0,1,0,,0,"Ames27119","all_sweet","NA",,"Mdw","IL"
-"IL103a",1,1,1,1,,0,"IL103a","all_sweet","su1",,"Mdw","IL"
-"IL104g",1,1,1,1,,0,"IL104g","all_sweet","su1",,"Mdw","IL"
-"IL107a",0,1,1,0,,0,,"NA","su1",,"Mdw","IL"
-"IL110K",1,1,1,1,,0,"IL110K","all_sweet","su1",,"Mdw","IL"
-"IL112t",1,1,1,1,,0,"IL112t","all_sweet","su1",,"Mdw","IL"
-"IL1171",1,1,1,1,,0,"IL1171","all_sweet","su1",,"Mdw","IL"
-"IL11D",1,1,1,1,,0,"IL11D","all_sweet","su1",,"Mdw","IL"
-"IL124a",1,1,1,1,,0,"IL124a","all_sweet","su1",,"Mdw","IL"
-"IL125a",1,0,1,1,,0,,"NA","NA",,"Mdw","IL"
-"IL125b",1,1,1,0,,0,"IL125b","WiDivMerged","su1",,"Mdw","IL"
-"IL134",0,1,1,0,,0,,"0","su1",,"Mdw","IL"
-"IL13B",1,1,1,1,,0,"IL13B","WiDivMerged","su1",,"Mdw","IL"
-"IL14b",1,1,1,1,,0,"IL14b","WiDivMerged","su1",,"Mdw","IL"
-"IL14C",1,1,1,1,,0,"IL14C","WiDivMerged","su1",,"Mdw","IL"
-"IL14H",1,1,1,1,,0,"Ames27118","all_sweet","su1","Assume same as IL14H","Mdw","IL"
-"IL14H-1014:74",0,0,1,0,,0,"Ames27118","all_sweet","su1","Assume same as IL14H","Mdw","IL"
-"IL14H-588-68(B)",0,0,1,0,,0,"Ames27118","all_sweet","su1","Assume same as IL14H","Mdw","IL"
-"IL18b",1,1,1,1,,0,"IL18b","WiDivMerged","se",,"Mdw","IL"
-"IL18c",0,0,1,0,,0,,"NA","NA",,"Mdw","IL"
-"IL200e",1,1,1,1,,0,"IL200e","WiDivMerged","su1",,"Mdw","IL"
-"IL21f",1,1,1,1,,0,"IL21f","WiDivMerged","su1",,"Mdw","IL"
-"IL279AxRp1d",1,1,1,1,,0,"IL279AxRp1d","WiDivMerged","su1",,"Mdw","IL"
-"IL27a",1,1,1,1,,0,"IL27a","WiDivMerged","su1",,"Mdw","IL"
-"IL27A-317-68©",0,0,1,0,,0,"IL27a","WiDivMerged","su1","Assume the same as IL27a","Mdw","IL"
-"IL303b",1,1,1,1,,0,"IL303b","WiDivMerged","su1",,"Mdw","IL"
-"IL318a",1,1,1,1,,0,"IL318a","WiDivMerged","su1",,"Mdw","IL"
-"IL31a",1,1,1,1,,0,"IL31a","WiDivMerged","su1",,"Mdw","IL"
-"IL323a",1,1,1,1,,0,"IL323a","WiDivMerged","su1",,"Mdw","IL"
-"IL325a",1,1,1,1,,0,"IL325a","WiDivMerged","su1",,"Mdw","IL"
-"IL328a",1,1,1,1,,0,"IL328a","WiDivMerged","su1",,"Mdw","IL"
-"IL354a",1,1,1,1,,0,"IL354a","WiDivMerged","su1",,"Mdw","IL"
-"IL366a",1,1,1,1,,0,"IL366a","WiDivMerged","su1",,"Mdw","IL"
-"IL368a",1,1,1,1,,0,"IL368a","WiDivMerged","su1",,"Mdw","IL"
-"IL369b",1,1,1,1,,0,"IL369b","WiDivMerged","su1",,"Mdw","IL"
-"IL370a",1,1,1,1,,0,"IL370a","WiDivMerged","su1",,"Mdw","IL"
-"IL370a (su)",0,0,1,0,,0,"IL370a","WiDivMerged","su1","assume the same as IL370a","Mdw","IL"
-"IL370b",0,0,1,0,,0,,"NA","NA",,"Mdw","IL"
-"IL393a",1,1,1,1,,0,"IL393a","WiDivMerged","su1",,"Mdw","IL"
-"IL395a",1,1,1,1,,0,"IL395a","WiDivMerged","su1",,"Mdw","IL"
-"IL430a",1,1,1,1,,0,"IL430a","WiDivMerged","su1",,"Mdw","IL"
-"IL437a",1,1,1,1,,0,"IL437a","all_sweet","su1",,"Mdw","IL"
-"IL442a",1,1,1,1,,1,"IL442a","WiDivMerged","su1",,"Mdw","IL"
-"IL442A-431-68(D)",0,0,1,0,,0,"IL442a","WiDivMerged","su1","Assume the same as IL442a","Mdw","IL"
-"IL44b",1,1,1,1,,1,"IL44b","WiDivMerged","se",,"Mdw","IL"
-"IL451-18 Se Se",0,0,1,0,,0,,"NA","NA",,"Mdw","IL"
-"IL451b",1,1,1,1,,0,"IL451b","WiDivMerged","su1",,"Mdw","IL"
-"Il451b se",0,1,0,0,,0,,"NA","se",,"Mdw","IL"
-"IL453b",1,1,1,1,,0,"IL453b","WiDivMerged","su1",,"Mdw","IL"
-"IL454a",1,1,1,1,,0,"IL454a","WiDivMerged","su1",,"Mdw","IL"
-"IL465a",1,1,1,1,,0,"IL465a","WiDivMerged","su1",,"Mdw","IL"
-"IL47A",1,1,1,1,,0,"IL47A","WiDivMerged","su1",,"Mdw","IL"
-"IL515a",1,1,1,1,,0,"IL515a","WiDivMerged","su1",,"Mdw","IL"
-"IL543c",1,1,1,1,,0,"IL543c","WiDivMerged","su1",,"Mdw","IL"
-"IL545",1,1,1,1,,0,"IL545","WiDivMerged","su1",,"Mdw","IL"
-"IL557a",1,1,1,1,,0,"IL557a","WiDivMerged","su1",,"Mdw","IL"
-"IL607a",1,1,1,1,,0,"IL607a","WiDivMerged","su1",,"Mdw","IL"
-"IL611a",1,1,1,1,,0,"IL611a","WiDivMerged","su1",,"Mdw","IL"
-"IL615a",1,1,1,1,,0,"IL615a","WiDivMerged","su1",,"Mdw","IL"
-"IL618b",1,1,1,1,,0,"IL618b","WiDivMerged","su1",,"Mdw","IL"
-"IL648",1,1,1,1,,0,"IL648","WiDivMerged","su1",,"Mdw","IL"
-"IL648a",0,0,1,0,,0,"IL648","WiDivMerged","su1","assume same as IL648","Mdw","IL"
-"IL661a",1,1,1,1,,0,"IL661a","WiDivMerged","su1",,"Mdw","IL"
-"IL671a",1,1,1,1,,0,"IL671a","WiDivMerged","su1",,"Mdw","IL"
-"IL673a",1,1,1,1,,0,"IL673a","WiDivMerged","su1",,"Mdw","IL"
-"IL676a",1,1,1,1,,0,"IL676a","WiDivMerged","su1",,"Mdw","IL"
-"IL677a",1,1,1,1,,1,"Ames27120","all_sweet","se",,"Mdw","IL"
-"IL678a",1,1,1,1,,0,"IL678a","WiDivMerged","su1",,"Mdw","IL"
-"IL678a-se",0,0,1,0,,0,,"NA","NA",,"Mdw","IL"
-"IL689a",1,1,1,1,,0,"IL689a","WiDivMerged","su1",,"Mdw","IL"
-"IL692c",1,1,1,1,,0,"IL692c","WiDivMerged","su1",,"Mdw","IL"
-"IL696a",1,1,1,1,,0,"IL696a","WiDivMerged","se",,"Mdw","IL"
-"IL699e",1,1,1,1,,0,"IL699e","all_sweet","su1",,"Mdw","IL"
-"IL699f",0,0,1,0,,0,,"NA","NA",,"Mdw","IL"
-"IL7",1,1,1,1,,0,"IL7","all_sweet","su1",,"Mdw","IL"
-"IL701e",1,1,1,1,,0,"IL701e","WiDivMerged","su1",,"Mdw","IL"
-"IL707a",1,1,1,1,,0,"IL707a","WiDivMerged","su1",,"Mdw","IL"
-"IL710a",0,0,1,0,,0,,"NA","NA",,"Mdw","IL"
-"IL711a",0,0,1,0,,0,,"NA","NA",,"Mdw","IL"
-"IL713a",1,1,1,1,,0,"IL713a","WiDivMerged","su1",,"Mdw","IL"
-"IL729a",1,1,1,1,,0,"IL729a","WiDivMerged","su1",,"Mdw","IL"
-"IL731",0,0,1,0,,0,"Ames27444","all_sweet","se","Assuming same as IL731a","Mdw","IL"
-"IL731a",1,1,0,1,,0,"Ames27444","all_sweet","se",,"Mdw","IL"
-"IL731a (se)",0,0,1,0,,0,"Ames27444","all_sweet","se","Assuming same as IL731a","Mdw","IL"
-"IL733a",1,1,1,1,,0,"IL733a","WiDivMerged","su1",,"Mdw","IL"
-"IL744a",1,1,1,1,,0,"IL744a","WiDivMerged","su1",,"Mdw","IL"
-"IL747b",1,1,0,1,,0,"IL747b","WiDivMerged","se",,"Mdw","IL"
-"IL747b (se)",0,0,1,0,,0,"IL747b","WiDivMerged","se","Assuming same as IL747b","Mdw","IL"
-"IL751a",1,1,1,1,,0,"IL751a","WiDivMerged","su1",,"Mdw","IL"
-"IL755a",0,0,0,1,,0,,"NA","NA",,"Mdw","IL"
-"IL757b",1,1,1,1,,0,"IL747b","WiDivMerged","su1",,"Mdw","IL"
-"IL761a",1,1,1,1,,0,"IL761a","WiDivMerged","su1",,"Mdw","IL"
-"IL761c",0,0,1,0,,0,,"NA","NA",,"Mdw","IL"
-"IL764b",1,1,1,1,,0,"IL764b","WiDivMerged","su1",,"Mdw","IL"
-"IL765a",1,1,1,1,,0,"IL765a","WiDivMerged","su1",,"Mdw","IL"
-"IL766a",1,1,0,1,,0,"IL766a","WiDivMerged","se",,"Mdw","IL"
-"IL766a (se)",0,0,1,0,,0,"IL766a","WiDivMerged","se","Assuming same as IL766a","Mdw","IL"
-"IL767a",0,0,1,0,,0,,"NA","NA",,"Mdw","IL"
-"IL767b",1,1,1,1,,0,"Ames27445","all_sweet","su1",,"Mdw","IL"
-"IL768a (se)",0,0,1,0,,0,,"NA","NA",,"Mdw","IL"
-"IL769a",0,0,1,0,,0,,"NA","NA",,"Mdw","IL"
-"IL772a",1,1,1,1,,0,"IL772a","WiDivMerged","su1",,"Mdw","IL"
-"IL772b",0,0,1,0,,0,,"NA","NA",,"Mdw","IL"
-"IL773a",1,1,1,1,,0,"IL773a","WiDivMerged","su1",,"Mdw","IL"
-"IL774a",0,0,1,0,,0,,"NA","NA",,"Mdw","IL"
-"IL774b su",0,0,1,0,,0,,"NA","NA",,"Mdw","IL"
-"IL774d",0,0,1,0,,0,,"NA","NA",,"Mdw","IL"
-"IL775a",1,1,1,0,,0,"IL775a","WiDivMerged","su1",,"Mdw","IL"
-"IL776a",1,1,1,1,,0,"IL776a","WiDivMerged","su1",,"Mdw","IL"
-"IL777a",1,1,1,1,,0,"IL777a","WiDivMerged","su1",,"Mdw","IL"
-"IL778c",1,1,1,1,,0,"IL778c","WiDivMerged","su1",,"Mdw","IL"
-"IL778d",1,0,0,1,,0,"Ames27446","all_sweet","NA",,"Mdw","IL"
-"IL779a",1,1,1,0,,0,"Ames27447","all_sweet","su1",,"Mdw","IL"
-"IL781a",0,0,1,0,,0,,"NA","NA",,"Mdw","IL"
-"IL784a",0,1,0,0,,0,,"NA","su1",,"Mdw","IL"
-"IL788a",1,1,1,1,,0,"IL788a","WiDivMerged","su1",,"Mdw","IL"
-"IL789b",1,1,1,1,,0,"IL789b","WiDivMerged","su1",,"Mdw","IL"
-"IL791a",0,1,1,0,,0,"IL791a","WiDivMerged","su1",,"Mdw","IL"
-"IL793a",1,1,1,1,,0,"IL793a","WiDivMerged","su1",,"Mdw","IL"
-"IL794a",1,1,1,1,,0,"IL794a","WiDivMerged","su1",,"Mdw","IL"
-"IL795a",1,1,1,1,,0,"IL795a","WiDivMerged","su1",,"Mdw","IL"
-"IL796a",1,1,1,1,,0,"IL796a","WiDivMerged","su1",,"Mdw","IL"
-"IL797a",1,1,1,1,,0,"IL797a","WiDivMerged","su1",,"Mdw","IL"
-"IL798c",1,1,1,1,,0,"IL798c","WiDivMerged","su1",,"Mdw","IL"
-"IL799b",1,1,1,1,,0,"IL799b","WiDivMerged","su1",,"Mdw","IL"
-"IL800a",1,1,1,0,,0,,"NA","su1",,"Mdw","IL"
-"IL801a",1,1,1,1,,0,"IL801a","WiDivMerged","su1",,"Mdw","IL"
-"IL802b",0,1,0,0,,0,"IL802b_Ht2","WiDivMerged","su1",,"Mdw","IL"
-"IL802b Ht2",1,0,1,1,,0,"IL802b_Ht2","WiDivMerged","su1",,"Mdw","IL"
-"IL803a",1,1,1,1,,0,"IL803a","WiDivMerged","su1",,"Mdw","IL"
-"IL804a",1,1,1,0,,0,"IL804a","WiDivMerged","su1",,"Mdw","IL"
-"IL804a HTN",0,0,0,1,,0,"IL804a","WiDivMerged","NA","Assume same as IL804a","Mdw","IL"
-"IL86e",1,1,1,1,,0,"IL86e","WiDivMerged","su1",,"Mdw","IL"
-"IL91j",1,1,1,1,,0,"IL91j","WiDivMerged","su1",,"Mdw","IL"
-"ILB5765",1,1,0,1,,0,"ILB5765","WiDivMerged","se",,"Mdw","IL"
-"ILB5765 se",0,0,1,0,,0,"ILB5765","WiDivMerged","se","Assume same as ILB5765","Mdw","IL"
-"ILB5870",1,1,1,1,,0,"ILB5870","WiDivMerged","su1",,"Mdw","IL"
-"ILB6011",1,1,1,1,,0,"ILB6011","WiDivMerged","su1",,"Mdw","IL"
-"Ill101Q",0,0,0,1,,0,"Ames22033","all_sweet","su1",,"Mdw","IL"
-"Ind.5817",1,1,1,1,,0,,"NA","su1",,,
-"IP39",1,1,1,1,,0,"Ames22032","all_sweet","su1",,"Mdw","IA"
-"Jubileeex9017",1,1,1,1,,0,"Jubileeex9017","WiDivMerged","su1",,,
-"K104-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"K105-1-1-2-1-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"K1-1-1-1-1-1-2-1-1-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"K113-2-1-2-1-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"K115-11-1-1-1-1-1-1B-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"K120-1-1-1-1-1-2-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"K127-1-1-1-2-1-1-1-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"K15-1(X9)",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"K164-1-1-1-1-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"K169-1-1-1-2-2",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"K192-1-1-1-1-1-1-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"K43-1-1-1-1-1-1-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"K52-2-1-1-1-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"K88-2-1(x4)-2-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"L108-1-1-1-1-1-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"L108-2-1-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"L125-1-1-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"L17-1-1-1-1-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"L185-1-1-1-1-3-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"L25-1-1-1-1-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"L48-1-1-1-1-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"L73-1-1-1-1-1-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"Late_Mammoth",0,0,0,1,,0,,"NA","NA",,,
-"LUTHER HILL",1,1,1,0,,0,"LUTHERHILL","WiDivMerged","su1",,"Mdw","WI"
-"Luther_Hill",0,0,0,1,,0,"LUTHERHILL","WiDivMerged","NA","Assume same as LUTHERHILL","Mdw","WI"
-"M126-1-1-1-2-2-3-1-2-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"M23",1,1,1,1,,0,"Ames22034","all_sweet","su1",,,
-"M31-1-1-1-1-1-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"M45",1,1,1,1,,0,"Ames22035","all_sweet","su1",,,
-"M5",1,1,1,1,,0,"M5","WiDivMerged","su1",,,
-"M6388",1,1,1,0,,0,"M6388","WiDivMerged","aeduwx",,,"USDA"
-"M6411",1,1,1,0,,0,"PI506411","WiDivMerged","aeduwx",,,"USDA"
-"M6415",1,1,1,0,,0,"M6415","WiDivMerged","aeduwx",,,"USDA"
-"M6421",1,1,1,0,,0,"M6421","WiDivMerged","aeduwx",,,"USDA"
-"M822",1,1,1,1,,0,"M822","WiDivMerged","su1",,,
-"M90-1-1-1-2-2-1-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"Ma2402",1,1,1,1,,0,"Ma2402","WiDivMerged","su1",,"Ne","MA"
-"Ma2410-1191",0,0,1,0,,0,"Ma2410","all_sweet","NA","Assume same as Ma2410","Ne","MA"
-"Ma32",1,1,1,1,,0,"Ames22036","all_sweet","su1",,"Ne","MA"
-"Ma401",1,1,1,1,,0,"Ma401","WiDivMerged","su1",,"Ne","MA"
-"Ma5125",1,1,1,1,,0,"Ma5125","WiDivMerged","su1",,"Ne","MA"
-"Ma609",0,1,1,0,,0,"Ma609","WiDivMerged","su1",,"Ne","MA"
-"Ma83608",1,1,1,1,,0,"Ma83608","WiDivMerged","su1",,"Ne","MA"
-"Maiz_Amarilla_Evergreen",1,0,0,1,,0,,"NA","NA",,,
-"MDM-1",1,1,1,1,,0,"MDM_1","WiDivMerged","su1",,,
-"MDM-12",1,1,1,1,,0,"MDM_12","all_sweet","su1",,,
-"MDM-15",1,1,1,1,,0,"MDM_15","WiDivMerged","su1",,,
-"MDM-16",1,1,1,1,,0,"MDM_16","WiDivMerged","su1",,,
-"MDM-17",1,1,1,1,,0,"MDM_17","WiDivMerged","su1",,,
-"MDM-18",1,1,1,1,,0,"MDM_18","WiDivMerged","su1",,,
-"MDM-19",1,1,1,1,,0,"MDM_19","WiDivMerged","su1",,,
-"MDM-2",1,1,1,1,,0,"MDM_2","WiDivMerged","su1",,,
-"MDM-20",1,1,1,1,,0,"MDM_20","WiDivMerged","su1",,,
-"MDM-21",1,1,1,1,,0,"MDM_21","WiDivMerged","su1",,,
-"MDM-23",1,1,1,1,,0,"MDM_23","WiDivMerged","su1",,,
-"MDM3",0,0,1,0,,0,,"NA","NA",,,
-"MDM-5",1,1,1,1,,0,"MDM_5","WiDivMerged","su1",,,
-"MDM-6",1,1,1,1,,0,"MDM_6","WiDivMerged","su1",,,
-"MDM-8",1,1,1,1,,0,"MDM_8","WiDivMerged","su1",,,
-"MDM-9",1,1,1,1,,0,"MDM_9","WiDivMerged","su1",,,
-"Me1",1,1,1,1,,0,"Ames22037","all_sweet","su1",,"Ne","ME"
-"Me100",1,1,1,0,,0,"Ames22038","all_sweet","su1",,"Ne","ME"
-"Me121Wa",0,0,0,1,,0,"Ames22039","all_sweet","NA",,"Ne","ME"
-"Me121-wb",1,1,1,1,,0,"Me121_wb","all_sweet","su1",,"Ne","ME"
-"Me123",1,1,1,1,,0,"Ames22040","all_sweet","su1",,"Ne","ME"
-"Me135",1,1,1,1,,0,"Ames22041","all_sweet","su1",,"Ne","ME"
-"Me2",1,1,1,0,,1,"Me2","WiDivMerged","su1",,"Ne","ME"
-"Me244Wa",1,0,1,1,,0,"Ames22042","all_sweet","NA",,"Ne","ME"
-"Me244-wb",1,1,1,1,,1,"Ames22043","all_sweet","su1",,"Ne","ME"
-"Me2rt",1,1,1,1,,0,"Me2rt","WiDivMerged","su1",,"Ne","ME"
-"Mexican_Dent_sh2",1,0,0,1,,0,,"NA","NA",,,
-"Millersburg_Red_Sweet_No2",1,0,0,1,,0,,"NA","NA",,,
-"Mo17",0,1,1,0,,0,"PI558532","WiDivMerged","field",,"Mdw","MO"
-"Mo17 su/su",1,0,0,1,,0,,"NA","su1",,"Mdw","MO"
-"Moencopi_Pueblo",1,0,0,1,,0,,"NA","NA",,,
-"MR10",0,1,0,1,,0,"MR10","WiDivMerged","sh2i",,"Mdw","WI"
-"MR10 (Cristalino Norteno) S6",1,0,1,0,,0,"MR10","WiDivMerged","sh2i","Assume same as MR10","Mdw","WI"
-"MR14",1,0,1,1,,0,"MR14","all_sweet","su1",,"Mdw","WI"
-"MSR_su",1,0,0,1,,0,,"NA","NA",,,
-"N11-1-2-1-1-1-1-1-1-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"N120-1-X-1-1-1-1-1-3",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"N124A-1-1-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"N12A-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"N132A-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"N142A-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"N38-2-1-1-1-1-1-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"N44-1-2-1-1-1-1-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"N45A-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"N46A-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"N72A-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"N7C-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"N99-1-1-1-1-1-1-1",0,0,0,1,,0,,"NA","NA",,"Sou","FL"
-"Narino_430",0,0,0,1,,0,,"NA","NA",,,
-"ND1",1,1,1,1,,0,"ND1","WiDivMerged","su1",,"Mdw","ND"
-"NE_EDR_sh2",1,0,0,1,,0,,"NA","NA",,,
-"NE_HY_13A",1,0,0,1,,0,,"NA","NA",,,
-"NE_HY_13b",1,0,0,1,,0,,"NA","NA",,,
-"NJ112",1,1,1,1,,0,"Ames22044","all_sweet","su1",,"Ne","NJ"
-"NJ116-wa",1,1,0,1,,0,"Ames22045","all_sweet","su1",,"Ne","NJ"
-"NJ116Wb",1,0,1,1,,0,"Ames22046","all_sweet","NA",,"Ne","NJ"
-"NJ143",0,0,1,0,,0,,"NA","NA",,"Ne","NJ"
-"NJ159",1,1,1,1,,0,"NJ159","WiDivMerged","su1",,"Ne","NJ"
-"NJ618",1,1,1,1,,0,"NJ618","WiDivMerged","su1",,"Ne","NJ"
-"NJ7Y",1,1,1,0,,0,"NJ7Y","WiDivMerged","su1",,"Ne","NJ"
-"No_156",1,0,0,1,,0,,"NA","NA",,,
-"No_1577",0,0,0,1,,0,,"NA","NA",,,
-"North_Dakota_Yellow_Sweet_Bulk",0,0,0,1,,0,,"NA","NA",,"Mdw","ND"
-"Northrup_King_Strain 9316",0,0,0,1,,0,,"NA","NA",,,
-"Nueta",0,0,0,1,,0,,"NA","NA",,,
-"Nueta_Sweet_Corn",0,0,0,1,,0,,"NA","NA",,,
-"NY MDM-1",0,0,1,0,,0,"MDM_1","WiDivMerged","su1","Assume same as MDM_1","Ne","NY"
-"OH43",1,1,1,0,,0,"Ames19288","WiDivMerged","field",,"Mdw","OH"
-"OH43_sh2",1,0,0,1,,0,,"NA","sh2",,"Mdw","OH"
-"Oh43su",1,0,0,1,,0,,"NA","su1",,"Mdw","OH"
-"OH7B",0,1,1,0,,0,"Ames19323","WiDivMerged","field",,"Mdw","OH"
-"OLCOTT",1,1,1,1,,0,"OLCOTT","WiDivMerged","su1",,,
-"OLCOTT-1067:72",0,0,1,0,,0,"OLCOTT","WiDivMerged","NA","Assume same as OLCOTT",,
-"OLCOTT-1069:72",0,0,1,0,,0,"OLCOTT","WiDivMerged","NA","Assume same as OLCOTT",,
-"Oregon_Evergreen -1",1,0,0,1,,0,,"NA","NA",,,
-"Oregon_Evergreen -2",1,0,0,1,,0,,"NA","NA",,,
-"P14",1,1,1,1,,0,"P14","WiDivMerged","su1",,"Mdw","IN"
-"P35",1,1,1,1,,0,"P35","WiDivMerged","su1",,"Mdw","IN"
-"P39",1,1,1,1,,0,"P39","WiDivMerged","su1",,"Mdw","IN"
-"P39 A",0,0,1,1,,0,"P39","all_sweet","NA",,"Mdw","IN"
-"P39 Goodman-Buckler",1,1,1,1,,1,"Ames28186","all_sweet","su1",,"Mdw","IN"
-"P39 su",0,0,1,0,,0,"P39","all_sweet","su1","Assume same as P39","Mdw","IN"
-"P39(New)",1,1,1,1,,0,"P39_New","WiDivMerged","su1",,"Mdw","IN"
-"P39_10_226",0,0,0,1,,0,,"NA","NA",,"Mdw","IN"
-"P39-10-226:61",0,0,1,0,,0,,"NA","NA",,"Mdw","IN"
-"P39-16-275:61",0,0,1,0,,0,,"NA","NA",,"Mdw","IN"
-"P39-16-276:61",0,0,1,0,,0,,"NA","NA",,"Mdw","IN"
-"P39a",1,1,1,0,,0,"NSL8583","all_sweet","su1","Assume same as P39 A","Mdw","IN"
-"P39b",1,1,1,1,,0,"P39b","WiDivMerged","su1",,"Mdw","IN"
-"P39Le-253",1,1,1,0,,0,"P39Le_253_60","WiDivMerged","su1","Assume same as P39Le_253_60","Mdw","IN"
-"P39Le-253:60",0,1,0,1,,0,"P39Le_253_60","WiDivMerged","su1",,"Mdw","IN"
-"P39LE-261",1,1,0,0,,0,"P39LE_261_61","WiDivMerged","su1",,"Mdw","IN"
-"P39LE-261:61",0,1,1,1,,0,"P39LE_261_61","WiDivMerged","su1","Assume same as P39Le_261_61","Mdw","IN"
-"P39-LE-3438:64",0,0,1,0,,0,,"NA","NA",,"Mdw","IN"
-"P39LE-3502:61",0,0,1,1,,0,"P39LE_3502_61","all_sweet","NA",,"Mdw","IN"
-"P39M94",1,1,1,1,,0,"P39M94","WiDivMerged","su1",,"Mdw","IN"
-"P39M96",1,1,1,1,,0,"Ames22048","all_sweet","su1",,"Mdw","IN"
-"P39xRp1d",1,1,1,1,,0,"P39_x_Rp1d","WiDivMerged","su1",,"Mdw","IN"
-"P51",1,1,1,1,,0,"Ames22049","all_sweet","su1",,"Mdw","IN"
-"P51-3289:61",0,0,1,0,,0,"Ames22049","all_sweet","su1","Assume same as P51","Mdw","IN"
-"P51B",1,1,1,1,,1,"NSL8582","all_sweet","su1",,"Mdw","IN"
-"P51wx",1,0,0,1,,0,"Ames22050","all_sweet","NA",,"Mdw","IN"
-"P51xRp1d",1,1,1,1,,0,"P51xRp1d","all_sweet","su1",,"Mdw","IN"
-"P737M20",1,0,0,1,,0,"PI644102","all_sweet","su1",,"Sou","FL"
-"PAIA_453",0,0,0,1,,0,,"NA","NA",,,
-"Pease_Crosby_Sweet_Corn",1,0,0,1,,0,,"NA","NA",,,
-"R825",1,1,1,1,,0,"NSL42805","all_sweet","sh2",,"Mdw","IL"
-"R839",1,1,1,1,,0,"NSL42806","all_sweet","sh2",,"Mdw","IL"
-"R851",1,1,1,1,,0,"R851","WiDivMerged","sh2",,"Mdw","IL"
-"R853",1,1,0,1,,0,"R853","WiDivMerged","sh2",,"Mdw","IL"
-"R853 sh2",0,0,1,0,,0,"R853","WiDivMerged","sh2","Assume same as R853","Mdw","IL"
-"Ranniaya_Zolotaya_401",1,0,0,1,,0,,"NA","NA",,,
-"Raza_Maiz_Dulce",0,0,0,1,,0,,"NA","NA",,,
-"Red_NCLB",1,0,0,1,,0,,"NA","NA",,,
-"Rhode_Island_Sweet",0,0,0,1,,0,,"NA","NA",,,
-"S4",1,1,1,1,,0,"Ames23508","all_sweet","su1",,"Mdw","MN"
-"S43",1,1,1,1,,0,"Ames23510","all_sweet","su1",,"Mdw","MN"
-"S8",0,0,0,1,,0,"Ames23509","all_sweet","su1",,"Mdw","MN"
-"SC1441",1,1,1,1,,0,"SC1441","WiDivMerged","su1",,"Sou","SC"
-"SC6069",1,1,1,1,,0,"SC6069","WiDivMerged","su1",,"Sou","SC"
-"SD176",1,1,1,1,,0,"SD176","WiDivMerged","su1",,"Mdw","SD"
-"SD226",1,1,1,1,,0,"SD226","WiDivMerged","su1",,"Mdw","SD"
-"SD245",0,1,1,0,,0,"SD245","WiDivMerged","su1",,"Mdw","SD"
-"SD277",1,1,1,1,,0,"SD277","WiDivMerged","su1",,"Mdw","SD"
-"SD42",1,0,1,1,,0,"SD42","all_sweet","su1",,"Mdw","SD"
-"SD469",1,1,1,1,,0,"SD469","WiDivMerged","su1",,"Mdw","SD"
-"SD592",1,1,1,1,,0,"SD592","WiDivMerged","su1",,"Mdw","SD"
-"SD789",1,1,1,1,,0,"SD789","WiDivMerged","su1",,"Mdw","SD"
-"SD829",1,1,1,1,,0,"SD829","WiDivMerged","su1",,"Mdw","SD"
-"SD883",1,1,1,1,,0,"SD883","WiDivMerged","su1",,"Mdw","SD"
-"SD884",1,1,1,1,,0,"SD884","WiDivMerged","su1",,"Mdw","SD"
-"SD908",1,1,1,1,,0,"SD908","WiDivMerged","su1",,"Mdw","SD"
-"SD909",1,1,1,1,,0,"SD909","WiDivMerged","su1",,"Mdw","SD"
-"Selection_from_231227",0,0,0,1,,0,,"NA","NA",,,
-"Separation_from_170882",0,0,0,1,,0,,"NA","NA",,,
-"Separation_from_177107",0,0,0,1,,0,,"NA","NA",,,
-"Separation_from_177589",1,0,0,1,,0,,"NA","NA",,,
-"Separation_from_177604",0,0,0,1,,0,,"NA","NA",,,
-"Separation_from_177642",1,0,0,1,,0,,"NA","NA",,,
-"Separation_from_183739",0,0,0,1,,0,,"NA","NA",,,
-"Separation_from_183742",1,0,0,1,,0,,"NA","NA",,,
-"Separation_from_204812",0,0,0,1,,0,,"NA","NA",,,
-"Separation_from_212335",0,0,0,1,,0,,"NA","NA",,,
-"Silver #9",0,0,0,1,,0,,"NA","NA",,,
-"Slatka_Pukanka",1,0,0,1,,0,,"NA","NA",,,
-"sm*sm*smooth@@",0,1,1,0,,0,,"NA","su1",,,
-"sm*sm*wrinkled @@",0,1,1,0,,0,,"NA","su1",,,
-"Sonora_108",0,0,0,1,,0,,"NA","NA",,,
-"Sonora_124",1,0,0,1,,0,,"NA","NA",,,
-"Sonora_22",1,0,0,1,,0,,"NA","NA",,,
-"Sonora_57",0,0,0,1,,0,,"NA","NA",,,
-"Stowels_Evergreen",1,0,0,1,,0,,"NA","NA",,,
-"STRAIN 11D-586-68A",1,0,1,1,,0,"PI358521","all_sweet","su1",,"Mdw","IL"
-"Strain 18B-5-64",0,0,1,0,,0,"PI358524","all_sweet","su1","Assume same as STRAIN18B-5-69","Mdw","IL"
-"STRAIN 18B-5-69",0,0,0,1,,0,"PI358524","all_sweet","su1",,"Mdw","IL"
-"STRAIN 304A-408-68B",0,0,1,1,,0,"PI358527","all_sweet","su1",,"Mdw","IL"
-"STRAIN 451B-4-68B",1,0,1,1,,0,"PI358529","all_sweet","su1",,"Mdw","IL"
-"STRAIN 465A-421-68B",1,0,1,1,,0,"PI358530","all_sweet","su1",,"Mdw","IL"
-"STRAIN 675A-415-68(B)",0,0,1,1,,0,"PI358531","all_sweet","su1",,"Mdw","IL"
-"STRAIN T20-2-68B",0,0,0,1,,0,"PI358534","all_sweet","su1",,"Mdw","IL"
-"STRAIN T24-395-68B",0,0,1,1,,0,"PI358536","all_sweet","su1",,"Mdw","IL"
-"STRAIN T32-397-68B",1,0,0,1,,0,"PI358537","all_sweet","su1",,"Mdw","IL"
-"STRAIN T32-397-68r",0,0,1,1,,0,"Strain_T32_397_68r","WiDivMerged","su1",,"Mdw","IL"
-"STRAIN T33-399-68B",0,0,1,1,,0,"PI358538","all_sweet","su1",,"Mdw","IL"
-"STRAIN T35-388-68A",0,0,1,1,,0,"PI358539","all_sweet","su1",,"Mdw","IL"
-"STRAIN T36 101T-394-68",0,0,0,1,,0,"PI358533","all_sweet","su1",,"Mdw","IL"
-"Sunshine",1,0,0,1,,0,,"NA","NA",,,
-"SYN2 sh2",0,0,0,1,,0,,"NA","NA",,,
-"T20",1,1,0,0,,0,"PI358534","all_sweet","su1","Assume same as STRAIN T20-2-68B","Mdw","IL"
-"T20-2-68(B)",0,0,1,0,,0,"PI358534","all_sweet","su1","Assume same as STRAIN T20-2-68B","Mdw","IL"
-"T24",1,1,0,0,,0,"PI358536","all_sweet","su1","Assume same as STRAIN T24-395-68B","Mdw","IL"
-"T-24-56-ILL",1,0,0,1,,0,"PI358536","all_sweet","su1","Assume same as STRAIN T24-395-68B","Mdw","IL"
-"T32",1,1,0,0,,0,"PI358537","all_sweet","su1","Assume same as STRAIN T32-397-68B","Mdw","IL"
-"T33",1,1,0,0,,0,"PI358538","all_sweet","su1","Assume same as STRAIN T33-399-68B","Mdw","IL"
-"T35",1,1,0,0,,0,"PI358539","all_sweet","su1","Assume same as STRAIN T35-388-68A","Mdw","IL"
-"T625",1,1,1,1,,0,"T625","WiDivMerged","su1",,"Sou","TN"
-"T62s",1,1,1,1,,0,"PI509045","all_sweet","su1",,"Sou","TN"
-"T64S",0,0,0,1,,0,"PI509046","all_sweet","NA",,"Sou","TN"
-"Tawaktci",1,0,0,1,,0,,"NA","NA",,,
-"Tesuque_Pueblo",1,0,0,1,,0,,"NA","NA",,,
-"UFI2EDbt1-1",0,0,0,1,,0,,"NA","NA",,,
-"UFI9EC",0,0,0,1,,0,,"NA","NA",,,
-"V775",1,1,1,1,,0,"V775","WiDivMerged","su1",,,
-"V781",1,1,1,1,,0,"V781","WiDivMerged","su1",,,
-"VIA5492",1,1,1,1,,0,"VIA5492","WiDivMerged","su1",,,
-"VIII/221",1,0,0,1,,0,,"NA","NA",,,
-"Vineland576",1,1,1,1,,0,"Vineland576","WiDivMerged","su1",,,
-"W 6786",0,0,1,0,,0,"W6728","all_sweet","su1",,"Mdw","WI"
-"W1736",1,1,1,1,,0,"W1736","WiDivMerged","su1",,"Mdw","WI"
-"W3607",0,0,0,1,,0,"Ames22052","all_sweet","NA",,"Mdw","WI"
-"W3647",1,1,1,1,,0,"Ames22053","all_sweet","su1",,"Mdw","WI"
-"W3722",1,1,1,1,,0,"Ames22054","all_sweet","su1",,"Mdw","WI"
-"W3742",1,1,1,1,,0,"Ames22055","all_sweet","su1",,"Mdw","WI"
-"W5543",1,1,1,1,,0,"Ames22056","all_sweet","su1",,"Mdw","WI"
-"W5552",1,1,1,1,,0,"Ames22057","all_sweet","su1",,"Mdw","WI"
-"W5579",1,1,1,1,,0,"Ames22058","all_sweet","su1",,"Mdw","WI"
-"W6366",1,1,1,1,,0,"Ames22059","all_sweet","su1",,"Mdw","WI"
-"W6462",1,1,1,1,,0,"Ames22060","all_sweet","su1",,"Mdw","WI"
-"W64A",1,1,1,1,,0,"PI587152","WiDivMerged","field",,"Mdw","WI"
-"W6714",1,1,1,1,,0,"Ames22061","all_sweet","su1",,"Mdw","WI"
-"W6720-1",1,1,1,1,,0,"Ames22062","all_sweet","su1",,"Mdw","WI"
-"W6720-2",1,0,1,1,,0,,"NA","NA",,"Mdw","WI"
-"W6728",1,1,1,1,,0,"W6728","WiDivMerged","su1",,"Mdw","WI"
-"W6757",1,1,1,1,,0,"Ames22065","all_sweet","su1",,"Mdw","WI"
-"W6786",1,1,1,1,,0,"W6786","WiDivMerged","su1",,"Mdw","WI"
-"W7151",1,1,1,1,,0,"Ames22067","all_sweet","su1",,"Mdw","WI"
-"W822GSe",1,1,1,0,,1,"W822GSE","all_sweet","se","is this Se or se in sources?","Mdw","WI"
-"W85",1,1,1,1,,0,"W85","WiDivMerged","field",,"Mdw","WI"
-"We01407",1,1,1,1,,1,"We01407","WiDivMerged","se",,"Mdw","WI"
-"We02404",1,1,1,1,,0,"We02404","WiDivMerged","se",,"Mdw","WI"
-"We02406",1,1,0,0,,0,"We02406","WiDivMerged","se",,"Mdw","WI"
-"We02412",1,1,1,1,,0,"We02412","WiDivMerged","se",,"Mdw","WI"
-"We03418a",1,1,1,1,,1,"We03418a","WiDivMerged","se",,"Mdw","WI"
-"We04401",1,0,1,1,,1,,"NA","se",,"Mdw","WI"
-"We04806",1,0,1,1,,0,,"NA","se",,"Mdw","WI"
-"We04819",1,0,0,1,,0,,"NA","se",,"Mdw","WI"
-"We05401",1,1,1,0,,0,"We05401","WiDivMerged","se",,"Mdw","WI"
-"We05407",1,1,0,1,,0,"We05407","WiDivMerged","se",,"Mdw","WI"
-"We05407Y",0,0,0,0,,1,"We05407","WiDivMerged","se","Assuming same as We05407","Mdw","WI"
-"We05408",1,1,1,0,,0,"We05408","WiDivMerged","se",,"Mdw","WI"
-"We05410",1,1,1,1,,0,"We05410","WiDivMerged","se",,"Mdw","WI"
-"We05411",1,1,1,0,,0,"We05411","WiDivMerged","se",,"Mdw","WI"
-"We06409a",1,0,0,1,,1,"We06409a","WiDivMerged","se",,"Mdw","WI"
-"We06409b",1,1,1,0,,0,"We06409b","all_sweet","se",,"Mdw","WI"
-"We06410",1,1,0,0,,0,"We06410","WiDivMerged","se",,"Mdw","WI"
-"we07403a",1,0,1,1,,0,,"NA","se",,"Mdw","WI"
-"We08405",1,0,1,1,,1,,"NA","se",,"Mdw","WI"
-"We08408",1,1,1,1,,0,"We08408","WiDivMerged","se",,"Mdw","WI"
-"We08414a",1,1,1,1,,0,"We08414a","WiDivMerged","se",,"Mdw","WI"
-"We08417a",1,1,0,1,,0,"We08417a","WiDivMerged","se",,"Mdw","WI"
-"We08424",1,0,1,1,,0,,"NA","se",,"Mdw","WI"
-"We09402",1,1,1,1,,1,"We09402","WiDivMerged","se",,"Mdw","WI"
-"We09413",1,1,1,1,,0,"We09413","WiDivMerged","se",,"Mdw","WI"
-"We09425",1,1,1,1,,0,"We09425","WiDivMerged","se",,"Mdw","WI"
-"We10401",1,1,1,1,,0,"We10401","WiDivMerged","se",,"Mdw","WI"
-"We1095407-2",1,0,0,1,,0,,"NA","se",,"Mdw","WI"
-"We11401",1,0,1,1,,1,,"NA","se",,"Mdw","WI"
-"We11403",0,1,0,0,,0,,"NA","se",,"Mdw","WI"
-"We11404",0,1,1,0,,0,,"NA","se",,"Mdw","WI"
-"We11405",1,0,1,1,,0,,"NA","NA",,"Mdw","WI"
-"We11408",1,0,0,1,,0,,"NA","se",,"Mdw","WI"
-"We11416",1,0,1,1,,1,,"NA","se",,"Mdw","WI"
-"We12401",1,0,1,1,,0,,"NA","se",,"Mdw","WI"
-"We17401",1,0,0,0,,1,,"NA","se",,"Mdw","WI"
-"We17410",1,0,0,0,,0,,"NA","se",,"Mdw","WI"
-"We17418",1,0,0,0,,0,,"NA","se",,"Mdw","WI"
-"We17421",1,0,0,0,,0,,"NA","se",,"Mdw","WI"
-"We17442",1,0,0,0,,0,,"NA","se",,"Mdw","WI"
-"West_Brookfield_white_sweet",0,0,0,1,,0,,"NA","NA",,"Mdw","WI"
-"Wh00033",1,1,1,1,,0,"Wh00033","WiDivMerged","sh2",,"Mdw","WI"
-"Wh00050",1,1,1,1,,0,"Wh00050","WiDivMerged","sh2",,"Mdw","WI"
-"Wh00051",1,1,1,1,,0,"Wh00051","WiDivMerged","sh2",,"Mdw","WI"
-"Wh00065",1,1,1,0,,0,"Wh00065","WiDivMerged","sh2",,"Mdw","WI"
-"Wh01001",1,1,1,1,,0,"Wh01001","WiDivMerged","sh2",,"Mdw","WI"
-"Wh03031",1,1,1,1,,0,"Wh03031","WiDivMerged","sh2",,"Mdw","WI"
-"Wh04020a",1,1,1,1,,0,"Wh04020a","WiDivMerged","sh2",,"Mdw","WI"
-"Wh04036V",0,1,0,0,,0,"Wh04036V","WiDivMerged","sh2",,"Mdw","WI"
-"Wh04036VW",1,0,0,1,,1,"Wh04036V","WiDivMerged","sh2","Assume same as Wh04036","Mdw","WI"
-"Wh05032a",1,1,1,0,,0,"Wh05032a","WiDivMerged","sh2",,"Mdw","WI"
-"wh05032a1",0,0,0,1,,0,"Wh05032a","WiDivMerged","NA","Assume same as Wh05032a","Mdw","WI"
-"Wh05051",1,1,1,1,,0,"Wh05051","WiDivMerged","sh2",,"Mdw","WI"
-"Wh05066a",1,1,1,1,,0,"Wh05066a","WiDivMerged","sh2",,"Mdw","WI"
-"Wh05070a",1,0,1,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh05081a",1,1,0,0,,0,"Wh05081a","WiDivMerged","sh2",,"Mdw","WI"
-"Wh05081b",1,0,1,1,,0,"Wh05081b","all_sweet","sh2",,"Mdw","WI"
-"Wh07013",1,1,1,1,,0,"Wh07013","WiDivMerged","sh2",,"Mdw","WI"
-"Wh07020a",1,1,1,1,,1,"Wh07020a","WiDivMerged","sh2",,"Mdw","WI"
-"Wh07029",1,0,1,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh07051",1,1,1,1,,0,"Wh07051","WiDivMerged","sh2",,"Mdw","WI"
-"Wh07061a",1,1,1,1,,0,"Wh07061a","WiDivMerged","sh2",,"Mdw","WI"
-"Wh07061b",1,0,1,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh07165R",1,1,1,1,,0,"Wh07165R","WiDivMerged","sh2",,"Mdw","WI"
-"Wh07166R",1,1,1,1,,1,"Wh07166R","WiDivMerged","sh2",,"Mdw","WI"
-"Wh08022",1,1,1,1,,1,"Wh08022","WiDivMerged","sh2",,"Mdw","WI"
-"Wh08039",1,0,1,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh08042",1,1,1,1,,1,"Wh08042","WiDivMerged","sh2",,"Mdw","WI"
-"Wh08045",1,0,1,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh08091",0,1,0,0,,0,"Wh08091","WiDivMerged","sh2",,"Mdw","WI"
-"Wh08092",1,1,1,1,,0,"Wh08092","WiDivMerged","sh2",,"Mdw","WI"
-"Wh08114",1,0,1,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh08115b",1,1,1,0,,0,"Wh08115b","WiDivMerged","sh2",,"Mdw","WI"
-"Wh09009",1,1,1,1,,0,"Wh09009","WiDivMerged","sh2",,"Mdw","WI"
-"Wh09033",1,1,1,1,,0,"Wh09033","WiDivMerged","sh2",,"Mdw","WI"
-"Wh09061",1,1,1,1,,0,"Wh09061","WiDivMerged","sh2",,"Mdw","WI"
-"Wh09068",1,1,1,1,,0,"Wh09068","WiDivMerged","sh2",,"Mdw","WI"
-"Wh09075",1,1,1,0,,0,"Wh09075","WiDivMerged","sh2",,"Mdw","WI"
-"Wh09083",1,1,1,1,,0,"Wh09083","WiDivMerged","sh2",,"Mdw","WI"
-"Wh09086",1,0,1,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh09087",1,1,1,0,,0,"Wh09087","WiDivMerged","sh2",,"Mdw","WI"
-"Wh09117R",1,1,1,1,,0,"Wh09117R","WiDivMerged","sh2",,"Mdw","WI"
-"Wh09126R",1,1,1,1,,0,"Wh09126R","WiDivMerged","sh2",,"Mdw","WI"
-"Wh09137R",1,1,1,1,,0,"Wh09137R","WiDivMerged","sh2",,"Mdw","WI"
-"Wh09141R",1,1,1,1,,0,"Wh09141R","WiDivMerged","sh2",,"Mdw","WI"
-"Wh10006R",1,1,1,1,,0,"Wh10006R","WiDivMerged","sh2",,"Mdw","WI"
-"Wh10034R",1,1,1,1,,0,"Wh10034R","WiDivMerged","sh2",,"Mdw","WI"
-"Wh10035R",1,1,1,1,,0,"Wh10035R","WiDivMerged","sh2",,"Mdw","WI"
-"Wh10040R",1,0,1,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh10046R",1,1,1,1,,0,"Wh10046R","WiDivMerged","sh2",,"Mdw","WI"
-"Wh10049R",1,1,1,1,,0,"Wh10049R","WiDivMerged","sh2",,"Mdw","WI"
-"Wh10052R",1,0,1,0,,0,,"NA","sh2",,"Mdw","WI"
-"wh10052Ra",0,0,0,1,,0,,"NA","NA",,"Mdw","WI"
-"Wh10057R",1,0,1,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh10062R",1,0,1,1,,0,"Wh10062R","all_sweet","sh2",,"Mdw","WI"
-"Wh10067R",1,0,1,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh10068R",1,0,1,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh10070R",1,0,1,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh10080",1,1,1,1,,0,"Wh10080","WiDivMerged","sh2",,"Mdw","WI"
-"Wh10085",0,0,1,0,,0,,"NA","NA",,"Mdw","WI"
-"Wh10088R",1,0,1,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh10090R",1,0,1,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh10105R",1,0,1,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh10110R",1,1,1,1,,0,"Wh10110R","WiDivMerged","sh2",,"Mdw","WI"
-"Wh10113R",1,1,1,1,,0,"Wh10113R","WiDivMerged","sh2",,"Mdw","WI"
-"Wh10117R",1,0,1,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh10127R",1,0,1,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh10135R",1,0,1,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh10137R",1,0,1,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh10140R",1,1,1,1,,0,"Wh10140R","WiDivMerged","sh2",,"Mdw","WI"
-"Wh10163",1,1,1,1,,0,"Wh10163","WiDivMerged","sh2",,"Mdw","WI"
-"Wh10173V",1,1,1,1,,0,"Wh10173V","WiDivMerged","sh2",,"Mdw","WI"
-"Wh10216V",1,1,1,1,,0,"Wh10216V","WiDivMerged","sh2",,"Mdw","WI"
-"Wh10231V",1,1,1,1,,0,"Wh10231V","WiDivMerged","sh2",,"Mdw","WI"
-"Wh10802R",0,1,0,0,,0,"Wh10802R","WiDivMerged","sh2",,"Mdw","WI"
-"Wh10804R",1,1,1,0,,0,"Wh10804R","WiDivMerged","sh2",,"Mdw","WI"
-"Wh1095407-2",0,1,0,0,,0,"Wh1095407_2","WiDivMerged","sh2",,"Mdw","WI"
-"Wh11001",1,0,1,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh11005",1,0,1,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh11008",1,0,1,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh11017a",1,0,0,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh12001",1,0,1,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh12004",1,0,1,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh12005",1,0,1,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh12008",1,0,1,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh12014",1,0,1,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh12048V",1,0,1,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh13022A",1,0,1,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh13037",1,0,1,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh13040",1,0,1,1,,1,,"NA","sh2",,"Mdw","WI"
-"Wh13041",1,0,1,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh13048",1,0,1,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh13053",1,0,1,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh13063A",1,0,1,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh13064",1,0,1,1,,1,,"NA","sh2",,"Mdw","WI"
-"Wh13070",1,0,1,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh13074",0,0,1,0,,0,,"NA","sh2",,"Mdw","WI"
-"Wh13074A",1,0,0,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh14022A",1,0,0,1,,1,,"NA","sh2",,"Mdw","WI"
-"Wh14022B",1,0,0,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh14082V",1,0,0,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh14100V",1,0,1,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh14101V",1,0,0,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh14102V",1,0,0,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh14113V",1,0,0,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh14119V",1,0,0,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh14201N",1,0,0,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh14202N",1,0,0,1,,1,,"NA","sh2",,"Mdw","WI"
-"wh14203N",0,0,0,1,,0,,"NA","sh2",,"Mdw","WI"
-"wh14204N",0,0,0,1,,0,,"NA","sh2",,"Mdw","WI"
-"wh14205N",0,0,0,1,,0,,"NA","sh2",,"Mdw","WI"
-"wh14206N",0,0,0,1,,0,,"NA","sh2",,"Mdw","WI"
-"wh14207N",0,0,0,1,,0,,"NA","sh2",,"Mdw","WI"
-"wh14208N",0,0,0,1,,0,,"NA","sh2",,"Mdw","WI"
-"wh14209N",0,0,0,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh14210N",1,0,0,1,,0,,"NA","sh2",,"Mdw","WI"
-"Wh16003",1,0,0,0,,0,,"NA","sh2",,"Mdw","WI"
-"Wh16008",1,0,0,0,,0,,"NA","sh2",,"Mdw","WI"
-"Wh16012",1,0,0,0,,0,,"NA","sh2",,"Mdw","WI"
-"Wh16015B",1,0,0,0,,0,,"NA","sh2",,"Mdw","WI"
-"Wh16042",1,0,0,0,,0,,"NA","sh2",,"Mdw","WI"
-"Wh16044",1,0,0,0,,0,,"NA","sh2",,"Mdw","WI"
-"Wh17027A",1,0,0,0,,0,,"NA","sh2",,"Mdw","WI"
-"Wh17031R",1,0,0,0,,0,,"NA","sh2",,"Mdw","WI"
-"Wh17048V",1,0,0,0,,0,,"NA","sh2",,"Mdw","WI"
-"Wh17070V",1,0,0,0,,0,,"NA","sh2",,"Mdw","WI"
-"Wh92047",1,1,1,1,,1,"Wh92047","WiDivMerged","sh2",,"Mdw","WI"
-"Wh92054",1,1,0,0,,0,"Wh92054","WiDivMerged","su1",,"Mdw","WI"
-"Wh9261",1,1,1,1,,1,"Wh9261","WiDivMerged","sh2",,"Mdw","WI"
-"Wh93006",1,1,1,0,,0,"Wh93006","WiDivMerged","sh2",,"Mdw","WI"
-"Wh93016",1,1,1,1,,0,"Wh93016","WiDivMerged","sh2",,"Mdw","WI"
-"Wh93017",1,1,1,0,,0,"Wh93017","WiDivMerged","sh2",,"Mdw","WI"
-"Wh94053",1,1,1,0,,0,"Wh94053","WiDivMerged","sh2",,"Mdw","WI"
-"Wh95016a",1,1,1,1,,0,"Wh95016a","WiDivMerged","sh2",,"Mdw","WI"
-"Wh96011",1,1,0,1,,0,"Wh96011","WiDivMerged","sh2",,"Mdw","WI"
-"Wh96015",1,1,1,0,,1,,"NA","sh2",,"Mdw","WI"
-"Wh96034",1,1,1,1,,0,"Wh96034","WiDivMerged","sh2",,"Mdw","WI"
-"Wh98044",1,1,1,1,,0,"Wh98044","WiDivMerged","sh2",,"Mdw","WI"
-"Wh98063",1,1,1,1,,0,"Wh98063","WiDivMerged","sh2",,"Mdw","WI"
-"Whipples_White",0,0,0,1,,0,,"NA","NA",,"Mdw","WI"
-"Whipples_Yellow",1,0,0,1,,0,,"NA","NA",,"Mdw","WI"
-"WMT",1,0,0,0,,0,,"NA","NA",,"Mdw","WI"
-"Wu00801",1,1,1,1,,0,"Wu00801","WiDivMerged","su1",,"Mdw","WI"
-"Wu00802",1,1,1,0,,0,"Wu00802","WiDivMerged","su1",,"Mdw","WI"
-"Wu0184R",0,0,1,0,,0,,"NA","NA",,"Mdw","WI"
-"Wu04401",0,1,0,0,,0,"Wu04401","WiDivMerged","su1",,"Mdw","WI"
-"Wu04806",0,1,0,0,,0,"Wu04806","WiDivMerged","su1",,"Mdw","WI"
-"Wu04819",0,1,1,0,,0,"Wu04819","WiDivMerged","su1",,"Mdw","WI"
-"Wu07812",1,0,0,1,,0,,"NA","su1",,"Mdw","WI"
-"Wu10802R",1,0,1,1,,0,"Wu10802R","all_sweet","su1",,"Mdw","WI"
-"wu10804R",0,0,0,1,,0,,"NA","NA",,"Mdw","WI"
-"Wu99811",1,1,1,1,,0,"Wu99811","WiDivMerged","su1",,"Mdw","WI"
-"Wu99823",1,1,1,1,,0,"Wu99823","WiDivMerged","su1",,"Mdw","WI"
-"Wuh07177i",1,1,1,1,,1,"Wuh07177i","WiDivMerged","sh2i",,"Mdw","WI"
-"Wuh07182i",1,1,1,1,,0,"Wuh07182i","WiDivMerged","sh2i",,"Mdw","WI"
-"Wuh07183i",1,1,1,0,,0,"Wuh07183i","WiDivMerged","sh2i",,"Mdw","WI"
-"Wuh07186i",1,1,1,1,,0,"Wuh07186i","WiDivMerged","sh2i",,"Mdw","WI"
-"Wuh07413",0,0,1,0,,0,"Wuh07413i","WiDivMerged","sh2i","Assume same asWuh07413i","Mdw","WI"
-"Wuh07413i",1,1,0,0,,1,"Wuh07413i","WiDivMerged","sh2i",,"Mdw","WI"
-"Wuh07422i",1,1,1,1,,0,"Wuh07422i","WiDivMerged","sh2i",,"Mdw","WI"
-"Wuh07428i",1,0,1,1,,0,,"NA","sh2i",,"Mdw","WI"
-"Wuh07429i",1,1,1,1,,0,"Wuh07429i","WiDivMerged","sh2i",,"Mdw","WI"
-"Wuh07466i",1,1,1,1,,0,"Wuh07466i","WiDivMerged","sh2",,"Mdw","WI"
-"Wuh07469i",1,1,1,1,,0,"Wuh07469i","WiDivMerged","sh2i",,"Mdw","WI"
-"Wuh07481i",1,1,1,1,,0,"Wuh07481i","WiDivMerged","sh2i",,"Mdw","WI"
-"Wuh07492i",1,0,1,1,,1,,"NA","sh2i",,"Mdw","WI"
-"Wuh08127i",0,1,0,0,,0,"Wuh08127i","WiDivMerged","sh2i",,"Mdw","WI"
-"Wuh08127ia",1,0,1,1,,1,"Wuh08127i","WiDivMerged","sh2i","Assume same as Wuh08127i","Mdw","WI"
-"Wuh09093i",1,1,1,1,,1,"Wuh09093i","WiDivMerged","sh2i",,"Mdw","WI"
-"Wuh09097i",1,1,1,1,,0,"Wuh09097i","WiDivMerged","sh2i",,"Mdw","WI"
-"Wuh09098i",1,1,1,1,,0,"Wuh09098i","WiDivMerged","sh2i",,"Mdw","WI"
-"Wuh09144i",1,1,1,1,,0,"Wuh09144i","WiDivMerged","sh2i",,"Mdw","WI"
-"Wuh09149i",1,1,1,1,,0,"Wuh09149i","WiDivMerged","sh2i",,"Mdw","WI"
-"Wuh09150i",1,1,1,1,,1,"Wuh09150i","WiDivMerged","sh2i",,"Mdw","WI"
-"Wuh09153i",1,1,1,1,,0,"Wuh09153i","WiDivMerged","sh2i",,"Mdw","WI"
-"Wuh09164i",1,1,1,1,,0,"Wuh09164i","WiDivMerged","sh2i",,"Mdw","WI"
-"Wuh09170i",1,1,1,1,,0,"Wuh09170i","WiDivMerged","sh2i",,"Mdw","WI"
-"Wuh09174i",1,1,1,1,,1,"Wuh09174i","WiDivMerged","sh2i",,"Mdw","WI"
-"Wuh09183i",1,1,1,1,,0,"Wuh09183i","WiDivMerged","sh2i",,"Mdw","WI"
-"Wuh09188i",1,1,1,0,,0,"Wuh09188i","WiDivMerged","sh2i",,"Mdw","WI"
-"Wuh09191i",1,1,1,1,,0,"Wuh09191i","WiDivMerged","sh2i",,"Mdw","WI"
-"Wuh11801i",1,0,1,1,,1,,"NA","sh2i",,"Mdw","WI"
-"Wuh11805i",0,0,1,0,,0,,"NA","sh2i",,"Mdw","WI"
-"Wuh11809i",1,0,1,1,,0,,"NA","sh2i",,"Mdw","WI"
-"Wuh11810i",1,0,1,1,,0,,"NA","sh2i",,"Mdw","WI"
-"Wuh11811i",1,0,1,1,,0,,"NA","sh2i",,"Mdw","WI"
-"Wuh11812i",1,0,1,1,,1,,"NA","sh2i",,"Mdw","WI"
-"Wuh11813i",1,0,1,1,,0,,"NA","sh2i",,"Mdw","WI"
-"Wuh11816i",1,0,1,1,,0,,"NA","sh2i",,"Mdw","WI"
-"Wuh12018i",1,0,1,1,,1,,"NA","sh2i",,"Mdw","WI"
-"Wuh12019i",1,0,1,1,,0,,"NA","sh2i",,"Mdw","WI"
-"Wuh12020i",1,0,1,1,,0,,"NA","sh2i",,"Mdw","WI"
-"Wuh12027i",1,0,1,1,,0,,"NA","sh2i",,"Mdw","WI"
-"Wuh12035i",1,0,1,1,,0,,"NA","sh2i",,"Mdw","WI"
-"Wuh12037i",1,0,1,1,,0,,"NA","sh2i",,"Mdw","WI"
-"Wuh12039i",1,0,1,1,,1,,"NA","sh2i",,"Mdw","WI"
-"Wuh98032",1,1,1,1,,0,"Wuh98032","WiDivMerged","sh2",,"Mdw","WI"
-"WVG3",1,1,1,1,,0,"WVG3","WiDivMerged","su1",,"Mdw","WI"
-"Z07_001",1,0,0,1,,0,,"NA","NA",,,
-"Z07_002",0,0,0,1,,0,,"NA","NA",,,
-"Z07_003",0,0,0,1,,0,,"NA","NA",,,
-"Zapalote Chico",0,0,0,1,,0,,"NA","NA",,,
-"Zarya 123",0,0,0,1,,0,,"NA","NA",,,
+13B-587-68A	0	0	0	1		0	PI358522	all_sweet	su1		Mdw	IL
+14H-588-68B	0	0	0	1		0	PI358523	all_sweet	su1		Mdw	IL
+2	1	1	1	1		0	PI233313	all_sweet	su1		Mdw	SD
+42	0	0	0	1		0	PI358526	all_sweet	su1		Mdw	IL
+176	0	0	0	1		0	2	WiDivMerged	su1			
+226	0	0	0	1		0	PI358535	all_sweet	su1		Mdw	IL
+245	1	0	0	1		0	PI233314	all_sweet	su1		Mdw	SD
+469	1	0	0	1		0	SD245	WiDivMerged	su1	Assume same as SD245	Mdw	SD
+592	0	0	0	1		0	257A9	WiDivMerged	su1			
+789	0	0	0	1		0	PI358525	all_sweet	su1		Mdw	IL
+829	0	0	0	1		0	PI358527	all_sweet	su1		Mdw	IL
+883	0	0	0	1		0	34f	WiDivMerged	su1			
+908	0	0	0	1		0	PI233312	all_sweet	su1		Mdw	SD
+909	0	0	0	1		0	PI358528	all_sweet	su1		Mdw	IL
+5261	0	0	0	1		0	PI233316	all_sweet	su1			SD
+197A-381-68A	1	0	0	1		0	471_U6	WiDivMerged	su1			USDA
+21-396-68(B)	0	0	1	1		0	NSL15405	all_sweet	su1		Mdw	IA
+257A9	1	1	1	0		0	PI233317	all_sweet	su1		Mdw	SD
+27A-317-68C	1	0	0	1		0	PI358531	all_sweet	su1			
+304A	1	1	0	0		0	PI358532	all_sweet	su1		Mdw	IL
+34f	1	1	1	1		0	PI233318	all_sweet	su1		Mdw	SD
+442A-431-68D	1	0	0	1		0	NSL8581	WiDivMerged	su1			USDA
+471-U6	1	1	1	1		0	PI233319	all_sweet	su1		Mdw	SD
+675A	1	1	0	0		0	83610b	WiDivMerged	su1			
+676A-348-68B	0	0	0	1		0	83612b	WiDivMerged	su1			
+81-1	1	1	1	1		0	PI233320	all_sweet	su1		Mdw	SD
+83610b	1	1	1	1		0	PI233321	all_sweet	su1		Mdw	SD
+83612b	1	1	1	1		0	PI233322	all_sweet	su1		Mdw	SD
+A10579	1	1	1	1		0	A10579	WiDivMerged	su1			
+A15	1	1	1	1		0	A15	WiDivMerged	su1		Mdw	MN
+A632	1	1	1	0		0	A632	WiDivMerged	field		Mdw	MN
+A632 su/su	1	0	1	1		0		NA	su1		Mdw	MN
+A632_sh2sh2	1	0	0	1		0		NA	sh2		Mdw	MN
+A648	1	1	1	1		0	A648	WiDivMerged	su1		Mdw	MN
+A684su	1	1	1	1		0	PI567792	WiDivMerged	su1		Mdw	MN
+A685su	1	1	1	1		0	PI567793	WiDivMerged	su1		Mdw	MN
+A686su	1	1	1	1		0	PI567794	WiDivMerged	su1		Mdw	MN
+A7	1	1	1	1		0	A7	WiDivMerged	su1	NSL42872	Mdw	MN
+Amarillo_dulce	1	0	0	1		0		NA	NA		Int	MX
+Andjar_Bekaa	0	0	0	1		0		NA	NA		Int	LB
+ARZM_16_011	0	0	0	1		0		NA	NA		Int	AR
+ARZM_19_051	1	0	0	1		0		NA	NA		Int	AR
+ARZM_19_057	0	0	0	1		0		NA	NA		Int	AR
+ARZM_19_069	1	0	0	1		0		NA	NA		Int	AR
+ARZM_20_005	0	0	0	1		0		NA	NA		Int	AR
+ARZM_20_006	1	0	0	1		0		NA	NA		Int	AR
+ARZM_21_002	1	0	0	1		0		NA	NA		Int	AR
+ARZM_21_006	1	0	0	1		0		NA	NA		Int	AR
+ARZM_21_007	1	0	0	1		0		NA	NA		Int	AR
+ARZM_21_008	1	0	0	1		0		NA	NA		Int	AR
+ARZM_21_009	0	0	0	1		0		NA	NA		Int	AR
+ARZM_21_013	0	0	0	1		0		NA	NA		Int	AR
+ARZM_21_014	0	0	0	1		0		NA	NA		Int	AR
+ARZM_21_018	1	0	0	1		0		NA	NA		Int	AR
+AS11	1	1	1	1		0	AS11	all_sweet	su1		Mdw	MN
+AS11_Sweet_corn_population	0	0	0	1		0		NA	NA		Mdw	MN
+AS12	1	0	0	1		0		NA	NA		Mdw	MN
+Atkinson	1	0	0	1		0		NA	NA		Mdw	OH
+Aunt_Marys	1	0	0	1		0		NA	NA			
+B5765	1	1	0	1		0	B5765	WiDivMerged	se		Mdw	IL
+B5765 Se	0	0	1	0		0	B5765	WiDivMerge	NA		Mdw	IL
+B5870	1	1	1	1		0	B5870	WiDivMerged	su1		Mdw	IL
+B73	1	1	1	0		0	B73	WiDivMerged	field		Mdw	IA
+B84_plus_su	0	0	0	1		0		NA	NA		Mdw	IA
+Banting	0	0	0	1		0		NA	NA		Mdw	CA
+Baxters_Golden_Bantam	0	0	0	1		0		NA	NA		Ne	ME
+Bi #10	0	0	0	1		0		NA	NA			
+Black_Mexican	0	0	0	1		0		NA	NA		Int	AR
+BSQ1	0	0	1	0		0		NA	NA			
+BST1	0	0	1	0		0		NA	NA			
+BST2	0	0	1	0		0		NA	NA			
+BST4	0	0	1	0		0		NA	NA			
+Burnell_Golden_Bantam	0	0	0	1		0		NA	NA			
+C12-1	1	1	1	1		0	Ames22015	all_sweet	su1		Ne	CT
+C13	1	1	1	1		0	PI587126	all_sweet	su1		Ne	CT
+C13et-123:68	0	0	1	0		0	PI587126	all_sweet	su1		Ne	CT
+C15	1	1	1	1		0	C15	WiDivMerged	su1		Ne	CT
+C1540	1	1	1	1		0	CI540	WiDivMerged	field		Ne	CT
+C18	1	1	1	1		0	Ames22017	all_sweet	su1		Ne	CT
+C2	1	1	1	1		0	C2	WiDivMerged	su1		Ne	CT
+C22	1	1	1	1		0	Ames22018	all_sweet	su1		Ne	CT
+C23	1	1	1	1		0	C23_su	WiDivMerged	su1		Ne	CT
+C27	1	1	1	1		0	Ames22019	all_sweet	su1		Ne	CT
+C27red	1	1	1	1		0	C27red	all_sweet	su1		Ne	CT
+C3	1	1	1	1		0	Ames26812	all_sweet	su1		Ne	CT
+C30	1	1	1	1		0	Ames26815	all_sweet	su1		Ne	CT
+C31	1	1	1	1		0	Ames22020	all_sweet	su1		Ne	CT
+C38	1	1	1	1		0	Ames22021	all_sweet	su1		Ne	CT
+C4	1	1	1	1		0	C4	all_sweet	su1		Ne	CT
+C40	1	1	1	1		0	Ames22022	all_sweet	su1		Ne	CT
+C42	1	1	1	1		0	Ames23507	all_sweet	su1		Ne	CT
+C5	1	1	1	1		0	Ames26813	all_sweet	su1		Ne	CT
+C5 Ark 1956	0	0	1	0		0	Ames22011	all_sweet	su1		Ne	CT
+C5 Cold Hardy Comp	0	0	1	0		0		NA	NA		Ne	CT
+C5-NT	1	1	1	0		0	C5_NT	WiDivMerged	su1		Ne	CT
+C65	1	1	1	1		0	C65	WiDivMerged	su1		Ne	CT
+C68	1	1	1	1		0	C68	WiDivMerged	su1		Ne	CT
+C68 su	0	0	1	0		0	C68	all_sweet	su1	no explicit C68 su	Ne	CT
+C68R	1	1	0	0		0	C68Rx_552_63	all_sweet	su1		Ne	CT
+C68R(x)-552:63	0	1	1	1		0	C68Rx_552_63	WiDivMerged	su1		Ne	CT
+C6A	1	1	1	1		0	C6A	all_sweet	su1		Ne	CT
+C7	1	1	1	1		0	Ames22012	all_sweet	su1		Ne	CT
+C7e	1	1	1	1		0	Ames22013	all_sweet	su1		Ne	CT
+C8 white	0	0	1	0		0	C8w	all_sweet	su1	no explicit C8 white. Assuming C8w is same	Ne	CT
+C81	1	1	1	1		0	C81	all_sweet	su1		Ne	CT
+C8p	0	1	0	0		0	Ames22014	all_sweet	su1	assuming sae as C8psuedo	Ne	CT
+C8pseudo	1	0	1	1		0	Ames22014	all_sweet	su1		Ne	CT
+C8w	1	1	0	0		0	C8w	all_sweet	su1		Ne	CT
+C90	1	1	1	1		0	Ames22024	all_sweet	su1		Ne	CT
+Check1	1	1	0	0		0		NA	se			
+Check2	1	1	0	0		0		NA	su1			
+Check3	1	1	0	0		0		NA	su1			
+Check4	1	1	0	0		0		NA	su1			
+Chihuahua_151	1	0	0	1		0		NA	NA			
+Chile_332	0	0	0	1		0		NA	NA			
+Chile_335	1	0	0	1		0		NA	NA			
+Chile_339	1	0	0	1		0		NA	NA			
+CHZM_08_129	1	0	0	1		0		NA	NA			
+CI540	1	0	1	1		0	CI540	WiDivMerge	NA			
+COES 25A-1	0	0	0	1		0		NA	NA			
+COES 28A-1	0	0	0	1		0		NA	NA			
+COES 46A-1	0	0	0	1		0		NA	NA			
+Country_Gentleman	0	0	0	1		0		NA	NA			
+CRC_61	0	0	0	1		0		NA	NA			
+CTS6-1	1	0	1	1		0	CTS6_1	all_sweet	su1			
+CTS6-2	1	0	1	0		0		NA	NA			
+CTS62_Su	0	0	0	1		0		NA	NA			
+Cubano	0	0	0	1		0		NA	NA			
+Cuzco_suse	1	0	0	1		0		NA	NA			
+DF14	1	1	0	1		0	DF14	all_sweet	field			
+DF14 Su	0	0	1	0		0	DF14	all_sweet	field	assume same as DF14		
+Doce_de_Cuba	1	0	0	1		0		NA	NA			
+DSU 146	0	0	1	0		0		NA	NA			
+Early_Evergreen	1	0	0	1		0		NA	NA			
+Early_June	0	0	0	1		0		NA	NA			
+EP58	1	1	1	1		0	EP58	all_sweet	su1		Int	SP
+EP60	1	1	1	1		0	EP60	all_sweet	su1		Int	SP
+EP61	1	1	1	1		0	EP61	all_sweet	su1		Int	SP
+EP62	1	1	1	1		0	EP62	all_sweet	su1		Int	SP
+EP82	1	1	1	1		0	EP82	all_sweet	su1		Int	SP
+EP83	1	1	1	1		0	EP83	all_sweet	su1		Int	SP
+EP84	1	1	1	1		0	EP84	all_sweet	sh2		Int	SP
+EP85	1	1	1	1		0	EP85	all_sweet	sh2		Int	SP
+Eskisehir	0	0	0	1		0		NA	NA			
+F2	1	1	1	0		0		NA	field		Int	FR
+F7	1	1	1	1		0		NA	field		Int	FR
+Fa32B	1	1	1	0		0	Fa32B	all_sweet	sh2i		Sou	FL
+Fa56A	1	1	1	0		0	PI644099	all_sweet	sh2i	Assume same as Florida56	Sou	FL
+FL32	0	0	0	1		0	Fa32B	all_sweet	NA	Assume same as Fa32B	Sou	FL
+FL56	0	0	0	1		0	PI644099	all_sweet	NA	Assume same as Florida56	Sou	FL
+G8	1	1	1	1		0	G8	WiDivMerged	su1		Mdw	IN
+Glancaster_sh2	1	0	0	1		0		NA	NA			
+GMBAB	1	1	1	0		0	GMBAB	WiDivMerged	su1			
+Golden_Bantam	0	0	0	1		0		NA	NA			
+Golden_Bantam_WI	1	0	0	1		0		NA	NA			
+Golden_Evergreen	0	0	0	1		0		NA	NA			
+Golden_Gem	0	0	0	1		0		NA	NA			
+Golden_Giant	1	0	0	1		0		NA	NA			
+GSSS_sh2	0	0	0	1		0		NA	sh2			
+GTS1	1	1	1	1		0	PI550492	all_sweet	su1		Sou	GA
+Guanajuato_93	0	0	0	1		0		NA	NA			
+Hawaii Sugar	0	0	0	1		0		NA	NA		Int	HI
+Hawaiian_Sugar	1	0	0	1		0		NA	NA		Int	HI
+Hayes_White_Sweet	1	0	0	1		0		NA	NA			
+Hi 38	0	0	0	1		0		NA	NA		Int	HI
+HI 70	0	0	0	1		0		NA	NA		Int	HI
+HI 71	0	0	0	1		0		NA	NA		Int	HI
+HI 73	0	0	0	1		0		NA	NA		Int	HI
+HI 74	0	0	0	1		0		NA	NA		Int	HI
+HI 75	0	0	0	1		0		NA	NA		Int	HI
+HI 76	0	0	0	1		0		NA	NA		Int	HI
+HI 77	0	0	0	1		0		NA	NA		Int	HI
+HI 78	0	0	0	1		0		NA	NA		Int	HI
+HI 79	0	0	0	1		0		NA	NA		Int	HI
+HI 81	0	0	0	1		0		NA	NA		Int	HI
+HI 82	0	0	0	1		0		NA	NA		Int	HI
+Hi BT SYN 3	0	0	0	1		0		NA	NA		Int	HI
+Hi38C1	0	0	0	1		0		NA	NA		Int	HI
+HotevillaAzwhitesweetcorn_1	1	0	1	1		0	HotevillaAzwhitesweetcorn_1	all_sweet	su1			
+Howling_Mob	1	0	0	1		0		NA	NA			
+I108-2-2-2-2-1-1-1	0	0	0	1		0		NA	NA		Sou	FL
+I112-1-1-2-1-1-1-	0	0	0	1		0		NA	NA		Sou	FL
+I136-1-1-1-1-1	0	0	0	1		0		NA	NA		Sou	FL
+I152-1-1-1-1-2-1-1	0	0	0	1		0		NA	NA		Sou	FL
+I182-1-2-1-1-1-1	0	0	0	1		0		NA	NA		Sou	FL
+I22-1-1-1-1-1-1	0	0	0	1		0		NA	NA		Sou	FL
+I237-1-2-1-1-1-1-1	0	0	0	1		0		NA	NA		Sou	FL
+I31-1-1-1-2-1-1	0	0	0	1		0		NA	NA		Sou	FL
+I45	1	1	1	0		0	I45	WiDivMerged	su1			
+I58-1-2-2-1-1-1	0	0	0	1		0		NA	NA		Sou	FL
+I817	1	1	1	1		0	I817	WiDivMerged	su1			
+I9-1-1-1-1-1-1	0	0	0	1		0		NA	NA		Sou	FL
+I94-1-1-1-1-1-1-1	0	0	0	1		0		NA	NA		Sou	FL
+I97-1-1-1-1-1-1	0	0	0	1		0		NA	NA		Sou	FL
+Ia2003	1	1	1	1		0	Ames22028	all_sweet	su1		Mdw	IA
+Ia2015 (yar) (A)	0	0	1	0		0	Ia2015	all_sweet	su1	Assume the same as Ia2015	Mdw	IA
+Ia2076	1	1	1	1		0	Ames22029	all_sweet	su1		Mdw	IA
+Ia2132	1	1	1	1		0	PI587134	all_sweet	su1		Mdw	IA
+Ia2256	1	1	1	0		0	Ia2256	all_sweet	su1		Mdw	IA
+Ia2256B	1	1	1	0		0		NA	su1		Mdw	IA
+Ia2730	1	1	1	1		0	Ia2730	all_sweet	su1		Mdw	IA
+Ia4189	1	1	1	1		0	Ia4189	all_sweet	su1		Mdw	IA
+Ia45-1	1	1	1	1		0	Ia45_1	WiDivMerged	su1		Mdw	IA
+Ia45-2	1	1	1	1		0	Ia45_2	WiDivMerged	su1		Mdw	IA
+Ia453	1	1	1	0		1	Ia453	WiDivMerged	su1		Mdw	IA
+Ia45-3	1	1	1	1		0	Ia45_3	WiDivMerged	su1		Mdw	IA
+Ia453 sh2	1	0	0	1		1		NA	sh2		Mdw	IA
+Ia453 Su	1	0	0	0		0		NA	NA		Mdw	IA
+Ia453 su1	0	0	0	1		0	Ia453	WiDivMerged	NA	Assume the same as Ia453	Mdw	IA
+Ia453 WT	0	0	0	1		0		NA	NA		Mdw	IA
+Ia5125	1	1	0	1		0	PI587135	all_sweet	su1		Mdw	IA
+Ia5125 (non-fire)	1	0	1	0		0	PI587135	all_sweet	su1		Mdw	IA
+Ia5125 su	0	0	1	0		0	PI587135	all_sweet	su1	Assume the same as Ia5125	Mdw	IA
+Ia5125B	1	0	0	1		1	Ames27117	all_sweet	su1		Mdw	IA
+Ia5145	1	0	1	1		0	Ames22031	all_sweet	NA		Mdw	IA
+Ia5220	1	1	1	0		0	Ia5220	WiDivMerged	su1		Mdw	IA
+Ia5261	1	1	1	1		0	Ia5261	all_sweet	su1		Mdw	IA
+Ia59	1	1	1	1		0	Ia59	all_sweet	su1		Mdw	IA
+IaCG4189	1	1	1	1		1	Ames22025	all_sweet	su1		Mdw	IA
+IaEV191	1	1	0	1		1	Ames22026	all_sweet	su1		Mdw	IA
+IaEV3002	1	1	1	1		1	IaEV3002	all_sweet	su1		Mdw	IA
+IaEV3004	1	1	1	1		0	Ames22027	all_sweet	su1		Mdw	IA
+IaEV3015	1	1	1	1		0	IaEV3015	all_sweet	su1		Mdw	IA
+If825	1	1	1	1		1	If825	WiDivMerged	sh2			
+If853	1	1	1	1		1	If853	all_sweet	sh2			
+IL101-dgB-2727:62	0	0	1	0		0		NA	NA		Mdw	IL
+IL101Q	1	0	1	0		0		NA	NA		Mdw	IL
+IL101t	1	1	1	1		1	Ames27119	all_sweet	su1		Mdw	IL
+Il101t su	0	0	1	0		0	Ames27119	all_sweet	NA		Mdw	IL
+IL103a	1	1	1	1		0	IL103a	all_sweet	su1		Mdw	IL
+IL104g	1	1	1	1		0	IL104g	all_sweet	su1		Mdw	IL
+IL107a	0	1	1	0		0		NA	su1		Mdw	IL
+IL110K	1	1	1	1		0	IL110K	all_sweet	su1		Mdw	IL
+IL112t	1	1	1	1		0	IL112t	all_sweet	su1		Mdw	IL
+IL1171	1	1	1	1		0	IL1171	all_sweet	su1		Mdw	IL
+IL11D	1	1	1	1		0	IL11D	all_sweet	su1		Mdw	IL
+IL124a	1	1	1	1		0	IL124a	all_sweet	su1		Mdw	IL
+IL125a	1	0	1	1		0		NA	NA		Mdw	IL
+IL125b	1	1	1	0		0	IL125b	WiDivMerged	su1		Mdw	IL
+IL134	0	1	1	0		0		0	su1		Mdw	IL
+IL13B	1	1	1	1		0	IL13B	WiDivMerged	su1		Mdw	IL
+IL14b	1	1	1	1		0	IL14b	WiDivMerged	su1		Mdw	IL
+IL14C	1	1	1	1		0	IL14C	WiDivMerged	su1		Mdw	IL
+IL14H	1	1	1	1		0	Ames27118	all_sweet	su1	Assume same as IL14H	Mdw	IL
+IL14H-1014:74	0	0	1	0		0	Ames27118	all_sweet	su1	Assume same as IL14H	Mdw	IL
+IL14H-588-68(B)	0	0	1	0		0	Ames27118	all_sweet	su1	Assume same as IL14H	Mdw	IL
+IL18b	1	1	1	1		0	IL18b	WiDivMerged	se		Mdw	IL
+IL18c	0	0	1	0		0		NA	NA		Mdw	IL
+IL200e	1	1	1	1		0	IL200e	WiDivMerged	su1		Mdw	IL
+IL21f	1	1	1	1		0	IL21f	WiDivMerged	su1		Mdw	IL
+IL279AxRp1d	1	1	1	1		0	IL279AxRp1d	WiDivMerged	su1		Mdw	IL
+IL27a	1	1	1	1		0	IL27a	WiDivMerged	su1		Mdw	IL
+IL27A-317-68©	0	0	1	0		0	IL27a	WiDivMerged	su1	Assume the same as IL27a	Mdw	IL
+IL303b	1	1	1	1		0	IL303b	WiDivMerged	su1		Mdw	IL
+IL318a	1	1	1	1		0	IL318a	WiDivMerged	su1		Mdw	IL
+IL31a	1	1	1	1		0	IL31a	WiDivMerged	su1		Mdw	IL
+IL323a	1	1	1	1		0	IL323a	WiDivMerged	su1		Mdw	IL
+IL325a	1	1	1	1		0	IL325a	WiDivMerged	su1		Mdw	IL
+IL328a	1	1	1	1		0	IL328a	WiDivMerged	su1		Mdw	IL
+IL354a	1	1	1	1		0	IL354a	WiDivMerged	su1		Mdw	IL
+IL366a	1	1	1	1		0	IL366a	WiDivMerged	su1		Mdw	IL
+IL368a	1	1	1	1		0	IL368a	WiDivMerged	su1		Mdw	IL
+IL369b	1	1	1	1		0	IL369b	WiDivMerged	su1		Mdw	IL
+IL370a	1	1	1	1		0	IL370a	WiDivMerged	su1		Mdw	IL
+IL370a (su)	0	0	1	0		0	IL370a	WiDivMerged	su1	assume the same as IL370a	Mdw	IL
+IL370b	0	0	1	0		0		NA	NA		Mdw	IL
+IL393a	1	1	1	1		0	IL393a	WiDivMerged	su1		Mdw	IL
+IL395a	1	1	1	1		0	IL395a	WiDivMerged	su1		Mdw	IL
+IL430a	1	1	1	1		0	IL430a	WiDivMerged	su1		Mdw	IL
+IL437a	1	1	1	1		0	IL437a	all_sweet	su1		Mdw	IL
+IL442a	1	1	1	1		1	IL442a	WiDivMerged	su1		Mdw	IL
+IL442A-431-68(D)	0	0	1	0		0	IL442a	WiDivMerged	su1	Assume the same as IL442a	Mdw	IL
+IL44b	1	1	1	1		1	IL44b	WiDivMerged	se		Mdw	IL
+IL451-18 Se Se	0	0	1	0		0		NA	NA		Mdw	IL
+IL451b	1	1	1	1		0	IL451b	WiDivMerged	su1		Mdw	IL
+Il451b se	0	1	0	0		0		NA	se		Mdw	IL
+IL453b	1	1	1	1		0	IL453b	WiDivMerged	su1		Mdw	IL
+IL454a	1	1	1	1		0	IL454a	WiDivMerged	su1		Mdw	IL
+IL465a	1	1	1	1		0	IL465a	WiDivMerged	su1		Mdw	IL
+IL47A	1	1	1	1		0	IL47A	WiDivMerged	su1		Mdw	IL
+IL515a	1	1	1	1		0	IL515a	WiDivMerged	su1		Mdw	IL
+IL543c	1	1	1	1		0	IL543c	WiDivMerged	su1		Mdw	IL
+IL545	1	1	1	1		0	IL545	WiDivMerged	su1		Mdw	IL
+IL557a	1	1	1	1		0	IL557a	WiDivMerged	su1		Mdw	IL
+IL607a	1	1	1	1		0	IL607a	WiDivMerged	su1		Mdw	IL
+IL611a	1	1	1	1		0	IL611a	WiDivMerged	su1		Mdw	IL
+IL615a	1	1	1	1		0	IL615a	WiDivMerged	su1		Mdw	IL
+IL618b	1	1	1	1		0	IL618b	WiDivMerged	su1		Mdw	IL
+IL648	1	1	1	1		0	IL648	WiDivMerged	su1		Mdw	IL
+IL648a	0	0	1	0		0	IL648	WiDivMerged	su1	assume same as IL648	Mdw	IL
+IL661a	1	1	1	1		0	IL661a	WiDivMerged	su1		Mdw	IL
+IL671a	1	1	1	1		0	IL671a	WiDivMerged	su1		Mdw	IL
+IL673a	1	1	1	1		0	IL673a	WiDivMerged	su1		Mdw	IL
+IL676a	1	1	1	1		0	IL676a	WiDivMerged	su1		Mdw	IL
+IL677a	1	1	1	1		1	Ames27120	all_sweet	se		Mdw	IL
+IL678a	1	1	1	1		0	IL678a	WiDivMerged	su1		Mdw	IL
+IL678a-se	0	0	1	0		0		NA	NA		Mdw	IL
+IL689a	1	1	1	1		0	IL689a	WiDivMerged	su1		Mdw	IL
+IL692c	1	1	1	1		0	IL692c	WiDivMerged	su1		Mdw	IL
+IL696a	1	1	1	1		0	IL696a	WiDivMerged	se		Mdw	IL
+IL699e	1	1	1	1		0	IL699e	all_sweet	su1		Mdw	IL
+IL699f	0	0	1	0		0		NA	NA		Mdw	IL
+IL7	1	1	1	1		0	IL7	all_sweet	su1		Mdw	IL
+IL701e	1	1	1	1		0	IL701e	WiDivMerged	su1		Mdw	IL
+IL707a	1	1	1	1		0	IL707a	WiDivMerged	su1		Mdw	IL
+IL710a	0	0	1	0		0		NA	NA		Mdw	IL
+IL711a	0	0	1	0		0		NA	NA		Mdw	IL
+IL713a	1	1	1	1		0	IL713a	WiDivMerged	su1		Mdw	IL
+IL729a	1	1	1	1		0	IL729a	WiDivMerged	su1		Mdw	IL
+IL731	0	0	1	0		0	Ames27444	all_sweet	se	Assuming same as IL731a	Mdw	IL
+IL731a	1	1	0	1		0	Ames27444	all_sweet	se		Mdw	IL
+IL731a (se)	0	0	1	0		0	Ames27444	all_sweet	se	Assuming same as IL731a	Mdw	IL
+IL733a	1	1	1	1		0	IL733a	WiDivMerged	su1		Mdw	IL
+IL744a	1	1	1	1		0	IL744a	WiDivMerged	su1		Mdw	IL
+IL747b	1	1	0	1		0	IL747b	WiDivMerged	se		Mdw	IL
+IL747b (se)	0	0	1	0		0	IL747b	WiDivMerged	se	Assuming same as IL747b	Mdw	IL
+IL751a	1	1	1	1		0	IL751a	WiDivMerged	su1		Mdw	IL
+IL755a	0	0	0	1		0		NA	NA		Mdw	IL
+IL757b	1	1	1	1		0	IL747b	WiDivMerged	su1		Mdw	IL
+IL761a	1	1	1	1		0	IL761a	WiDivMerged	su1		Mdw	IL
+IL761c	0	0	1	0		0		NA	NA		Mdw	IL
+IL764b	1	1	1	1		0	IL764b	WiDivMerged	su1		Mdw	IL
+IL765a	1	1	1	1		0	IL765a	WiDivMerged	su1		Mdw	IL
+IL766a	1	1	0	1		0	IL766a	WiDivMerged	se		Mdw	IL
+IL766a (se)	0	0	1	0		0	IL766a	WiDivMerged	se	Assuming same as IL766a	Mdw	IL
+IL767a	0	0	1	0		0		NA	NA		Mdw	IL
+IL767b	1	1	1	1		0	Ames27445	all_sweet	su1		Mdw	IL
+IL768a (se)	0	0	1	0		0		NA	NA		Mdw	IL
+IL769a	0	0	1	0		0		NA	NA		Mdw	IL
+IL772a	1	1	1	1		0	IL772a	WiDivMerged	su1		Mdw	IL
+IL772b	0	0	1	0		0		NA	NA		Mdw	IL
+IL773a	1	1	1	1		0	IL773a	WiDivMerged	su1		Mdw	IL
+IL774a	0	0	1	0		0		NA	NA		Mdw	IL
+IL774b su	0	0	1	0		0		NA	NA		Mdw	IL
+IL774d	0	0	1	0		0		NA	NA		Mdw	IL
+IL775a	1	1	1	0		0	IL775a	WiDivMerged	su1		Mdw	IL
+IL776a	1	1	1	1		0	IL776a	WiDivMerged	su1		Mdw	IL
+IL777a	1	1	1	1		0	IL777a	WiDivMerged	su1		Mdw	IL
+IL778c	1	1	1	1		0	IL778c	WiDivMerged	su1		Mdw	IL
+IL778d	1	0	0	1		0	Ames27446	all_sweet	NA		Mdw	IL
+IL779a	1	1	1	0		0	Ames27447	all_sweet	su1		Mdw	IL
+IL781a	0	0	1	0		0		NA	NA		Mdw	IL
+IL784a	0	1	0	0		0		NA	su1		Mdw	IL
+IL788a	1	1	1	1		0	IL788a	WiDivMerged	su1		Mdw	IL
+IL789b	1	1	1	1		0	IL789b	WiDivMerged	su1		Mdw	IL
+IL791a	0	1	1	0		0	IL791a	WiDivMerged	su1		Mdw	IL
+IL793a	1	1	1	1		0	IL793a	WiDivMerged	su1		Mdw	IL
+IL794a	1	1	1	1		0	IL794a	WiDivMerged	su1		Mdw	IL
+IL795a	1	1	1	1		0	IL795a	WiDivMerged	su1		Mdw	IL
+IL796a	1	1	1	1		0	IL796a	WiDivMerged	su1		Mdw	IL
+IL797a	1	1	1	1		0	IL797a	WiDivMerged	su1		Mdw	IL
+IL798c	1	1	1	1		0	IL798c	WiDivMerged	su1		Mdw	IL
+IL799b	1	1	1	1		0	IL799b	WiDivMerged	su1		Mdw	IL
+IL800a	1	1	1	0		0		NA	su1		Mdw	IL
+IL801a	1	1	1	1		0	IL801a	WiDivMerged	su1		Mdw	IL
+IL802b	0	1	0	0		0	IL802b_Ht2	WiDivMerged	su1		Mdw	IL
+IL802b Ht2	1	0	1	1		0	IL802b_Ht2	WiDivMerged	su1		Mdw	IL
+IL803a	1	1	1	1		0	IL803a	WiDivMerged	su1		Mdw	IL
+IL804a	1	1	1	0		0	IL804a	WiDivMerged	su1		Mdw	IL
+IL804a HTN	0	0	0	1		0	IL804a	WiDivMerged	NA	Assume same as IL804a	Mdw	IL
+IL86e	1	1	1	1		0	IL86e	WiDivMerged	su1		Mdw	IL
+IL91j	1	1	1	1		0	IL91j	WiDivMerged	su1		Mdw	IL
+ILB5765	1	1	0	1		0	ILB5765	WiDivMerged	se		Mdw	IL
+ILB5765 se	0	0	1	0		0	ILB5765	WiDivMerged	se	Assume same as ILB5765	Mdw	IL
+ILB5870	1	1	1	1		0	ILB5870	WiDivMerged	su1		Mdw	IL
+ILB6011	1	1	1	1		0	ILB6011	WiDivMerged	su1		Mdw	IL
+Ill101Q	0	0	0	1		0	Ames22033	all_sweet	su1		Mdw	IL
+Ind.5817	1	1	1	1		0		NA	su1			
+IP39	1	1	1	1		0	Ames22032	all_sweet	su1		Mdw	IA
+Jubileeex9017	1	1	1	1		0	Jubileeex9017	WiDivMerged	su1			
+K104-1	0	0	0	1		0		NA	NA		Sou	FL
+K105-1-1-2-1-1	0	0	0	1		0		NA	NA		Sou	FL
+K1-1-1-1-1-1-2-1-1-1	0	0	0	1		0		NA	NA		Sou	FL
+K113-2-1-2-1-1	0	0	0	1		0		NA	NA		Sou	FL
+K115-11-1-1-1-1-1-1B-1	0	0	0	1		0		NA	NA		Sou	FL
+K120-1-1-1-1-1-2-1	0	0	0	1		0		NA	NA		Sou	FL
+K127-1-1-1-2-1-1-1-1	0	0	0	1		0		NA	NA		Sou	FL
+K15-1(X9)	0	0	0	1		0		NA	NA		Sou	FL
+K164-1-1-1-1-1	0	0	0	1		0		NA	NA		Sou	FL
+K169-1-1-1-2-2	0	0	0	1		0		NA	NA		Sou	FL
+K192-1-1-1-1-1-1-1	0	0	0	1		0		NA	NA		Sou	FL
+K43-1-1-1-1-1-1-1	0	0	0	1		0		NA	NA		Sou	FL
+K52-2-1-1-1-1	0	0	0	1		0		NA	NA		Sou	FL
+K88-2-1(x4)-2-1	0	0	0	1		0		NA	NA		Sou	FL
+L108-1-1-1-1-1-1	0	0	0	1		0		NA	NA		Sou	FL
+L108-2-1-1	0	0	0	1		0		NA	NA		Sou	FL
+L125-1-1-1	0	0	0	1		0		NA	NA		Sou	FL
+L17-1-1-1-1-1	0	0	0	1		0		NA	NA		Sou	FL
+L185-1-1-1-1-3-1	0	0	0	1		0		NA	NA		Sou	FL
+L25-1-1-1-1-1	0	0	0	1		0		NA	NA		Sou	FL
+L48-1-1-1-1-1	0	0	0	1		0		NA	NA		Sou	FL
+L73-1-1-1-1-1-1	0	0	0	1		0		NA	NA		Sou	FL
+Late_Mammoth	0	0	0	1		0		NA	NA			
+LUTHER HILL	1	1	1	0		0	LUTHERHILL	WiDivMerged	su1		Mdw	WI
+Luther_Hill	0	0	0	1		0	LUTHERHILL	WiDivMerged	NA	Assume same as LUTHERHILL	Mdw	WI
+M126-1-1-1-2-2-3-1-2-1	0	0	0	1		0		NA	NA		Sou	FL
+M23	1	1	1	1		0	Ames22034	all_sweet	su1			
+M31-1-1-1-1-1-1	0	0	0	1		0		NA	NA		Sou	FL
+M45	1	1	1	1		0	Ames22035	all_sweet	su1			
+M5	1	1	1	1		0	M5	WiDivMerged	su1			
+M6388	1	1	1	0		0	M6388	WiDivMerged	aeduwx			USDA
+M6411	1	1	1	0		0	PI506411	WiDivMerged	aeduwx			USDA
+M6415	1	1	1	0		0	M6415	WiDivMerged	aeduwx			USDA
+M6421	1	1	1	0		0	M6421	WiDivMerged	aeduwx			USDA
+M822	1	1	1	1		0	M822	WiDivMerged	su1			
+M90-1-1-1-2-2-1-1	0	0	0	1		0		NA	NA		Sou	FL
+Ma2402	1	1	1	1		0	Ma2402	WiDivMerged	su1		Ne	MA
+Ma2410-1191	0	0	1	0		0	Ma2410	all_sweet	NA	Assume same as Ma2410	Ne	MA
+Ma32	1	1	1	1		0	Ames22036	all_sweet	su1		Ne	MA
+Ma401	1	1	1	1		0	Ma401	WiDivMerged	su1		Ne	MA
+Ma5125	1	1	1	1		0	Ma5125	WiDivMerged	su1		Ne	MA
+Ma609	0	1	1	0		0	Ma609	WiDivMerged	su1		Ne	MA
+Ma83608	1	1	1	1		0	Ma83608	WiDivMerged	su1		Ne	MA
+Maiz_Amarilla_Evergreen	1	0	0	1		0		NA	NA			
+MDM-1	1	1	1	1		0	MDM_1	WiDivMerged	su1			
+MDM-12	1	1	1	1		0	MDM_12	all_sweet	su1			
+MDM-15	1	1	1	1		0	MDM_15	WiDivMerged	su1			
+MDM-16	1	1	1	1		0	MDM_16	WiDivMerged	su1			
+MDM-17	1	1	1	1		0	MDM_17	WiDivMerged	su1			
+MDM-18	1	1	1	1		0	MDM_18	WiDivMerged	su1			
+MDM-19	1	1	1	1		0	MDM_19	WiDivMerged	su1			
+MDM-2	1	1	1	1		0	MDM_2	WiDivMerged	su1			
+MDM-20	1	1	1	1		0	MDM_20	WiDivMerged	su1			
+MDM-21	1	1	1	1		0	MDM_21	WiDivMerged	su1			
+MDM-23	1	1	1	1		0	MDM_23	WiDivMerged	su1			
+MDM3	0	0	1	0		0		NA	NA			
+MDM-5	1	1	1	1		0	MDM_5	WiDivMerged	su1			
+MDM-6	1	1	1	1		0	MDM_6	WiDivMerged	su1			
+MDM-8	1	1	1	1		0	MDM_8	WiDivMerged	su1			
+MDM-9	1	1	1	1		0	MDM_9	WiDivMerged	su1			
+Me1	1	1	1	1		0	Ames22037	all_sweet	su1		Ne	ME
+Me100	1	1	1	0		0	Ames22038	all_sweet	su1		Ne	ME
+Me121Wa	0	0	0	1		0	Ames22039	all_sweet	NA		Ne	ME
+Me121-wb	1	1	1	1		0	Me121_wb	all_sweet	su1		Ne	ME
+Me123	1	1	1	1		0	Ames22040	all_sweet	su1		Ne	ME
+Me135	1	1	1	1		0	Ames22041	all_sweet	su1		Ne	ME
+Me2	1	1	1	0		1	Me2	WiDivMerged	su1		Ne	ME
+Me244Wa	1	0	1	1		0	Ames22042	all_sweet	NA		Ne	ME
+Me244-wb	1	1	1	1		1	Ames22043	all_sweet	su1		Ne	ME
+Me2rt	1	1	1	1		0	Me2rt	WiDivMerged	su1		Ne	ME
+Mexican_Dent_sh2	1	0	0	1		0		NA	NA			
+Millersburg_Red_Sweet_No2	1	0	0	1		0		NA	NA			
+Mo17	0	1	1	0		0	PI558532	WiDivMerged	field		Mdw	MO
+Mo17 su/su	1	0	0	1		0		NA	su1		Mdw	MO
+Moencopi_Pueblo	1	0	0	1		0		NA	NA			
+MR10	0	1	0	1		0	MR10	WiDivMerged	sh2i		Mdw	WI
+MR10 (Cristalino Norteno) S6	1	0	1	0		0	MR10	WiDivMerged	sh2i	Assume same as MR10	Mdw	WI
+MR14	1	0	1	1		0	MR14	all_sweet	su1		Mdw	WI
+MSR_su	1	0	0	1		0		NA	NA			
+N11-1-2-1-1-1-1-1-1-1	0	0	0	1		0		NA	NA		Sou	FL
+N120-1-X-1-1-1-1-1-3	0	0	0	1		0		NA	NA		Sou	FL
+N124A-1-1-1	0	0	0	1		0		NA	NA		Sou	FL
+N12A-1	0	0	0	1		0		NA	NA		Sou	FL
+N132A-1	0	0	0	1		0		NA	NA		Sou	FL
+N142A-1	0	0	0	1		0		NA	NA		Sou	FL
+N38-2-1-1-1-1-1-1	0	0	0	1		0		NA	NA		Sou	FL
+N44-1-2-1-1-1-1-1	0	0	0	1		0		NA	NA		Sou	FL
+N45A-1	0	0	0	1		0		NA	NA		Sou	FL
+N46A-1	0	0	0	1		0		NA	NA		Sou	FL
+N72A-1	0	0	0	1		0		NA	NA		Sou	FL
+N7C-1	0	0	0	1		0		NA	NA		Sou	FL
+N99-1-1-1-1-1-1-1	0	0	0	1		0		NA	NA		Sou	FL
+Narino_430	0	0	0	1		0		NA	NA			
+ND1	1	1	1	1		0	ND1	WiDivMerged	su1		Mdw	ND
+NE_EDR_sh2	1	0	0	1		0		NA	NA			
+NE_HY_13A	1	0	0	1		0		NA	NA			
+NE_HY_13b	1	0	0	1		0		NA	NA			
+NJ112	1	1	1	1		0	Ames22044	all_sweet	su1		Ne	NJ
+NJ116-wa	1	1	0	1		0	Ames22045	all_sweet	su1		Ne	NJ
+NJ116Wb	1	0	1	1		0	Ames22046	all_sweet	NA		Ne	NJ
+NJ143	0	0	1	0		0		NA	NA		Ne	NJ
+NJ159	1	1	1	1		0	NJ159	WiDivMerged	su1		Ne	NJ
+NJ618	1	1	1	1		0	NJ618	WiDivMerged	su1		Ne	NJ
+NJ7Y	1	1	1	0		0	NJ7Y	WiDivMerged	su1		Ne	NJ
+No_156	1	0	0	1		0		NA	NA			
+No_1577	0	0	0	1		0		NA	NA			
+North_Dakota_Yellow_Sweet_Bulk	0	0	0	1		0		NA	NA		Mdw	ND
+Northrup_King_Strain 9316	0	0	0	1		0		NA	NA			
+Nueta	0	0	0	1		0		NA	NA			
+Nueta_Sweet_Corn	0	0	0	1		0		NA	NA			
+NY MDM-1	0	0	1	0		0	MDM_1	WiDivMerged	su1	Assume same as MDM_1	Ne	NY
+OH43	1	1	1	0		0	Ames19288	WiDivMerged	field		Mdw	OH
+OH43_sh2	1	0	0	1		0		NA	sh2		Mdw	OH
+Oh43su	1	0	0	1		0		NA	su1		Mdw	OH
+OH7B	0	1	1	0		0	Ames19323	WiDivMerged	field		Mdw	OH
+OLCOTT	1	1	1	1		0	OLCOTT	WiDivMerged	su1			
+OLCOTT-1067:72	0	0	1	0		0	OLCOTT	WiDivMerged	NA	Assume same as OLCOTT		
+OLCOTT-1069:72	0	0	1	0		0	OLCOTT	WiDivMerged	NA	Assume same as OLCOTT		
+Oregon_Evergreen -1	1	0	0	1		0		NA	NA			
+Oregon_Evergreen -2	1	0	0	1		0		NA	NA			
+P14	1	1	1	1		0	P14	WiDivMerged	su1		Mdw	IN
+P35	1	1	1	1		0	P35	WiDivMerged	su1		Mdw	IN
+P39	1	1	1	1		0	P39	WiDivMerged	su1		Mdw	IN
+P39 A	0	0	1	1		0	P39	all_sweet	NA		Mdw	IN
+P39 Goodman-Buckler	1	1	1	1		1	Ames28186	all_sweet	su1		Mdw	IN
+P39 su	0	0	1	0		0	P39	all_sweet	su1	Assume same as P39	Mdw	IN
+P39(New)	1	1	1	1		0	P39_New	WiDivMerged	su1		Mdw	IN
+P39_10_226	0	0	0	1		0		NA	NA		Mdw	IN
+P39-10-226:61	0	0	1	0		0		NA	NA		Mdw	IN
+P39-16-275:61	0	0	1	0		0		NA	NA		Mdw	IN
+P39-16-276:61	0	0	1	0		0		NA	NA		Mdw	IN
+P39a	1	1	1	0		0	NSL8583	all_sweet	su1	Assume same as P39 A	Mdw	IN
+P39b	1	1	1	1		0	P39b	WiDivMerged	su1		Mdw	IN
+P39Le-253	1	1	1	0		0	P39Le_253_60	WiDivMerged	su1	Assume same as P39Le_253_60	Mdw	IN
+P39Le-253:60	0	1	0	1		0	P39Le_253_60	WiDivMerged	su1		Mdw	IN
+P39LE-261	1	1	0	0		0	P39LE_261_61	WiDivMerged	su1		Mdw	IN
+P39LE-261:61	0	1	1	1		0	P39LE_261_61	WiDivMerged	su1	Assume same as P39Le_261_61	Mdw	IN
+P39-LE-3438:64	0	0	1	0		0		NA	NA		Mdw	IN
+P39LE-3502:61	0	0	1	1		0	P39LE_3502_61	all_sweet	NA		Mdw	IN
+P39M94	1	1	1	1		0	P39M94	WiDivMerged	su1		Mdw	IN
+P39M96	1	1	1	1		0	Ames22048	all_sweet	su1		Mdw	IN
+P39xRp1d	1	1	1	1		0	P39_x_Rp1d	WiDivMerged	su1		Mdw	IN
+P51	1	1	1	1		0	Ames22049	all_sweet	su1		Mdw	IN
+P51-3289:61	0	0	1	0		0	Ames22049	all_sweet	su1	Assume same as P51	Mdw	IN
+P51B	1	1	1	1		1	NSL8582	all_sweet	su1		Mdw	IN
+P51wx	1	0	0	1		0	Ames22050	all_sweet	NA		Mdw	IN
+P51xRp1d	1	1	1	1		0	P51xRp1d	all_sweet	su1		Mdw	IN
+P737M20	1	0	0	1		0	PI644102	all_sweet	su1		Sou	FL
+PAIA_453	0	0	0	1		0		NA	NA			
+Pease_Crosby_Sweet_Corn	1	0	0	1		0		NA	NA			
+R825	1	1	1	1		0	NSL42805	all_sweet	sh2		Mdw	IL
+R839	1	1	1	1		0	NSL42806	all_sweet	sh2		Mdw	IL
+R851	1	1	1	1		0	R851	WiDivMerged	sh2		Mdw	IL
+R853	1	1	0	1		0	R853	WiDivMerged	sh2		Mdw	IL
+R853 sh2	0	0	1	0		0	R853	WiDivMerged	sh2	Assume same as R853	Mdw	IL
+Ranniaya_Zolotaya_401	1	0	0	1		0		NA	NA			
+Raza_Maiz_Dulce	0	0	0	1		0		NA	NA			
+Red_NCLB	1	0	0	1		0		NA	NA			
+Rhode_Island_Sweet	0	0	0	1		0		NA	NA			
+S4	1	1	1	1		0	Ames23508	all_sweet	su1		Mdw	MN
+S43	1	1	1	1		0	Ames23510	all_sweet	su1		Mdw	MN
+S8	0	0	0	1		0	Ames23509	all_sweet	su1		Mdw	MN
+SC1441	1	1	1	1		0	SC1441	WiDivMerged	su1		Sou	SC
+SC6069	1	1	1	1		0	SC6069	WiDivMerged	su1		Sou	SC
+SD176	1	1	1	1		0	SD176	WiDivMerged	su1		Mdw	SD
+SD226	1	1	1	1		0	SD226	WiDivMerged	su1		Mdw	SD
+SD245	0	1	1	0		0	SD245	WiDivMerged	su1		Mdw	SD
+SD277	1	1	1	1		0	SD277	WiDivMerged	su1		Mdw	SD
+SD42	1	0	1	1		0	SD42	all_sweet	su1		Mdw	SD
+SD469	1	1	1	1		0	SD469	WiDivMerged	su1		Mdw	SD
+SD592	1	1	1	1		0	SD592	WiDivMerged	su1		Mdw	SD
+SD789	1	1	1	1		0	SD789	WiDivMerged	su1		Mdw	SD
+SD829	1	1	1	1		0	SD829	WiDivMerged	su1		Mdw	SD
+SD883	1	1	1	1		0	SD883	WiDivMerged	su1		Mdw	SD
+SD884	1	1	1	1		0	SD884	WiDivMerged	su1		Mdw	SD
+SD908	1	1	1	1		0	SD908	WiDivMerged	su1		Mdw	SD
+SD909	1	1	1	1		0	SD909	WiDivMerged	su1		Mdw	SD
+Selection_from_231227	0	0	0	1		0		NA	NA			
+Separation_from_170882	0	0	0	1		0		NA	NA			
+Separation_from_177107	0	0	0	1		0		NA	NA			
+Separation_from_177589	1	0	0	1		0		NA	NA			
+Separation_from_177604	0	0	0	1		0		NA	NA			
+Separation_from_177642	1	0	0	1		0		NA	NA			
+Separation_from_183739	0	0	0	1		0		NA	NA			
+Separation_from_183742	1	0	0	1		0		NA	NA			
+Separation_from_204812	0	0	0	1		0		NA	NA			
+Separation_from_212335	0	0	0	1		0		NA	NA			
+Silver #9	0	0	0	1		0		NA	NA			
+Slatka_Pukanka	1	0	0	1		0		NA	NA			
+sm*sm*smooth@@	0	1	1	0		0		NA	su1			
+sm*sm*wrinkled @@	0	1	1	0		0		NA	su1			
+Sonora_108	0	0	0	1		0		NA	NA			
+Sonora_124	1	0	0	1		0		NA	NA			
+Sonora_22	1	0	0	1		0		NA	NA			
+Sonora_57	0	0	0	1		0		NA	NA			
+Stowels_Evergreen	1	0	0	1		0		NA	NA			
+STRAIN 11D-586-68A	1	0	1	1		0	PI358521	all_sweet	su1		Mdw	IL
+Strain 18B-5-64	0	0	1	0		0	PI358524	all_sweet	su1	Assume same as STRAIN18B-5-69	Mdw	IL
+STRAIN 18B-5-69	0	0	0	1		0	PI358524	all_sweet	su1		Mdw	IL
+STRAIN 304A-408-68B	0	0	1	1		0	PI358527	all_sweet	su1		Mdw	IL
+STRAIN 451B-4-68B	1	0	1	1		0	PI358529	all_sweet	su1		Mdw	IL
+STRAIN 465A-421-68B	1	0	1	1		0	PI358530	all_sweet	su1		Mdw	IL
+STRAIN 675A-415-68(B)	0	0	1	1		0	PI358531	all_sweet	su1		Mdw	IL
+STRAIN T20-2-68B	0	0	0	1		0	PI358534	all_sweet	su1		Mdw	IL
+STRAIN T24-395-68B	0	0	1	1		0	PI358536	all_sweet	su1		Mdw	IL
+STRAIN T32-397-68B	1	0	0	1		0	PI358537	all_sweet	su1		Mdw	IL
+STRAIN T32-397-68r	0	0	1	1		0	Strain_T32_397_68r	WiDivMerged	su1		Mdw	IL
+STRAIN T33-399-68B	0	0	1	1		0	PI358538	all_sweet	su1		Mdw	IL
+STRAIN T35-388-68A	0	0	1	1		0	PI358539	all_sweet	su1		Mdw	IL
+STRAIN T36 101T-394-68	0	0	0	1		0	PI358533	all_sweet	su1		Mdw	IL
+Sunshine	1	0	0	1		0		NA	NA			
+SYN2 sh2	0	0	0	1		0		NA	NA			
+T20	1	1	0	0		0	PI358534	all_sweet	su1	Assume same as STRAIN T20-2-68B	Mdw	IL
+T20-2-68(B)	0	0	1	0		0	PI358534	all_sweet	su1	Assume same as STRAIN T20-2-68B	Mdw	IL
+T24	1	1	0	0		0	PI358536	all_sweet	su1	Assume same as STRAIN T24-395-68B	Mdw	IL
+T-24-56-ILL	1	0	0	1		0	PI358536	all_sweet	su1	Assume same as STRAIN T24-395-68B	Mdw	IL
+T32	1	1	0	0		0	PI358537	all_sweet	su1	Assume same as STRAIN T32-397-68B	Mdw	IL
+T33	1	1	0	0		0	PI358538	all_sweet	su1	Assume same as STRAIN T33-399-68B	Mdw	IL
+T35	1	1	0	0		0	PI358539	all_sweet	su1	Assume same as STRAIN T35-388-68A	Mdw	IL
+T625	1	1	1	1		0	T625	WiDivMerged	su1		Sou	TN
+T62s	1	1	1	1		0	PI509045	all_sweet	su1		Sou	TN
+T64S	0	0	0	1		0	PI509046	all_sweet	NA		Sou	TN
+Tawaktci	1	0	0	1		0		NA	NA			
+Tesuque_Pueblo	1	0	0	1		0		NA	NA			
+UFI2EDbt1-1	0	0	0	1		0		NA	NA			
+UFI9EC	0	0	0	1		0		NA	NA			
+V775	1	1	1	1		0	V775	WiDivMerged	su1			
+V781	1	1	1	1		0	V781	WiDivMerged	su1			
+VIA5492	1	1	1	1		0	VIA5492	WiDivMerged	su1			
+VIII/221	1	0	0	1		0		NA	NA			
+Vineland576	1	1	1	1		0	Vineland576	WiDivMerged	su1			
+W 6786	0	0	1	0		0	W6728	all_sweet	su1		Mdw	WI
+W1736	1	1	1	1		0	W1736	WiDivMerged	su1		Mdw	WI
+W3607	0	0	0	1		0	Ames22052	all_sweet	NA		Mdw	WI
+W3647	1	1	1	1		0	Ames22053	all_sweet	su1		Mdw	WI
+W3722	1	1	1	1		0	Ames22054	all_sweet	su1		Mdw	WI
+W3742	1	1	1	1		0	Ames22055	all_sweet	su1		Mdw	WI
+W5543	1	1	1	1		0	Ames22056	all_sweet	su1		Mdw	WI
+W5552	1	1	1	1		0	Ames22057	all_sweet	su1		Mdw	WI
+W5579	1	1	1	1		0	Ames22058	all_sweet	su1		Mdw	WI
+W6366	1	1	1	1		0	Ames22059	all_sweet	su1		Mdw	WI
+W6462	1	1	1	1		0	Ames22060	all_sweet	su1		Mdw	WI
+W64A	1	1	1	1		0	PI587152	WiDivMerged	field		Mdw	WI
+W6714	1	1	1	1		0	Ames22061	all_sweet	su1		Mdw	WI
+W6720-1	1	1	1	1		0	Ames22062	all_sweet	su1		Mdw	WI
+W6720-2	1	0	1	1		0		NA	NA		Mdw	WI
+W6728	1	1	1	1		0	W6728	WiDivMerged	su1		Mdw	WI
+W6757	1	1	1	1		0	Ames22065	all_sweet	su1		Mdw	WI
+W6786	1	1	1	1		0	W6786	WiDivMerged	su1		Mdw	WI
+W7151	1	1	1	1		0	Ames22067	all_sweet	su1		Mdw	WI
+W822GSe	1	1	1	0		1	W822GSE	all_sweet	se	is this Se or se in sources?	Mdw	WI
+W85	1	1	1	1		0	W85	WiDivMerged	field		Mdw	WI
+We01407	1	1	1	1		1	We01407	WiDivMerged	se		Mdw	WI
+We02404	1	1	1	1		0	We02404	WiDivMerged	se		Mdw	WI
+We02406	1	1	0	0		0	We02406	WiDivMerged	se		Mdw	WI
+We02412	1	1	1	1		0	We02412	WiDivMerged	se		Mdw	WI
+We03418a	1	1	1	1		1	We03418a	WiDivMerged	se		Mdw	WI
+We04401	1	0	1	1		1		NA	se		Mdw	WI
+We04806	1	0	1	1		0		NA	se		Mdw	WI
+We04819	1	0	0	1		0		NA	se		Mdw	WI
+We05401	1	1	1	0		0	We05401	WiDivMerged	se		Mdw	WI
+We05407	1	1	0	1		0	We05407	WiDivMerged	se		Mdw	WI
+We05407Y	0	0	0	0		1	We05407	WiDivMerged	se	Assuming same as We05407	Mdw	WI
+We05408	1	1	1	0		0	We05408	WiDivMerged	se		Mdw	WI
+We05410	1	1	1	1		0	We05410	WiDivMerged	se		Mdw	WI
+We05411	1	1	1	0		0	We05411	WiDivMerged	se		Mdw	WI
+We06409a	1	0	0	1		1	We06409a	WiDivMerged	se		Mdw	WI
+We06409b	1	1	1	0		0	We06409b	all_sweet	se		Mdw	WI
+We06410	1	1	0	0		0	We06410	WiDivMerged	se		Mdw	WI
+we07403a	1	0	1	1		0		NA	se		Mdw	WI
+We08405	1	0	1	1		1		NA	se		Mdw	WI
+We08408	1	1	1	1		0	We08408	WiDivMerged	se		Mdw	WI
+We08414a	1	1	1	1		0	We08414a	WiDivMerged	se		Mdw	WI
+We08417a	1	1	0	1		0	We08417a	WiDivMerged	se		Mdw	WI
+We08424	1	0	1	1		0		NA	se		Mdw	WI
+We09402	1	1	1	1		1	We09402	WiDivMerged	se		Mdw	WI
+We09413	1	1	1	1		0	We09413	WiDivMerged	se		Mdw	WI
+We09425	1	1	1	1		0	We09425	WiDivMerged	se		Mdw	WI
+We10401	1	1	1	1		0	We10401	WiDivMerged	se		Mdw	WI
+We1095407-2	1	0	0	1		0		NA	se		Mdw	WI
+We11401	1	0	1	1		1		NA	se		Mdw	WI
+We11403	0	1	0	0		0		NA	se		Mdw	WI
+We11404	0	1	1	0		0		NA	se		Mdw	WI
+We11405	1	0	1	1		0		NA	NA		Mdw	WI
+We11408	1	0	0	1		0		NA	se		Mdw	WI
+We11416	1	0	1	1		1		NA	se		Mdw	WI
+We12401	1	0	1	1		0		NA	se		Mdw	WI
+We17401	1	0	0	0		1		NA	se		Mdw	WI
+We17410	1	0	0	0		0		NA	se		Mdw	WI
+We17418	1	0	0	0		0		NA	se		Mdw	WI
+We17421	1	0	0	0		0		NA	se		Mdw	WI
+We17442	1	0	0	0		0		NA	se		Mdw	WI
+West_Brookfield_white_sweet	0	0	0	1		0		NA	NA		Mdw	WI
+Wh00033	1	1	1	1		0	Wh00033	WiDivMerged	sh2		Mdw	WI
+Wh00050	1	1	1	1		0	Wh00050	WiDivMerged	sh2		Mdw	WI
+Wh00051	1	1	1	1		0	Wh00051	WiDivMerged	sh2		Mdw	WI
+Wh00065	1	1	1	0		0	Wh00065	WiDivMerged	sh2		Mdw	WI
+Wh01001	1	1	1	1		0	Wh01001	WiDivMerged	sh2		Mdw	WI
+Wh03031	1	1	1	1		0	Wh03031	WiDivMerged	sh2		Mdw	WI
+Wh04020a	1	1	1	1		0	Wh04020a	WiDivMerged	sh2		Mdw	WI
+Wh04036V	0	1	0	0		0	Wh04036V	WiDivMerged	sh2		Mdw	WI
+Wh04036VW	1	0	0	1		1	Wh04036V	WiDivMerged	sh2	Assume same as Wh04036	Mdw	WI
+Wh05032a	1	1	1	0		0	Wh05032a	WiDivMerged	sh2		Mdw	WI
+wh05032a1	0	0	0	1		0	Wh05032a	WiDivMerged	NA	Assume same as Wh05032a	Mdw	WI
+Wh05051	1	1	1	1		0	Wh05051	WiDivMerged	sh2		Mdw	WI
+Wh05066a	1	1	1	1		0	Wh05066a	WiDivMerged	sh2		Mdw	WI
+Wh05070a	1	0	1	1		0		NA	sh2		Mdw	WI
+Wh05081a	1	1	0	0		0	Wh05081a	WiDivMerged	sh2		Mdw	WI
+Wh05081b	1	0	1	1		0	Wh05081b	all_sweet	sh2		Mdw	WI
+Wh07013	1	1	1	1		0	Wh07013	WiDivMerged	sh2		Mdw	WI
+Wh07020a	1	1	1	1		1	Wh07020a	WiDivMerged	sh2		Mdw	WI
+Wh07029	1	0	1	1		0		NA	sh2		Mdw	WI
+Wh07051	1	1	1	1		0	Wh07051	WiDivMerged	sh2		Mdw	WI
+Wh07061a	1	1	1	1		0	Wh07061a	WiDivMerged	sh2		Mdw	WI
+Wh07061b	1	0	1	1		0		NA	sh2		Mdw	WI
+Wh07165R	1	1	1	1		0	Wh07165R	WiDivMerged	sh2		Mdw	WI
+Wh07166R	1	1	1	1		1	Wh07166R	WiDivMerged	sh2		Mdw	WI
+Wh08022	1	1	1	1		1	Wh08022	WiDivMerged	sh2		Mdw	WI
+Wh08039	1	0	1	1		0		NA	sh2		Mdw	WI
+Wh08042	1	1	1	1		1	Wh08042	WiDivMerged	sh2		Mdw	WI
+Wh08045	1	0	1	1		0		NA	sh2		Mdw	WI
+Wh08091	0	1	0	0		0	Wh08091	WiDivMerged	sh2		Mdw	WI
+Wh08092	1	1	1	1		0	Wh08092	WiDivMerged	sh2		Mdw	WI
+Wh08114	1	0	1	1		0		NA	sh2		Mdw	WI
+Wh08115b	1	1	1	0		0	Wh08115b	WiDivMerged	sh2		Mdw	WI
+Wh09009	1	1	1	1		0	Wh09009	WiDivMerged	sh2		Mdw	WI
+Wh09033	1	1	1	1		0	Wh09033	WiDivMerged	sh2		Mdw	WI
+Wh09061	1	1	1	1		0	Wh09061	WiDivMerged	sh2		Mdw	WI
+Wh09068	1	1	1	1		0	Wh09068	WiDivMerged	sh2		Mdw	WI
+Wh09075	1	1	1	0		0	Wh09075	WiDivMerged	sh2		Mdw	WI
+Wh09083	1	1	1	1		0	Wh09083	WiDivMerged	sh2		Mdw	WI
+Wh09086	1	0	1	1		0		NA	sh2		Mdw	WI
+Wh09087	1	1	1	0		0	Wh09087	WiDivMerged	sh2		Mdw	WI
+Wh09117R	1	1	1	1		0	Wh09117R	WiDivMerged	sh2		Mdw	WI
+Wh09126R	1	1	1	1		0	Wh09126R	WiDivMerged	sh2		Mdw	WI
+Wh09137R	1	1	1	1		0	Wh09137R	WiDivMerged	sh2		Mdw	WI
+Wh09141R	1	1	1	1		0	Wh09141R	WiDivMerged	sh2		Mdw	WI
+Wh10006R	1	1	1	1		0	Wh10006R	WiDivMerged	sh2		Mdw	WI
+Wh10034R	1	1	1	1		0	Wh10034R	WiDivMerged	sh2		Mdw	WI
+Wh10035R	1	1	1	1		0	Wh10035R	WiDivMerged	sh2		Mdw	WI
+Wh10040R	1	0	1	1		0		NA	sh2		Mdw	WI
+Wh10046R	1	1	1	1		0	Wh10046R	WiDivMerged	sh2		Mdw	WI
+Wh10049R	1	1	1	1		0	Wh10049R	WiDivMerged	sh2		Mdw	WI
+Wh10052R	1	0	1	0		0		NA	sh2		Mdw	WI
+wh10052Ra	0	0	0	1		0		NA	NA		Mdw	WI
+Wh10057R	1	0	1	1		0		NA	sh2		Mdw	WI
+Wh10062R	1	0	1	1		0	Wh10062R	all_sweet	sh2		Mdw	WI
+Wh10067R	1	0	1	1		0		NA	sh2		Mdw	WI
+Wh10068R	1	0	1	1		0		NA	sh2		Mdw	WI
+Wh10070R	1	0	1	1		0		NA	sh2		Mdw	WI
+Wh10080	1	1	1	1		0	Wh10080	WiDivMerged	sh2		Mdw	WI
+Wh10085	0	0	1	0		0		NA	NA		Mdw	WI
+Wh10088R	1	0	1	1		0		NA	sh2		Mdw	WI
+Wh10090R	1	0	1	1		0		NA	sh2		Mdw	WI
+Wh10105R	1	0	1	1		0		NA	sh2		Mdw	WI
+Wh10110R	1	1	1	1		0	Wh10110R	WiDivMerged	sh2		Mdw	WI
+Wh10113R	1	1	1	1		0	Wh10113R	WiDivMerged	sh2		Mdw	WI
+Wh10117R	1	0	1	1		0		NA	sh2		Mdw	WI
+Wh10127R	1	0	1	1		0		NA	sh2		Mdw	WI
+Wh10135R	1	0	1	1		0		NA	sh2		Mdw	WI
+Wh10137R	1	0	1	1		0		NA	sh2		Mdw	WI
+Wh10140R	1	1	1	1		0	Wh10140R	WiDivMerged	sh2		Mdw	WI
+Wh10163	1	1	1	1		0	Wh10163	WiDivMerged	sh2		Mdw	WI
+Wh10173V	1	1	1	1		0	Wh10173V	WiDivMerged	sh2		Mdw	WI
+Wh10216V	1	1	1	1		0	Wh10216V	WiDivMerged	sh2		Mdw	WI
+Wh10231V	1	1	1	1		0	Wh10231V	WiDivMerged	sh2		Mdw	WI
+Wh10802R	0	1	0	0		0	Wh10802R	WiDivMerged	sh2		Mdw	WI
+Wh10804R	1	1	1	0		0	Wh10804R	WiDivMerged	sh2		Mdw	WI
+Wh1095407-2	0	1	0	0		0	Wh1095407_2	WiDivMerged	sh2		Mdw	WI
+Wh11001	1	0	1	1		0		NA	sh2		Mdw	WI
+Wh11005	1	0	1	1		0		NA	sh2		Mdw	WI
+Wh11008	1	0	1	1		0		NA	sh2		Mdw	WI
+Wh11017a	1	0	0	1		0		NA	sh2		Mdw	WI
+Wh12001	1	0	1	1		0		NA	sh2		Mdw	WI
+Wh12004	1	0	1	1		0		NA	sh2		Mdw	WI
+Wh12005	1	0	1	1		0		NA	sh2		Mdw	WI
+Wh12008	1	0	1	1		0		NA	sh2		Mdw	WI
+Wh12014	1	0	1	1		0		NA	sh2		Mdw	WI
+Wh12048V	1	0	1	1		0		NA	sh2		Mdw	WI
+Wh13022A	1	0	1	1		0		NA	sh2		Mdw	WI
+Wh13037	1	0	1	1		0		NA	sh2		Mdw	WI
+Wh13040	1	0	1	1		1		NA	sh2		Mdw	WI
+Wh13041	1	0	1	1		0		NA	sh2		Mdw	WI
+Wh13048	1	0	1	1		0		NA	sh2		Mdw	WI
+Wh13053	1	0	1	1		0		NA	sh2		Mdw	WI
+Wh13063A	1	0	1	1		0		NA	sh2		Mdw	WI
+Wh13064	1	0	1	1		1		NA	sh2		Mdw	WI
+Wh13070	1	0	1	1		0		NA	sh2		Mdw	WI
+Wh13074	0	0	1	0		0		NA	sh2		Mdw	WI
+Wh13074A	1	0	0	1		0		NA	sh2		Mdw	WI
+Wh14022A	1	0	0	1		1		NA	sh2		Mdw	WI
+Wh14022B	1	0	0	1		0		NA	sh2		Mdw	WI
+Wh14082V	1	0	0	1		0		NA	sh2		Mdw	WI
+Wh14100V	1	0	1	1		0		NA	sh2		Mdw	WI
+Wh14101V	1	0	0	1		0		NA	sh2		Mdw	WI
+Wh14102V	1	0	0	1		0		NA	sh2		Mdw	WI
+Wh14113V	1	0	0	1		0		NA	sh2		Mdw	WI
+Wh14119V	1	0	0	1		0		NA	sh2		Mdw	WI
+Wh14201N	1	0	0	1		0		NA	sh2		Mdw	WI
+Wh14202N	1	0	0	1		1		NA	sh2		Mdw	WI
+wh14203N	0	0	0	1		0		NA	sh2		Mdw	WI
+wh14204N	0	0	0	1		0		NA	sh2		Mdw	WI
+wh14205N	0	0	0	1		0		NA	sh2		Mdw	WI
+wh14206N	0	0	0	1		0		NA	sh2		Mdw	WI
+wh14207N	0	0	0	1		0		NA	sh2		Mdw	WI
+wh14208N	0	0	0	1		0		NA	sh2		Mdw	WI
+wh14209N	0	0	0	1		0		NA	sh2		Mdw	WI
+Wh14210N	1	0	0	1		0		NA	sh2		Mdw	WI
+Wh16003	1	0	0	0		0		NA	sh2		Mdw	WI
+Wh16008	1	0	0	0		0		NA	sh2		Mdw	WI
+Wh16012	1	0	0	0		0		NA	sh2		Mdw	WI
+Wh16015B	1	0	0	0		0		NA	sh2		Mdw	WI
+Wh16042	1	0	0	0		0		NA	sh2		Mdw	WI
+Wh16044	1	0	0	0		0		NA	sh2		Mdw	WI
+Wh17027A	1	0	0	0		0		NA	sh2		Mdw	WI
+Wh17031R	1	0	0	0		0		NA	sh2		Mdw	WI
+Wh17048V	1	0	0	0		0		NA	sh2		Mdw	WI
+Wh17070V	1	0	0	0		0		NA	sh2		Mdw	WI
+Wh92047	1	1	1	1		1	Wh92047	WiDivMerged	sh2		Mdw	WI
+Wh92054	1	1	0	0		0	Wh92054	WiDivMerged	su1		Mdw	WI
+Wh9261	1	1	1	1		1	Wh9261	WiDivMerged	sh2		Mdw	WI
+Wh93006	1	1	1	0		0	Wh93006	WiDivMerged	sh2		Mdw	WI
+Wh93016	1	1	1	1		0	Wh93016	WiDivMerged	sh2		Mdw	WI
+Wh93017	1	1	1	0		0	Wh93017	WiDivMerged	sh2		Mdw	WI
+Wh94053	1	1	1	0		0	Wh94053	WiDivMerged	sh2		Mdw	WI
+Wh95016a	1	1	1	1		0	Wh95016a	WiDivMerged	sh2		Mdw	WI
+Wh96011	1	1	0	1		0	Wh96011	WiDivMerged	sh2		Mdw	WI
+Wh96015	1	1	1	0		1		NA	sh2		Mdw	WI
+Wh96034	1	1	1	1		0	Wh96034	WiDivMerged	sh2		Mdw	WI
+Wh98044	1	1	1	1		0	Wh98044	WiDivMerged	sh2		Mdw	WI
+Wh98063	1	1	1	1		0	Wh98063	WiDivMerged	sh2		Mdw	WI
+Whipples_White	0	0	0	1		0		NA	NA		Mdw	WI
+Whipples_Yellow	1	0	0	1		0		NA	NA		Mdw	WI
+WMT	1	0	0	0		0		NA	NA		Mdw	WI
+Wu00801	1	1	1	1		0	Wu00801	WiDivMerged	su1		Mdw	WI
+Wu00802	1	1	1	0		0	Wu00802	WiDivMerged	su1		Mdw	WI
+Wu0184R	0	0	1	0		0		NA	NA		Mdw	WI
+Wu04401	0	1	0	0		0	Wu04401	WiDivMerged	su1		Mdw	WI
+Wu04806	0	1	0	0		0	Wu04806	WiDivMerged	su1		Mdw	WI
+Wu04819	0	1	1	0		0	Wu04819	WiDivMerged	su1		Mdw	WI
+Wu07812	1	0	0	1		0		NA	su1		Mdw	WI
+Wu10802R	1	0	1	1		0	Wu10802R	all_sweet	su1		Mdw	WI
+wu10804R	0	0	0	1		0		NA	NA		Mdw	WI
+Wu99811	1	1	1	1		0	Wu99811	WiDivMerged	su1		Mdw	WI
+Wu99823	1	1	1	1		0	Wu99823	WiDivMerged	su1		Mdw	WI
+Wuh07177i	1	1	1	1		1	Wuh07177i	WiDivMerged	sh2i		Mdw	WI
+Wuh07182i	1	1	1	1		0	Wuh07182i	WiDivMerged	sh2i		Mdw	WI
+Wuh07183i	1	1	1	0		0	Wuh07183i	WiDivMerged	sh2i		Mdw	WI
+Wuh07186i	1	1	1	1		0	Wuh07186i	WiDivMerged	sh2i		Mdw	WI
+Wuh07413	0	0	1	0		0	Wuh07413i	WiDivMerged	sh2i	Assume same asWuh07413i	Mdw	WI
+Wuh07413i	1	1	0	0		1	Wuh07413i	WiDivMerged	sh2i		Mdw	WI
+Wuh07422i	1	1	1	1		0	Wuh07422i	WiDivMerged	sh2i		Mdw	WI
+Wuh07428i	1	0	1	1		0		NA	sh2i		Mdw	WI
+Wuh07429i	1	1	1	1		0	Wuh07429i	WiDivMerged	sh2i		Mdw	WI
+Wuh07466i	1	1	1	1		0	Wuh07466i	WiDivMerged	sh2		Mdw	WI
+Wuh07469i	1	1	1	1		0	Wuh07469i	WiDivMerged	sh2i		Mdw	WI
+Wuh07481i	1	1	1	1		0	Wuh07481i	WiDivMerged	sh2i		Mdw	WI
+Wuh07492i	1	0	1	1		1		NA	sh2i		Mdw	WI
+Wuh08127i	0	1	0	0		0	Wuh08127i	WiDivMerged	sh2i		Mdw	WI
+Wuh08127ia	1	0	1	1		1	Wuh08127i	WiDivMerged	sh2i	Assume same as Wuh08127i	Mdw	WI
+Wuh09093i	1	1	1	1		1	Wuh09093i	WiDivMerged	sh2i		Mdw	WI
+Wuh09097i	1	1	1	1		0	Wuh09097i	WiDivMerged	sh2i		Mdw	WI
+Wuh09098i	1	1	1	1		0	Wuh09098i	WiDivMerged	sh2i		Mdw	WI
+Wuh09144i	1	1	1	1		0	Wuh09144i	WiDivMerged	sh2i		Mdw	WI
+Wuh09149i	1	1	1	1		0	Wuh09149i	WiDivMerged	sh2i		Mdw	WI
+Wuh09150i	1	1	1	1		1	Wuh09150i	WiDivMerged	sh2i		Mdw	WI
+Wuh09153i	1	1	1	1		0	Wuh09153i	WiDivMerged	sh2i		Mdw	WI
+Wuh09164i	1	1	1	1		0	Wuh09164i	WiDivMerged	sh2i		Mdw	WI
+Wuh09170i	1	1	1	1		0	Wuh09170i	WiDivMerged	sh2i		Mdw	WI
+Wuh09174i	1	1	1	1		1	Wuh09174i	WiDivMerged	sh2i		Mdw	WI
+Wuh09183i	1	1	1	1		0	Wuh09183i	WiDivMerged	sh2i		Mdw	WI
+Wuh09188i	1	1	1	0		0	Wuh09188i	WiDivMerged	sh2i		Mdw	WI
+Wuh09191i	1	1	1	1		0	Wuh09191i	WiDivMerged	sh2i		Mdw	WI
+Wuh11801i	1	0	1	1		1		NA	sh2i		Mdw	WI
+Wuh11805i	0	0	1	0		0		NA	sh2i		Mdw	WI
+Wuh11809i	1	0	1	1		0		NA	sh2i		Mdw	WI
+Wuh11810i	1	0	1	1		0		NA	sh2i		Mdw	WI
+Wuh11811i	1	0	1	1		0		NA	sh2i		Mdw	WI
+Wuh11812i	1	0	1	1		1		NA	sh2i		Mdw	WI
+Wuh11813i	1	0	1	1		0		NA	sh2i		Mdw	WI
+Wuh11816i	1	0	1	1		0		NA	sh2i		Mdw	WI
+Wuh12018i	1	0	1	1		1		NA	sh2i		Mdw	WI
+Wuh12019i	1	0	1	1		0		NA	sh2i		Mdw	WI
+Wuh12020i	1	0	1	1		0		NA	sh2i		Mdw	WI
+Wuh12027i	1	0	1	1		0		NA	sh2i		Mdw	WI
+Wuh12035i	1	0	1	1		0		NA	sh2i		Mdw	WI
+Wuh12037i	1	0	1	1		0		NA	sh2i		Mdw	WI
+Wuh12039i	1	0	1	1		1		NA	sh2i		Mdw	WI
+Wuh98032	1	1	1	1		0	Wuh98032	WiDivMerged	sh2		Mdw	WI
+WVG3	1	1	1	1		0	WVG3	WiDivMerged	su1		Mdw	WI
+Z07_001	1	0	0	1		0		NA	NA			
+Z07_002	0	0	0	1		0		NA	NA			
+Z07_003	0	0	0	1		0		NA	NA			
+Zapalote Chico	0	0	0	1		0		NA	NA			
+Zarya 123	0	0	0	1		0		NA	NA			

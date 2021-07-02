@@ -42,7 +42,8 @@ Check99        8.063      5.202   1.550
 optimizer (nloptwrap) convergence code: 0 (OK)
 boundary (singular) fit: see ?isSingular
 
-[1] NA
+The r^2 value of this model for Starch is [1] 0.6764997
+The heritability of Starch is [1] 0.8711165
 Model Comparison, with and without Endosperm Term
 Starch ~ Check + (1|endo/BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)
 Linear mixed model fit by REML ['lmerMod']
@@ -125,7 +126,8 @@ Check99        8.801      7.685   1.145
 optimizer (nloptwrap) convergence code: 0 (OK)
 boundary (singular) fit: see ?isSingular
 
-[1] NA
+The r^2 value of this model for Total.Polysaccharides is [1] 0.7639964
+The heritability of Total.Polysaccharides is [1] 0.947585
 Model Comparison, with and without Endosperm Term
 Total.Polysaccharides ~ Check + (1|endo/BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)
 Linear mixed model fit by REML ['lmerMod']
@@ -204,7 +206,8 @@ Check2         4.818      9.176   0.525
 Check3         2.117      9.177   0.231
 Check4         8.222      9.195   0.894
 Check99        1.290      6.514   0.198
-[1] NA
+The r^2 value of this model for WSP is [1] 0.706178
+The heritability of WSP is [1] 0.930412
 Model Comparison, with and without Endosperm Term
 WSP ~ Check + (1|endo/BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)
 Linear mixed model fit by REML ['lmerMod']
@@ -250,7 +253,8 @@ Check99        4.818      3.375   1.428
  NA's   :18       
 Glucose ~ Check + (1|BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)
 Linear mixed model fit by REML ['lmerMod']
-Formula: Glucose ~ Check + (1 | BookInbred) + (1 | BookInbred:Envi) +      (1 | Envi/superblock/block) + (1 | Envi:Row) + (1 | Envi:Col)
+Formula: Glucose ~ Check + (1 | BookInbred) + (1 | BookInbred:Envi) +  
+    (1 | Envi/superblock/block) + (1 | Envi:Row) + (1 | Envi:Col)
    Data: SampleDFtoModel
 Control: strict_tol
 
@@ -283,7 +287,8 @@ Check99       -2.567      1.310  -1.960
 optimizer (nloptwrap) convergence code: 0 (OK)
 boundary (singular) fit: see ?isSingular
 
-[1] NA
+The r^2 value of this model for Glucose is [1] 0.6152985
+The heritability of Glucose is [1] 0.88757
 Model Comparison, with and without Endosperm Term
 Glucose ~ Check + (1|endo/BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)
 Linear mixed model fit by REML ['lmerMod']
@@ -366,7 +371,8 @@ Check99       -2.934      1.239  -2.367
 optimizer (nloptwrap) convergence code: 0 (OK)
 boundary (singular) fit: see ?isSingular
 
-[1] NA
+The r^2 value of this model for Fructose is [1] 0.5594259
+The heritability of Fructose is [1] 0.8673179
 Model Comparison, with and without Endosperm Term
 Fructose ~ Check + (1|endo/BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)
 Linear mixed model fit by REML ['lmerMod']
@@ -415,7 +421,8 @@ Model failed to converge with max|grad| = 0.00242416 (tol = 0.002, component 1)
  NA's   :14      
 Sucrose ~ Check + (1|BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)
 Linear mixed model fit by REML ['lmerMod']
-Formula: Sucrose ~ Check + (1 | BookInbred) + (1 | BookInbred:Envi) +      (1 | Envi/superblock/block) + (1 | Envi:Row) + (1 | Envi:Col)
+Formula: Sucrose ~ Check + (1 | BookInbred) + (1 | BookInbred:Envi) +  
+    (1 | Envi/superblock/block) + (1 | Envi:Row) + (1 | Envi:Col)
    Data: SampleDFtoModel
 Control: strict_tol
 
@@ -448,7 +455,8 @@ Check99       -6.729      5.433  -1.239
 optimizer (nloptwrap) convergence code: 0 (OK)
 boundary (singular) fit: see ?isSingular
 
-[1] NA
+The r^2 value of this model for Sucrose is [1] 0.824754
+The heritability of Sucrose is [1] 0.9502581
 Model Comparison, with and without Endosperm Term
 Sucrose ~ Check + (1|endo/BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)
 Linear mixed model fit by REML ['lmerMod']
@@ -531,7 +539,8 @@ Check99      -11.095      8.253  -1.344
 optimizer (nloptwrap) convergence code: 0 (OK)
 boundary (singular) fit: see ?isSingular
 
-[1] NA
+The r^2 value of this model for Total.Sugar is [1] 0.7476642
+The heritability of Total.Sugar is [1] 0.9482092
 Model Comparison, with and without Endosperm Term
 Total.Sugar ~ Check + (1|endo/BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)
 Linear mixed model fit by REML ['lmerMod']

@@ -44,6 +44,7 @@ library(GWASpoly)#for running Gwas
 # library(rrBLUP)
 library(emmeans)
 library(bigmemory)
+library(MuMIn)
 
 
 getwd()
@@ -84,6 +85,7 @@ tail(SampleInfo)
 str(unique(SampleInfo$Variety))
 summary.factor(SampleInfo$endo)
 length(unique(SampleInfo$Variety))
+setdiff(unique(BookInfo$Inbred),unique(SampleInfo$Variety))
 
 #########Read in the output from NIR##########
 ####Copied pasted and modified from Hislop_carb_eqn_validation.R
@@ -354,11 +356,16 @@ linearmodel <- function(SampleDFtoModel,TitleAddendum){
   # Write out residuals from ANOVA
   write.table(resid(model), paste0("Data/OutputtedData/WSMDP_LinearModel_residuals_",TitleAddendum,"_", carbs[j], ".csv"), col.names=F, row.names=F, sep=",")
 
+  #calculate model R2
+  r2 <- r.squaredGLMM(model)
+  out <- capture.output(r2[2])
+  cat(paste("The r^2 value of this model for", carbs[j] ,"is", out), file= statsfile, sep="\n", append=TRUE)
     # Calculate hertiability 
   model_variances <- as.data.frame(VarCorr(model))
-  h2 <- model_variances$vcov[2]/(model_variances$vcov[2]+(model_variances$vcov[1]/5)+(model_variances$vcov[9]/10))
+  #broad sence heritability calculated as variance of genotype/ (variance of geno + var of gxe / num of enviornments + var of error/num of replicates and environ)
+  h2 <- model_variances$vcov[2]/(model_variances$vcov[2]+(model_variances$vcov[1]/4)+(model_variances$vcov[8]/8))
   out <- capture.output(h2)
-  cat(out, file= statsfile, sep="\n", append=TRUE)
+  cat(paste("The heritability of", carbs[j] ,"is", out), file= statsfile, sep="\n", append=TRUE)
 
   #Compare model with one with Endosperm
   cat("Model Comparison, with and without Endosperm Term", file=statsfile, sep="\n", append=TRUE)
@@ -394,16 +401,24 @@ NFBlups <- linearmodel(CleanedInfoNF,"CleanedOutliersNF")
 #########################
 ###Genomic Info###
 #########################
-genoinfo <- read.csv("Data/WSMDP_Inbreds.txt",head = FALSE)
-colnames(genoinfo) <- c("Variety","","","","","","","GenoName","source","endo","notes","Region","Program")
+# genoinfo <- read.csv("Data/WSMDP_Inbreds.txt",head = FALSE)
+genoinfo <- read.csv("Data/WSMDP_Inbreds_2021.6.30.csv",head = TRUE)
+# colnames(genoinfo) <- c("Variety","","","","","","","GenoName","source","endo","notes","Region","Program")
+colnames(genoinfo) <- c("Index","Variety","Planting2019","Planting20142015","SCMVTest","CAP","Sugar2019","GBS","endo","GenoName")
+test1 <- which(genoinfo$Planting20142015==1)
+test2 <- which(!is.na(genoinfo$GenoName))
+intersect(test1,test2)
 
 #read in genetic info post MAF 
+# hmppath <- "Data/RawData/WSMDP_SeqF.hmp.txt"
 hmppath <- "Data/RawData/WSMDP_SCMV_SeqB.hmp.txt"
+# hmppath <- "Data/RawData/WSMDP_SeqC.hmp.txt"
 SCMV_geno <- fread(hmppath,skip = "rs#")
-geno_scmv <- SCMV_geno
-str(geno_scmv)
-colnames(geno_scmv)<-gsub(colnames(geno_scmv), pattern = ":.*", replacement = "")
-str(geno_scmv)
+geno <- SCMV_geno
+str(geno)
+colnames(geno)<-gsub(colnames(geno), pattern = ":.*", replacement = "")
+str(geno)
+
 
 WFBlupsGeno <- merge(WFBlups,genoinfo, by = "Variety")
 c1 <- which(colnames(WFBlupsGeno)=="Starch.BLUP")
@@ -412,17 +427,19 @@ c3 <- which(colnames(WFBlupsGeno)=="GenoName")
 c4 <- which(colnames(WFBlupsGeno)=="endo")
 #remove rows with no geno information and remove rows that are duplicates. 
 #TODO:Check which duplicates are being deleted and if its a good choice
-WFBlupsGeno <- WFBlupsGeno[-which(WFBlupsGeno$GenoName == ""),]
+# WFBlupsGeno <- WFBlupsGeno[-which(WFBlupsGeno$GenoName == ""),]
+# WFBlupsGeno <- WFBlupsGeno[-which(WFBlupsGeno$GenoName == "0"),]
+WFBlupsGeno <- WFBlupsGeno[-which(is.na(WFBlupsGeno$GenoName)),]
+WFBlupsGeno <- WFBlupsGeno[-which(is.na(WFBlupsGeno$endo)),]
 WFBlupsGeno <- WFBlupsGeno %>% distinct(GenoName, .keep_all = TRUE)
 
 #seperate out superflous information
 WFBlupsGenoJustPheno <- WFBlupsGeno[,c(c3,c1:c2,c4)]
 WFBlupsGenoJustPheno$endo <- as.factor(WFBlupsGenoJustPheno$endo)
-
 blups <- colnames(WFBlupsGeno[c1:c2])
 for(blup in blups){
-GWASPolyRunner(WFBlupsGenoJustPheno[,1:8],geno_scmv,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),"SeqB","WFBLUP")
-GWASPolyRunner(WFBlupsGenoJustPheno,geno_scmv,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),"SeqB","WFBLUP","endo","factor")
+GWASPolyRunner(WFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),"SeqB","WFBLUP")
+GWASPolyRunner(WFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),"SeqB","WFBLUP","endo","factor")
 }
 
 
@@ -445,7 +462,7 @@ str(geno)
 setwd(path.to.res)
 
 kin.alg <- "VanRaden"
-res <- GAPIT( G = geno_scmv, kinship.cluster = c("average"), kinship.group = c("Mean"), kinship.algorithm = kin.alg,SNP.impute = "Middle", Major.allele.zero = TRUE)
+res <- GAPIT( G = geno, kinship.cluster = c("average"), kinship.group = c("Mean"), kinship.algorithm = kin.alg,SNP.impute = "Middle", Major.allele.zero = TRUE)
 
 
 ############################################
@@ -487,5 +504,5 @@ for (i in seq(1,7)) {
     #### User input Kinship
     myKI <- read.table(paste(path.to.res, '/GAPIT.Kin.VanRaden.csv', sep=''), header=FALSE, sep=',')
     # myCV <- read.table(paste('/local/workdir/mb2446/GWAS/Covariates/KernelType.txt', sep=''), header=T, sep='\t')
-    res <- GAPIT( Y = curr.pheno, G = geno_scmv, KI=myKI, PCA.total=3, plot.style="Ocean")
+    res <- GAPIT( Y = curr.pheno, G = geno, KI=myKI, PCA.total=3, plot.style="Ocean")
   }
