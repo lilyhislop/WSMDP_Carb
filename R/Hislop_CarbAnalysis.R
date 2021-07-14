@@ -45,6 +45,7 @@ library(GWASpoly)#for running Gwas
 library(emmeans)
 library(bigmemory)
 library(MuMIn)
+library(SNPRelate)
 
 
 getwd()
@@ -107,7 +108,7 @@ for(i in 1:6){CarbDF[[i]] <- read.csv(paste("Data/RawData/wsmdp",CarbCombos[i],"
 #combine the starch and sugar files for each equation type. Condense takes all the repeated scans of the same sample and averages them
 HWSPsDF <- AgPredOutput(StarchDF = CarbDF[[1]], SugDF = CarbDF[[2]], condense = TRUE)
 LWSPWFsDF <- AgPredOutput(StarchDF = CarbDF[[3]], SugDF = CarbDF[[4]], condense = TRUE)
-LWSPNFDF <- AgPredOutput(StarchDF = CarbDF[[5]], SugDF = CarbDF[[6]], condense = TRUE)
+LWSPNFsDF <- AgPredOutput(StarchDF = CarbDF[[5]], SugDF = CarbDF[[6]], condense = TRUE)
 
 InfoCombination <- function(NIRDF, SampleInfoDF, BookInfoDF){
   OutDF <- NIRDF
@@ -125,19 +126,22 @@ InfoCombination <- function(NIRDF, SampleInfoDF, BookInfoDF){
   OutDF$Check <- BookInfoDF$Check[match(NIRDF$NIRBase, BookInfoDF$NIRBase, nomatch = NA)]
   OutDF$IsFill <- BookInfoDF$IsFill[match(NIRDF$NIRBase, BookInfoDF$NIRBase, nomatch = NA)]
   OutDF$IsExperimental <- BookInfoDF$IsExperimental[match(NIRDF$NIRBase, BookInfoDF$NIRBase, nomatch = NA)]
+  #add in a year/location environment factor
+  OutDF$Envi <- paste0(BookInfoDF$Year[match(NIRDF$NIRBase, BookInfoDF$NIRBase, nomatch = NA)], BookInfoDF$Location[match(NIRDF$NIRBase, BookInfoDF$NIRBase, nomatch = NA)])
+
   return(OutDF)
 }
 
 HWSPsDF <- InfoCombination(HWSPsDF,SampleInfo,BookInfo)
 LWSPWFsDF <- InfoCombination(LWSPWFsDF,SampleInfo,BookInfo)
-LWSPNFDF <- InfoCombination(LWSPNFDF,SampleInfo,BookInfo)
+LWSPNFsDF <- InfoCombination(LWSPNFsDF,SampleInfo,BookInfo)
 
 #Eliminate irrelivant endosperm mutants from each df. We don't want to include sh2 samples that were predicted by the HWSP calibrated equations
 #should sh2i samples be estimated by the sh2 calibrated equations or the other calibrated equation?
 HWSPs <- HWSPsDF[which(HWSPsDF$endo == "su1" | HWSPsDF$endo == "se" | (is.na(HWSPsDF$endo)& (HWSPsDF$Year== "15"|HWSPsDF$Year == "14"))),]
 # HWSPs <- HWSPsDF[which(HWSPsDF$endo == "su1" | HWSPsDF$endo == "se" | is.na(HWSPsDF$endo)),]
-LWSPWFs <- LWSPWFsDF[which(LWSPNFDF$endo != "se" & LWSPNFDF$endo != "su1"),]
-LWSPNFs <- LWSPNFDF[which(LWSPNFDF$endo == "sh2" | LWSPNFDF$endo == "sh2i"),]
+LWSPWFs <- LWSPWFsDF[which(LWSPNFsDF$endo != "se" & LWSPNFsDF$endo != "su1"),]
+LWSPNFs <- LWSPNFsDF[which(LWSPNFsDF$endo == "sh2" | LWSPNFsDF$endo == "sh2i"),]
 
 #lets look at the validation data that I predicted from kahtleen and Jareds data and output it for further analysis
 jared <- HWSPsDF[which(HWSPsDF$Year == "sc"),]
@@ -151,9 +155,7 @@ CarbInfoExpandedWFDF <- rbind(HWSPs,LWSPWFs)
 #all the predictions without the field lines
 CarbInfoExpandedNFDF <- rbind(HWSPs,LWSPNFs)
 
-#add in a year/location environment factor
-CarbInfoExpandedWFDF$Envi <- paste(CarbInfoExpandedWFDF$Year,CarbInfoExpandedWFDF$Location)
-CarbInfoExpandedNFDF$Envi <- paste(CarbInfoExpandedNFDF$Year,CarbInfoExpandedNFDF$Location)
+
 
 #visualize these data sets pre cleaning
 CarbDataFrameVis(CarbInfoExpandedWFDF,"WithField_WithOutliers")
@@ -317,7 +319,12 @@ linearmodel <- function(SampleDFtoModel,TitleAddendum){
     cat(out, file=statsfile, sep="\n", append=TRUE)
     
     #####Modeling
+    modelpastecheck<-  paste0(carbs[j], " ~ (1|BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)")
+    
+    # Use check if there enough checks in the model set
+    if(length(unique(SampleDFtoModel$Check))>1){
     modelpastecheck<-  paste0(carbs[j], " ~ Check + (1|BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)")
+    }
     cat(modelpastecheck, file=statsfile, sep="\n", append=TRUE)
     
     
@@ -369,7 +376,12 @@ linearmodel <- function(SampleDFtoModel,TitleAddendum){
 
   #Compare model with one with Endosperm
   cat("Model Comparison, with and without Endosperm Term", file=statsfile, sep="\n", append=TRUE)
+  #####Modeling
+  modelpasteendo<-  paste0(carbs[j], " ~ (1|endo/BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)")
+  # Use check if there enough checks in the model set
+  if(length(unique(SampleDFtoModel$Check))>1){
   modelpasteendo<-  paste0(carbs[j], " ~ Check + (1|endo/BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)")
+  }
   cat(modelpasteendo, file=statsfile, sep="\n", append=TRUE)
   
   modelendo <- lmer(modelpasteendo,
@@ -394,7 +406,18 @@ linearmodel <- function(SampleDFtoModel,TitleAddendum){
 
 
 WFBlups <- linearmodel(CleanedInfoWF,"CleanedOutliersWF")
-NFBlups <- linearmodel(CleanedInfoNF,"CleanedOutliersNF")
+WFBlups <- linearmodel(CleanedInfoWF,"CleanedOutliersWF")
+
+CleanedInfoHWSP_wexcess <- CarbOutlierCleanup(HWSPs,"HWSP",alpha = 0.05)
+CleanedInfoLWSPNF_wexcess <- CarbOutlierCleanup(LWSPNFs,"LWSPNFs",alpha = 0.05)
+CleanedInfoLWSPWF_wexcess <- CarbOutlierCleanup(LWSPWFs,"LWSPWFs",alpha = 0.05)
+
+CleanedInfoHWSP <- subset(CleanedInfoHWSP_wexcess, !is.na(IsExperimental))
+CleanedInfoLWSPNF <- subset(CleanedInfoLWSPNF_wexcess, !is.na(IsExperimental))
+CleanedInfoLWSPWF <- subset(CleanedInfoLWSPWF_wexcess, !is.na(IsExperimental))
+HWSPBlups <- linearmodel(CleanedInfoHWSP,"CleanedOutliersHWSP")
+LWSPNFBlups <- linearmodel(CleanedInfoLWSPNF,"CleanedOutliersLWSPNF")
+LWSPWFBlups <- linearmodel(CleanedInfoLWSPWF,"CleanedOutliersLWSPWF")
 
 
 
@@ -409,9 +432,64 @@ test1 <- which(genoinfo$Planting20142015==1)
 test2 <- which(!is.na(genoinfo$GenoName))
 intersect(test1,test2)
 
+#########################
+###SNP Relate Establishment###
+#########################
+infilename <- "WSMDP_SeqG_PreLD"
+
+
+#read in VCF. This file has been previously filtered for 90% SNP call rate and MinorAlleleFrequency of 0.025
+infilename
+vcfpath <- paste("Data/RawData/",infilename,".vcf",sep = "")
+snpgdsVCF2GDS(vcfpath, "Data/test.gds", method = "biallelic.only")
+snpgdsSummary("Data/test.gds")
+PreLDGeno <- snpgdsOpen("Data/test.gds")
+
+#Lets prune anything with an LD over 0.98
+PostLDGeno <- snpgdsLDpruning(PreLDGeno, ld.threshold = 0.98, start.pos = "first", verbose = TRUE)
+names(PostLDGeno)
+head(PostLDGeno$chr1)
+PostLDGeno.id <- unlist(PostLDGeno)
+
+#########################
+### PCA ###
+#########################
+#Read in the SCMV gdsobj with only the snp.id's found by LD pruning and only the sample.id's that we phenotypes
+
+# PCA <- snpgdsPCA(SCMV, sample.id = phenowcol$V1) 
+#cut off the numbers at the end of the sample.id that don't mean things to humans
+PCA$sample.id<-gsub(PCA$sample.id, pattern = ":.*", replacement = "")
+matching <- PCA$sample.id[match(genoinfo$GenoName, PCA$sample.id)]
+matching <- 
+PCA <- snpgdsPCA(PreLDGeno, sample.id = , snp.id = PostLDGeno.id)
+
+pc.perc <- PCA$varprop*100
+head(round(pc.perc,2))
+
+
+PCAFigureCreation(PCA,pc.perc,genoinfo,infilename,"endo")
+PCAFigureCreation(PCA,pc.perc,phenoSubsetGeno,filename,"Program")
+PCAFigureCreation(PCA,pc.perc,phenoSubsetGeno,filename,"Region")
+PCAFigureCreation(PCA,pc.perc,phenoSubsetGeno,filename,"SusceptibilityRating03")
+PCAFigureCreation(PCA,pc.perc,phenoSubsetGeno,filename,"SusceptibilityRating02")
+PCAFigureCreation(PCA,pc.perc,phenoSubsetGeno,filename,"SusceptibilityRating05")
+PCAFigureCreation(PCA,pc.perc,phenoSubsetGeno,filename,"PercentInfectedAllRounds")
+
+#########################
+### Close Snp Relate ###
+#########################
+outfilename <- "WSMDP_SeqG"
+outfile <- paste("Data/RawData/",outfilename ,sep="")
+snpgdsGDS2PED(PreLDGeno, outfile, snp.id = PostLDGeno.id)
+snpgdsClose(PreLDGeno)
+
+
+
+
 #read in genetic info post MAF 
-# hmppath <- "Data/RawData/WSMDP_SeqF.hmp.txt"
-hmppath <- "Data/RawData/WSMDP_SCMV_SeqB.hmp.txt"
+Seq <- "SeqG"
+hmppath <- paste0("Data/RawData/WSMDP_",Seq,".hmp.txt")
+# hmppath <- "Data/RawData/WSMDP_SCMV_SeqB.hmp.txt"
 # hmppath <- "Data/RawData/WSMDP_SeqC.hmp.txt"
 SCMV_geno <- fread(hmppath,skip = "rs#")
 geno <- SCMV_geno
@@ -419,27 +497,51 @@ str(geno)
 colnames(geno)<-gsub(colnames(geno), pattern = ":.*", replacement = "")
 str(geno)
 
-
-WFBlupsGeno <- merge(WFBlups,genoinfo, by = "Variety")
-c1 <- which(colnames(WFBlupsGeno)=="Starch.BLUP")
-c2 <- which(colnames(WFBlupsGeno)=="Total.Sugar.BLUP")
-c3 <- which(colnames(WFBlupsGeno)=="GenoName")
-c4 <- which(colnames(WFBlupsGeno)=="endo")
+BlupGenoCleanup <- function(BlupDF){
+BlupDFGeno <- merge(BlupDF,genoinfo, by = "Variety")
+c1 <- which(colnames(BlupDFGeno)=="Starch.BLUP")
+c2 <- which(colnames(BlupDFGeno)=="Total.Sugar.BLUP")
+c3 <- which(colnames(BlupDFGeno)=="GenoName")
+c4 <- which(colnames(BlupDFGeno)=="endo")
 #remove rows with no geno information and remove rows that are duplicates. 
 #TODO:Check which duplicates are being deleted and if its a good choice
-# WFBlupsGeno <- WFBlupsGeno[-which(WFBlupsGeno$GenoName == ""),]
-# WFBlupsGeno <- WFBlupsGeno[-which(WFBlupsGeno$GenoName == "0"),]
-WFBlupsGeno <- WFBlupsGeno[-which(is.na(WFBlupsGeno$GenoName)),]
-WFBlupsGeno <- WFBlupsGeno[-which(is.na(WFBlupsGeno$endo)),]
-WFBlupsGeno <- WFBlupsGeno %>% distinct(GenoName, .keep_all = TRUE)
+# BlupDFGeno <- BlupDFGeno[-which(BlupDFGeno$GenoName == ""),]
+# BlupDFGeno <- BlupDFGeno[-which(BlupDFGeno$GenoName == "0"),]
+BlupDFGeno <- BlupDFGeno[-which(is.na(BlupDFGeno$GenoName)),]
+if(length(which(is.na(BlupDFGeno$endo)))>0){
+BlupDFGeno <- BlupDFGeno[-which(is.na(BlupDFGeno$endo)),]}
+BlupDFGeno <- BlupDFGeno %>% distinct(GenoName, .keep_all = TRUE)
 
 #seperate out superflous information
-WFBlupsGenoJustPheno <- WFBlupsGeno[,c(c3,c1:c2,c4)]
-WFBlupsGenoJustPheno$endo <- as.factor(WFBlupsGenoJustPheno$endo)
-blups <- colnames(WFBlupsGeno[c1:c2])
+BlupDFGenoJustPheno <- BlupDFGeno[,c(c3,c1:c2,c4)]
+BlupDFGenoJustPheno$endo <- as.factor(BlupDFGenoJustPheno$endo)
+return(BlupDFGenoJustPheno)
+}
+WFBlupsGenoJustPheno <- BlupGenoCleanup(WFBlups)
+HWSPBlupsGenoJustPheno <- BlupGenoCleanup(HWSPBlups)
+LWSPNFBlupsGenoJustPheno <- BlupGenoCleanup(LWSPNFBlups)
+LWSPWFBlupsGenoJustPheno <- BlupGenoCleanup(LWSPWFBlups)
+
+
+
+# c1 <- which(colnames(WFBlupsGenoJustPheno)=="Starch.BLUP")
+c1 <- which(colnames(WFBlupsGenoJustPheno)=="Glucose.BLUP")
+c2 <- which(colnames(WFBlupsGenoJustPheno)=="Total.Sugar.BLUP")
+blups <- colnames(WFBlupsGenoJustPheno[c1:c2])
+
 for(blup in blups){
-GWASPolyRunner(WFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),"SeqB","WFBLUP")
-GWASPolyRunner(WFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),"SeqB","WFBLUP","endo","factor")
+GWASPolyRunner(WFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),Seq,"WFBLUP")
+GWASPolyRunner(WFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),Seq,"WFBLUP","endo","factor")
+
+GWASPolyRunner(HWSPBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),Seq,"HWSPBlups")
+GWASPolyRunner(HWSPBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),Seq,"WFBLUP","endo","factor")
+
+GWASPolyRunner(LWSPNFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),Seq,"LWSPNFBlups")
+GWASPolyRunner(LWSPNFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),Seq,"LWSPNFBlups","endo","factor")
+
+GWASPolyRunner(LWSPWFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),Seq,"LWSPWFBlups")
+GWASPolyRunner(LWSPWFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),Seq,"LWSPWFBlups","endo","factor")
+
 }
 
 

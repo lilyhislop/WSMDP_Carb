@@ -26,8 +26,9 @@ hmpToNumeric <- function(hmpData){
   
   #some of the SNPs have more than 2 homozygous genotypes. Get rid of them 
   toomanyHomos <- which(apply(SCMVMatrix_clean, 1, function(x) length(unique(x)))>4)
+  if(length(toomanyHomos) > 0){
   SCMVMatrix_clean <- SCMVMatrix_clean[-toomanyHomos,]
-  SCMVPanel_map<- SCMVPanel_map[-toomanyHomos,]
+  SCMVPanel_map<- SCMVPanel_map[-toomanyHomos,]}
   
   #convert to numeric
   SCMVPanel_n <- recodeSNPs(SCMVMatrix_clean, first.ref = FALSE, geno = 0:2, snp.in.col = FALSE)

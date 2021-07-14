@@ -2,7 +2,7 @@ GWASPolyVis <- function(GWASPolyRunVersion,trait,data3,filename,adendum){
   visfileprefix <- paste0("Figures/GWASpoly/WSMDP_Carb_GWASpoly_",filename,"_",adendum,"_",GWASPolyRunVersion,"_",trait)
   
   QQplotfile <- paste(visfileprefix,"_QQplot_General.png", sep = "")
-  png(QQplotfile)
+  png(QQplotfile, width = 500, height = 500)
   #,"1-dom-alt-alt","1-dom-alt-ref","1-dom-ref-alt","1-dom-ref-ref")
   qq.plot(data3,trait=trait,model="general")
   dev.off()
