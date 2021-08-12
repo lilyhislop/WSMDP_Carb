@@ -35,14 +35,14 @@ GWASPolyVis <- function(GWASPolyRunVersion,trait,data3,filename,adendum){
   # abline(a = get.QTL(data4, model="general")$Threshold[1], b = 0, lty = "dashed")
   })
   dev.off()
-  # 
-  # MANAddplotfile <- paste(visfileprefix,"_Manhattan_AdditiveModel.png", sep = "")
-  # png(MANAddplotfile,width = 750, height = 500)
-  # print({
-  # par(mfrow=c(1,1))
-  # manhattan.plot(data4,trait=trait,model="additive")
-  # })
-  # dev.off()
+
+  MANAddplotfile <- paste(visfileprefix,"_Manhattan_AdditiveModel.png", sep = "")
+  png(MANAddplotfile,width = 750, height = 500)
+  print({
+  par(mfrow=c(1,1))
+  manhattan.plot(data4,trait=trait,model="additive")
+  })
+  dev.off()
   
   Scoresfile <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",filename,adendum,GWASPolyRunVersion,"_",trait,"_scores.csv", sep = "")
   Effectfile <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",filename,adendum,GWASPolyRunVersion,"_",trait,"_effects.csv", sep = "")

@@ -1,0 +1,4 @@
+"Trait","Model","Threshold","Marker","Chrom","Position","Ref","Alt","Score","Effect"
+"WSP.BLUP","general",5.53,"S4_37098643","4",37098643,0,1,6.04,NA
+"WSP.BLUP","general",5.53,"S4_67071203","4",67071203,0,1,5.77,NA
+"WSP.BLUP","general",5.53,"S4_136971414","4",136971414,0,1,6.33,NA

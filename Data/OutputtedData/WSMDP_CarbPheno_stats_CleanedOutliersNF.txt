@@ -253,8 +253,7 @@ Check99        4.818      3.375   1.428
  NA's   :18       
 Glucose ~ Check + (1|BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)
 Linear mixed model fit by REML ['lmerMod']
-Formula: Glucose ~ Check + (1 | BookInbred) + (1 | BookInbred:Envi) +  
-    (1 | Envi/superblock/block) + (1 | Envi:Row) + (1 | Envi:Col)
+Formula: Glucose ~ Check + (1 | BookInbred) + (1 | BookInbred:Envi) +      (1 | Envi/superblock/block) + (1 | Envi:Row) + (1 | Envi:Col)
    Data: SampleDFtoModel
 Control: strict_tol
 
@@ -421,8 +420,7 @@ Model failed to converge with max|grad| = 0.00242416 (tol = 0.002, component 1)
  NA's   :14      
 Sucrose ~ Check + (1|BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)
 Linear mixed model fit by REML ['lmerMod']
-Formula: Sucrose ~ Check + (1 | BookInbred) + (1 | BookInbred:Envi) +  
-    (1 | Envi/superblock/block) + (1 | Envi:Row) + (1 | Envi:Col)
+Formula: Sucrose ~ Check + (1 | BookInbred) + (1 | BookInbred:Envi) +      (1 | Envi/superblock/block) + (1 | Envi:Row) + (1 | Envi:Col)
    Data: SampleDFtoModel
 Control: strict_tol
 
