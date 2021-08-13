@@ -406,7 +406,7 @@ linearmodel <- function(SampleDFtoModel,TitleAddendum){
 
 
 WFBlups <- linearmodel(CleanedInfoWF,"CleanedOutliersWF")
-WFBlups <- linearmodel(CleanedInfoWF,"CleanedOutliersWF")
+NFBlups <- linearmodel(CleanedInfoNF,"CleanedOutliersNF")
 
 CleanedInfoHWSP_wexcess <- CarbOutlierCleanup(HWSPs,"HWSP",alpha = 0.05)
 CleanedInfoLWSPNF_wexcess <- CarbOutlierCleanup(LWSPNFs,"LWSPNFs",alpha = 0.05)
@@ -445,6 +445,14 @@ snpgdsVCF2GDS(vcfpath, "Data/test.gds", method = "biallelic.only")
 snpgdsSummary("Data/test.gds")
 PreLDGeno <- snpgdsOpen("Data/test.gds")
 
+# #LDVisualization
+# L1 <- snpgdsLDMat(PreLDGeno, method="r", slide=250)
+# # plot
+# LDMatFile <- paste0("Figures/",Sys.Date(),"SNPRelate_LDMatrix.png")
+# png(LDMatFile, width = 1000, height = 1000)
+# image(abs(L1$LD), col=terrain.colors(64))
+# dev.off()
+
 #Lets prune anything with an LD over 0.98
 PostLDGeno <- snpgdsLDpruning(PreLDGeno, ld.threshold = 0.98, start.pos = "first", verbose = TRUE)
 names(PostLDGeno)
@@ -456,24 +464,31 @@ PostLDGeno.id <- unlist(PostLDGeno)
 #########################
 #Read in the SCMV gdsobj with only the snp.id's found by LD pruning and only the sample.id's that we phenotypes
 
-# PCA <- snpgdsPCA(SCMV, sample.id = phenowcol$V1) 
+PCA <- snpgdsPCA(PreLDGeno, snp.id = PostLDGeno.id)
 #cut off the numbers at the end of the sample.id that don't mean things to humans
-PCA$sample.id<-gsub(PCA$sample.id, pattern = ":.*", replacement = "")
-matching <- PCA$sample.id[match(genoinfo$GenoName, PCA$sample.id)]
-matching <- 
-PCA <- snpgdsPCA(PreLDGeno, sample.id = , snp.id = PostLDGeno.id)
+holdtrunc<-gsub(PCA$sample.id, pattern = ":.*", replacement = "")
+#only include the samples that are in genoinfo
+genoinfo2014only <- genoinfo[which(genoinfo$Planting20142015 == 1),]
+matching <- unique(PCA$sample.id[na.omit(match(genoinfo2014only$GenoName, holdtrunc))])
+genoInfo2014GenoOnly <- genoinfo2014only[na.omit(match(holdtrunc, genoinfo2014only$GenoName)),]
+genoInfo2014GenoOnly <- genoInfo2014GenoOnly[which(!duplicated(genoInfo2014GenoOnly$GenoName)),]
 
+
+#conduct pca again with only those samples
+PCA <- snpgdsPCA(PreLDGeno, sample.id = matching, snp.id = PostLDGeno.id)
 pc.perc <- PCA$varprop*100
 head(round(pc.perc,2))
 
 
-PCAFigureCreation(PCA,pc.perc,genoinfo,infilename,"endo")
-PCAFigureCreation(PCA,pc.perc,phenoSubsetGeno,filename,"Program")
-PCAFigureCreation(PCA,pc.perc,phenoSubsetGeno,filename,"Region")
-PCAFigureCreation(PCA,pc.perc,phenoSubsetGeno,filename,"SusceptibilityRating03")
-PCAFigureCreation(PCA,pc.perc,phenoSubsetGeno,filename,"SusceptibilityRating02")
-PCAFigureCreation(PCA,pc.perc,phenoSubsetGeno,filename,"SusceptibilityRating05")
-PCAFigureCreation(PCA,pc.perc,phenoSubsetGeno,filename,"PercentInfectedAllRounds")
+
+#visualize the PCA with ld pruned snps and only the tested samples 
+PCAFigureCreation(PCA,pc.perc,genoInfo2014GenoOnly,infilename,"endo")
+# PCAFigureCreation(PCA,pc.perc,phenoSubsetGeno,filename,"Program")
+# PCAFigureCreation(PCA,pc.perc,phenoSubsetGeno,filename,"Region")
+# PCAFigureCreation(PCA,pc.perc,phenoSubsetGeno,filename,"SusceptibilityRating03")
+# PCAFigureCreation(PCA,pc.perc,phenoSubsetGeno,filename,"SusceptibilityRating02")
+# PCAFigureCreation(PCA,pc.perc,phenoSubsetGeno,filename,"SusceptibilityRating05")
+# PCAFigureCreation(PCA,pc.perc,phenoSubsetGeno,filename,"PercentInfectedAllRounds")
 
 #########################
 ### Close Snp Relate ###
@@ -518,6 +533,7 @@ BlupDFGenoJustPheno$endo <- as.factor(BlupDFGenoJustPheno$endo)
 return(BlupDFGenoJustPheno)
 }
 WFBlupsGenoJustPheno <- BlupGenoCleanup(WFBlups)
+NFBlupsGenoJustPheno <- BlupGenoCleanup(NFBlups)
 HWSPBlupsGenoJustPheno <- BlupGenoCleanup(HWSPBlups)
 LWSPNFBlupsGenoJustPheno <- BlupGenoCleanup(LWSPNFBlups)
 LWSPWFBlupsGenoJustPheno <- BlupGenoCleanup(LWSPWFBlups)
