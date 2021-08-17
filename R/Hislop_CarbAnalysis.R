@@ -61,6 +61,7 @@ source("R/CarbDataFrameVis.R")
 source("R/GWASPolyVis.R")
 source("R/GWASPolyRunner.R")
 source("R/WritePhenoGenotoFile.R")
+source("R/PCAFigureCreation.R")
 source("R/hmpToNumeric.R")
 
 #########################
@@ -143,281 +144,281 @@ HWSPs <- HWSPsDF[which(HWSPsDF$endo == "su1" | HWSPsDF$endo == "se" | (is.na(HWS
 LWSPWFs <- LWSPWFsDF[which(LWSPNFsDF$endo != "se" & LWSPNFsDF$endo != "su1"),]
 LWSPNFs <- LWSPNFsDF[which(LWSPNFsDF$endo == "sh2" | LWSPNFsDF$endo == "sh2i"),]
 
-#lets look at the validation data that I predicted from kahtleen and Jareds data and output it for further analysis
-jared <- HWSPsDF[which(HWSPsDF$Year == "sc"),]
-write.csv(jared, file = "Data/OutputtedData/JaredsPredictedLineswHWSPeqn.csv")
-kathleen <- HWSPsDF[which(HWSPsDF$Year != "13"&HWSPsDF$Year != "14"&HWSPsDF$Year != "15"&HWSPsDF$Year != "sc"),]
-write.csv(kathleen,file = "Data/OutputtedData/KathleenPredictedLineswHWSPeqn.csv")
-
-########mash it all together ######
-#All the predictions with the field lines
-CarbInfoExpandedWFDF <- rbind(HWSPs,LWSPWFs)
-#all the predictions without the field lines
-CarbInfoExpandedNFDF <- rbind(HWSPs,LWSPNFs)
-
-
-
-#visualize these data sets pre cleaning
-CarbDataFrameVis(CarbInfoExpandedWFDF,"WithField_WithOutliers")
-CarbDataFrameVis(CarbInfoExpandedNFDF,"NoField_WithOutliers")
-
-#clean up the predictive data frames. Reassign or delete outliers 
-CleanedInfoWF_wexcess <- CarbOutlierCleanup(CarbInfoExpandedWFDF,"WF",alpha = 0.05)
-CleanedInfoNF_wexcess <- CarbOutlierCleanup(CarbInfoExpandedNFDF,"NF",alpha = 0.05)
-CleanedInfoWF <- subset(CleanedInfoWF_wexcess, !is.na(IsExperimental))
-CleanedInfoNF <- subset(CleanedInfoNF_wexcess, !is.na(IsExperimental))
-write.csv(file = "Data/OutputtedData/CleanedInfoWFOutput.csv",CleanedInfoWF)
-write.csv(file = "Data/OutputtedData/CleanedInfoNFOutput.csv",CleanedInfoNF)
-
-#revisualize the dataframes 
-CarbDataFrameVis(CleanedInfoWF,"WithField_Cleaned")
-CarbDataFrameVis(CleanedInfoNF,"NoField_Cleaned")
-
-#write the names of the varieties used to a csv file so we can find the corresponding GBS data
-write.csv(file = "Data/OutputtedData/InbredsWithinWSMDPCarbDataNF.csv",unique(CleanedInfoNF[c("Variety", "endo")]))
-write.csv(file = "Data/OutputtedData/InbredsWithinWSMDPCarbDataWF.csv",unique(CleanedInfoWF[c("Variety", "endo")]))
-
-#########################
-###Validate that the NIR Equation is good###
-#########################
-
-#######Equation Validation!##############
-#Now I have a variable that has all the projected values, for the values used to calibrate the equations. WHat are the statistics on that?
-#set carb to a number 1:7. carb <- c(Fructose, Glucose, Sucrose, Total Sugar, Starch, Total Polysaccharide, WSP)
-#this functions needs to have the data frame set up so the carbs being compared are directly next to eachother 
-EqnStats <- function(DF){
-  
-  #establish dataframe used to record stats
-  Out <- data.frame(Carb = c("Fructose", "Glucose", "Sucrose", "Total Sugar", "Starch", "Total Polysaccharide", "WSP"),
-                    RMSEP = rep(NA,7), 
-                    bias = rep(NA,7),
-                    SEE = rep(NA,7),
-                    slope = rep(NA,7),
-                    intercept = rep(NA,7),
-                    R2 = rep(NA,7))
-  dfpos <- c(2,4,6,8,10,12,14)
-  for(carb in 1:7){
-    #Calculated the RMSEP
-    Out$RMSEP[carb] <- sqrt(sum((DF[,dfpos[carb]]- DF[,dfpos[carb]-1])^2, na.rm = TRUE)/dim(DF)[1])
-    #Calculate the Bias
-    Out$bias[carb] <- mean(DF[,dfpos[carb]], na.rm = TRUE) - mean(DF[,dfpos[carb]-1],na.rm = TRUE)
-    #Calculated the SEE
-    Out$SEE[carb] <- sqrt((dim(DF)[1]/(dim(DF)[1]-1))*(Out$RMSEP[carb]^2-Out$bias[carb]^2))
-    Out$Carb[carb] <- colnames(DF[dfpos[carb]])
-  }
-  return(Out)
-}
-
-
-#Visualize these
-R2Vis <- function(DF, label, Out){
-  dfpos <- c(2,4,6,8,10,12,14)
-  Carb = c("Fructose", "Glucose", "Sucrose", "Total Sugar", "Starch", "Total Polysaccharide", "WSP")
-  for(i in 1:7){
-    carbCompare  <- lm(DF[,dfpos[i]]~ DF[,dfpos[i]-1])
-    carbFileName <- paste("Figures/wsmdp2021_",label,Carb[i],"_NIR_Eqn_Prediction_vis.png", sep = "")
-    png(carbFileName)
-    par(mfrow=c(1,1))
-    print(summary(carbCompare))
-    rsqua <- summary(carbCompare)$r.squared
-    plot(DF[,dfpos[i]]~ DF[,dfpos[i]-1],
-         pch = 16,
-         xlab = paste(Carb[i]," wetlab (%)",sep = ""),
-         ylab = paste(Carb[i]," NIR Prediction (%)",sep = ""),
-         main = paste("Actual Vs Predicted ",Carb[i]," r^2 =",trunc(rsqua*10^3)/10^3,sep = ""))
-    abline(coefficients(carbCompare), lwd = 2, lty = 2, col = "red")
-    # text(15,max(Prediction[,i])-5,labels = paste("r^2 =",trunc(rsqua*10^3)/10^3))
-    
-    Out$slope[i] <- trunc(10^3*summary(carbCompare)$coefficients[2])/10^3
-    Out$intercept[i] <- trunc(10^3*summary(carbCompare)$coefficients[1])/10^3
-    Out$R2[i] <- trunc(10^3*summary(carbCompare)$r.squared)/10^3
-    
-    
-    dev.off()
-  }
-  return(Out)
-}
-
-
-######Visualize the validation. Look at all the samples that were wetlabbed and used to calibrate the equation
-wetlab <- read.csv("Data/WSMDP_Wetlab_StarchSugarData_FormatedForWinISI_WithR.csv")
-wetlabDF <- wetlab[,c(1,6:8,3,2,4,5)]
-
-WLLabels <- c("Samples","Starch_WL","Total.Polysaccharides_WL", "WSP_WL","Glucose_WL","Fructose_WL","Sucrose_WL","Total.Sugar_WL")
-colnames(wetlabDF) <- WLLabels 
-
-WFWL <- merge(CleanedInfoWF, wetlabDF, by = "Samples")
-NFWL <- merge(CleanedInfoNF, wetlabDF, by = "Samples")
-alternatingorder <- c(1,5,28,6,29,7,30,8,31,9,32,10,33,11,34)
-WFWLdf <- WFWL[,alternatingorder]
-NFWLdf <- NFWL[,alternatingorder]
-WFWLdfEqnStatsR <- R2Vis(WFWLdf[,2:15], "CleanedWSPeqnWF_PredVsWetlab_for_Calibration_Samples", EqnStats(WFWLdf[,2:15]))
-NFWLdfEqnStatsR <- R2Vis(NFWLdf[,2:15], "CleanedWSPeqnNF_PredVsWetlab_for_Calibration_Samples", EqnStats(NFWLdf[,2:15]))
-
-write.csv(WFWLdfEqnStatsR, "Data/OutputtedData/EqnFitStatisticsAllWetlabWF.csv")
-write.csv(NFWLdfEqnStatsR, "Data/OutputtedData/EqnFitStatisticsAllWetlabNF.csv")
-
-######Visualize the validation. Only the samples that were NOT used to create the equation
-valwetlab <- read.csv("Data/WSMDP_EqnValidation_Wetlab_Data.csv")
-valwetlabDF <- valwetlab[-2]
-colnames(valwetlabDF)[1] <- "Samples"
-
-WFValWL <- merge(CleanedInfoWF, valwetlabDF, by = "Samples")
-NFValWL <- merge(CleanedInfoNF, valwetlabDF, by = "Samples")
-WFValWLdf <- WFValWL[,alternatingorder]
-NFValWLdf <- NFValWL[,alternatingorder]
-WFValWLdfEqnStatsR <- R2Vis(WFValWLdf[,2:15], "CleanedWSPeqnWF_PredVsWetlab_ValidationSubset", EqnStats(WFValWLdf[,2:15]))
-NFValWLdfEqnStatsR <- R2Vis(NFValWLdf[,2:15], "CleanedWSPeqnNF_PredVsWetlab_ValidationSubset", EqnStats(NFValWLdf[,2:15]))
-
-write.csv(WFValWLdfEqnStatsR, "Data/OutputtedData/EqnFitStatisticsValidationWF.csv")
-write.csv(NFValWLdfEqnStatsR, "Data/OutputtedData/EqnFitStatisticsValidationNF.csv")
-
-
-####With Jared WetlabDATA
-HWSPsJ <- HWSPsDF[which(HWSPsDF$endo == "su1" | HWSPsDF$endo == "se" | is.na(HWSPsDF$endo)),]
-alternatingorder2 <- c(1,5,26,6,27,7,28,8,29,9,30,10,31,11,32)
-CarbInfoExpandedWFJDF <- rbind(HWSPsJ,LWSPWFs)
-CarbInfoExpandedNFJDF <- rbind(HWSPsJ,LWSPNFs)
-WFValWLJ <- merge(CarbInfoExpandedWFJDF, valwetlabDF, by = "Samples")
-NFValWLJ <- merge(CarbInfoExpandedNFJDF, valwetlabDF, by = "Samples")
-WFValWLJdf <- WFValWLJ[,alternatingorder2]
-NFValWLJdf <- NFValWLJ[,alternatingorder2]
-WFValWLdfJEqnStatsR <- R2Vis(WFValWLJdf[,2:15], "UnCleanedWSPeqnWF_PredVsWetlab_ValidationSubset_WJared", EqnStats(WFValWLdf[,2:15]))
-NFValWLdfJEqnStatsR <- R2Vis(NFValWLJdf[,2:15], "UnCleanedWSPeqnNF_PredVsWetlab_ValidationSubset_WJared", EqnStats(NFValWLdf[,2:15]))
-
-write.csv(WFValWLdfJEqnStatsR, "Data/OutputtedData/EqnFitStatisticsValidationWF_WJared.csv")
-write.csv(NFValWLdfJEqnStatsR, "Data/OutputtedData/EqnFitStatisticsValidationNF_WJared.csv")
-
-#########################
-###Linear Model Analysis###
-#########################
-
-linearmodel <- function(SampleDFtoModel,TitleAddendum){
-  SampleDFtoModel$superblock <- as.factor(SampleDFtoModel$superblock)
-  SampleDFtoModel$Col <- as.factor(SampleDFtoModel$Col)
-  SampleDFtoModel$Row <- as.factor(SampleDFtoModel$Row)
-  SampleDFtoModel$Year <- as.factor(SampleDFtoModel$Year)
-  SampleDFtoModel$Envi <- as.factor(SampleDFtoModel$Envi)
-  SampleDFtoModel$Check <- as.factor(SampleDFtoModel$Check)
-  SampleDFtoModel$block <- as.factor(SampleDFtoModel$block)
-  SampleDFtoModel$Rep <- as.factor(SampleDFtoModel$Rep)
-  SampleDFtoModel$endo <- as.factor(SampleDFtoModel$endo)
-  SampleDFtoModel$PlotNum <- as.factor(SampleDFtoModel$PlotNum)
-  
-  statsfile <- paste0("Data/OutputtedData/WSMDP_CarbPheno_stats_",TitleAddendum,".txt")
-  cat(paste0("Phenotypic Statistics for the Carbohydrates of ",TitleAddendum," Through Mixed Linear Modeling."), file=statsfile, sep="\n", append=FALSE)
-  
-  blupHolder <- data.frame("Variety" = sort(unique(SampleDFtoModel$BookInbred)))
-  c1 <- which(colnames(SampleDFtoModel)=="Starch")
-  c2 <- which(colnames(SampleDFtoModel)=="Total.Sugar")
-  carbs <- colnames(SampleDFtoModel)[c1:c2]
-  for(j in 1:length(carbs)){
-    
-  #output the statistics about this trait
-    summary <- summary(SampleDFtoModel[,c1+j-1], )
-    out <- capture.output(summary)
-    cat(out, file=statsfile, sep="\n", append=TRUE)
-    
-    #####Modeling
-    modelpastecheck<-  paste0(carbs[j], " ~ (1|BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)")
-    
-    # Use check if there enough checks in the model set
-    if(length(unique(SampleDFtoModel$Check))>1){
-    modelpastecheck<-  paste0(carbs[j], " ~ Check + (1|BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)")
-    }
-    cat(modelpastecheck, file=statsfile, sep="\n", append=TRUE)
-    
-    
-    model <- lmer(modelpastecheck,
-                  data=SampleDFtoModel, REML = TRUE)
-    # Decreasing stopping tolerances
-    strict_tol <- lmerControl(optCtrl=list(xtol_abs=1e-8, ftol_abs=1e-8))
-    if (all(model@optinfo$optimizer=="nloptwrap")) {
-      model <- update(model, control=strict_tol)
-    }
-  RandomEffects <- ranef(model)
-  tempBlup <- data.frame("Variety" = rownames(RandomEffects$BookInbred), "BLUP" = RandomEffects$BookInbred)
-  blupHolder <- merge(blupHolder, tempBlup, by = "Variety", all = TRUE)
-  colnames(blupHolder)[j+1] <- paste0(carbs[j],".BLUP")
-  
-  # CheckAssumptions
-  png(paste0("Figures/WSMDP_LinearModel_assumptions_",TitleAddendum,"_", carbs[j], ".png"), width = 1000, height = 500)
-  par(mfrow=c(1,3))
-  
-  # Model Fit with REML
-  plot(fitted(model), residuals(model), pch=19, col="dark blue", ylab="Residuals", xlab="Predicted")
-  abline(h=0,col="red", lwd=1, lty=1)
-  # histogram of residuals
-  hist(residuals(model),main=paste0("Histogram of ", carbs[j]," residuals from ", TitleAddendum),freq=F, xlab="Residuals", ylab= "Freq", col="palegreen", col.main="darkblue")
-  x=seq(-5e-15,9e-15,5e-15)
-  curve(dnorm(x,mean(residuals(model)),sd(residuals(model))),add=T,lwd=2, col="red", lty=1)
-  # qq plot
-  qqnorm(residuals(model), pch=19, col="dark blue", col.lines="red", xlab="Pred quantiles", ylab="Obs quantiles") 
-  
-  dev.off()
-   # Summary of random effects
-  summary <- summary(model, correlation=FALSE)
-  out <- capture.output(summary)
-  cat(out, file=statsfile, sep="\n", append=TRUE)
-  
-  # Write out residuals from ANOVA
-  write.table(resid(model), paste0("Data/OutputtedData/WSMDP_LinearModel_residuals_",TitleAddendum,"_", carbs[j], ".csv"), col.names=F, row.names=F, sep=",")
-
-  #calculate model R2
-  r2 <- r.squaredGLMM(model)
-  out <- capture.output(r2[2])
-  cat(paste("The r^2 value of this model for", carbs[j] ,"is", out), file= statsfile, sep="\n", append=TRUE)
-    # Calculate hertiability 
-  model_variances <- as.data.frame(VarCorr(model))
-  #broad sence heritability calculated as variance of genotype/ (variance of geno + var of gxe / num of enviornments + var of error/num of replicates and environ)
-  h2 <- model_variances$vcov[2]/(model_variances$vcov[2]+(model_variances$vcov[1]/4)+(model_variances$vcov[8]/8))
-  out <- capture.output(h2)
-  cat(paste("The heritability of", carbs[j] ,"is", out), file= statsfile, sep="\n", append=TRUE)
-
-  #Compare model with one with Endosperm
-  cat("Model Comparison, with and without Endosperm Term", file=statsfile, sep="\n", append=TRUE)
-  #####Modeling
-  modelpasteendo<-  paste0(carbs[j], " ~ (1|endo/BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)")
-  # Use check if there enough checks in the model set
-  if(length(unique(SampleDFtoModel$Check))>1){
-  modelpasteendo<-  paste0(carbs[j], " ~ Check + (1|endo/BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)")
-  }
-  cat(modelpasteendo, file=statsfile, sep="\n", append=TRUE)
-  
-  modelendo <- lmer(modelpasteendo,
-                data=SampleDFtoModel, REML = TRUE)
-  # Decreasing stopping tolerances
-  strict_tol <- lmerControl(optCtrl=list(xtol_abs=1e-8, ftol_abs=1e-8))
-  if (all(modelendo@optinfo$optimizer=="nloptwrap")) {
-    modelendo <- update(modelendo, control=strict_tol)
-  }
-  # Summary of random effects
-  summary <- summary(modelendo, correlation=FALSE)
-  out <- capture.output(summary)
-  cat(out, file=statsfile, sep="\n", append=TRUE)
-  
-  }
-  
-  # Write out BLUPs for Genotypes
-  write.table(blupHolder, file=paste0("Data/OutputtedData/WSMDP_CarbPheno_InbredBLUPS_",TitleAddendum,".txt"), col.names=T, row.names=F, sep=",")
-  
-  return(blupHolder)
-}
-
-
-WFBlups <- linearmodel(CleanedInfoWF,"CleanedOutliersWF")
-NFBlups <- linearmodel(CleanedInfoNF,"CleanedOutliersNF")
-
-CleanedInfoHWSP_wexcess <- CarbOutlierCleanup(HWSPs,"HWSP",alpha = 0.05)
-CleanedInfoLWSPNF_wexcess <- CarbOutlierCleanup(LWSPNFs,"LWSPNFs",alpha = 0.05)
-CleanedInfoLWSPWF_wexcess <- CarbOutlierCleanup(LWSPWFs,"LWSPWFs",alpha = 0.05)
-
-CleanedInfoHWSP <- subset(CleanedInfoHWSP_wexcess, !is.na(IsExperimental))
-CleanedInfoLWSPNF <- subset(CleanedInfoLWSPNF_wexcess, !is.na(IsExperimental))
-CleanedInfoLWSPWF <- subset(CleanedInfoLWSPWF_wexcess, !is.na(IsExperimental))
-HWSPBlups <- linearmodel(CleanedInfoHWSP,"CleanedOutliersHWSP")
-LWSPNFBlups <- linearmodel(CleanedInfoLWSPNF,"CleanedOutliersLWSPNF")
-LWSPWFBlups <- linearmodel(CleanedInfoLWSPWF,"CleanedOutliersLWSPWF")
+# #lets look at the validation data that I predicted from kahtleen and Jareds data and output it for further analysis
+# jared <- HWSPsDF[which(HWSPsDF$Year == "sc"),]
+# write.csv(jared, file = "Data/OutputtedData/JaredsPredictedLineswHWSPeqn.csv")
+# kathleen <- HWSPsDF[which(HWSPsDF$Year != "13"&HWSPsDF$Year != "14"&HWSPsDF$Year != "15"&HWSPsDF$Year != "sc"),]
+# write.csv(kathleen,file = "Data/OutputtedData/KathleenPredictedLineswHWSPeqn.csv")
+# 
+# ########mash it all together ######
+# #All the predictions with the field lines
+# CarbInfoExpandedWFDF <- rbind(HWSPs,LWSPWFs)
+# #all the predictions without the field lines
+# CarbInfoExpandedNFDF <- rbind(HWSPs,LWSPNFs)
+# 
+# 
+# 
+# #visualize these data sets pre cleaning
+# CarbDataFrameVis(CarbInfoExpandedWFDF,"WithField_WithOutliers")
+# CarbDataFrameVis(CarbInfoExpandedNFDF,"NoField_WithOutliers")
+# 
+# #clean up the predictive data frames. Reassign or delete outliers 
+# CleanedInfoWF_wexcess <- CarbOutlierCleanup(CarbInfoExpandedWFDF,"WF",alpha = 0.05)
+# CleanedInfoNF_wexcess <- CarbOutlierCleanup(CarbInfoExpandedNFDF,"NF",alpha = 0.05)
+# CleanedInfoWF <- subset(CleanedInfoWF_wexcess, !is.na(IsExperimental))
+# CleanedInfoNF <- subset(CleanedInfoNF_wexcess, !is.na(IsExperimental))
+# write.csv(file = "Data/OutputtedData/CleanedInfoWFOutput.csv",CleanedInfoWF)
+# write.csv(file = "Data/OutputtedData/CleanedInfoNFOutput.csv",CleanedInfoNF)
+# 
+# #revisualize the dataframes 
+# CarbDataFrameVis(CleanedInfoWF,"WithField_Cleaned")
+# CarbDataFrameVis(CleanedInfoNF,"NoField_Cleaned")
+# 
+# #write the names of the varieties used to a csv file so we can find the corresponding GBS data
+# write.csv(file = "Data/OutputtedData/InbredsWithinWSMDPCarbDataNF.csv",unique(CleanedInfoNF[c("Variety", "endo")]))
+# write.csv(file = "Data/OutputtedData/InbredsWithinWSMDPCarbDataWF.csv",unique(CleanedInfoWF[c("Variety", "endo")]))
+# 
+# #########################
+# ###Validate that the NIR Equation is good###
+# #########################
+# 
+# #######Equation Validation!##############
+# #Now I have a variable that has all the projected values, for the values used to calibrate the equations. WHat are the statistics on that?
+# #set carb to a number 1:7. carb <- c(Fructose, Glucose, Sucrose, Total Sugar, Starch, Total Polysaccharide, WSP)
+# #this functions needs to have the data frame set up so the carbs being compared are directly next to eachother 
+# EqnStats <- function(DF){
+#   
+#   #establish dataframe used to record stats
+#   Out <- data.frame(Carb = c("Fructose", "Glucose", "Sucrose", "Total Sugar", "Starch", "Total Polysaccharide", "WSP"),
+#                     RMSEP = rep(NA,7), 
+#                     bias = rep(NA,7),
+#                     SEE = rep(NA,7),
+#                     slope = rep(NA,7),
+#                     intercept = rep(NA,7),
+#                     R2 = rep(NA,7))
+#   dfpos <- c(2,4,6,8,10,12,14)
+#   for(carb in 1:7){
+#     #Calculated the RMSEP
+#     Out$RMSEP[carb] <- sqrt(sum((DF[,dfpos[carb]]- DF[,dfpos[carb]-1])^2, na.rm = TRUE)/dim(DF)[1])
+#     #Calculate the Bias
+#     Out$bias[carb] <- mean(DF[,dfpos[carb]], na.rm = TRUE) - mean(DF[,dfpos[carb]-1],na.rm = TRUE)
+#     #Calculated the SEE
+#     Out$SEE[carb] <- sqrt((dim(DF)[1]/(dim(DF)[1]-1))*(Out$RMSEP[carb]^2-Out$bias[carb]^2))
+#     Out$Carb[carb] <- colnames(DF[dfpos[carb]])
+#   }
+#   return(Out)
+# }
+# 
+# 
+# #Visualize these
+# R2Vis <- function(DF, label, Out){
+#   dfpos <- c(2,4,6,8,10,12,14)
+#   Carb = c("Fructose", "Glucose", "Sucrose", "Total Sugar", "Starch", "Total Polysaccharide", "WSP")
+#   for(i in 1:7){
+#     carbCompare  <- lm(DF[,dfpos[i]]~ DF[,dfpos[i]-1])
+#     carbFileName <- paste("Figures/wsmdp2021_",label,Carb[i],"_NIR_Eqn_Prediction_vis.png", sep = "")
+#     png(carbFileName)
+#     par(mfrow=c(1,1))
+#     print(summary(carbCompare))
+#     rsqua <- summary(carbCompare)$r.squared
+#     plot(DF[,dfpos[i]]~ DF[,dfpos[i]-1],
+#          pch = 16,
+#          xlab = paste(Carb[i]," wetlab (%)",sep = ""),
+#          ylab = paste(Carb[i]," NIR Prediction (%)",sep = ""),
+#          main = paste("Actual Vs Predicted ",Carb[i]," r^2 =",trunc(rsqua*10^3)/10^3,sep = ""))
+#     abline(coefficients(carbCompare), lwd = 2, lty = 2, col = "red")
+#     # text(15,max(Prediction[,i])-5,labels = paste("r^2 =",trunc(rsqua*10^3)/10^3))
+#     
+#     Out$slope[i] <- trunc(10^3*summary(carbCompare)$coefficients[2])/10^3
+#     Out$intercept[i] <- trunc(10^3*summary(carbCompare)$coefficients[1])/10^3
+#     Out$R2[i] <- trunc(10^3*summary(carbCompare)$r.squared)/10^3
+#     
+#     
+#     dev.off()
+#   }
+#   return(Out)
+# }
+# 
+# 
+# ######Visualize the validation. Look at all the samples that were wetlabbed and used to calibrate the equation
+# wetlab <- read.csv("Data/WSMDP_Wetlab_StarchSugarData_FormatedForWinISI_WithR.csv")
+# wetlabDF <- wetlab[,c(1,6:8,3,2,4,5)]
+# 
+# WLLabels <- c("Samples","Starch_WL","Total.Polysaccharides_WL", "WSP_WL","Glucose_WL","Fructose_WL","Sucrose_WL","Total.Sugar_WL")
+# colnames(wetlabDF) <- WLLabels 
+# 
+# WFWL <- merge(CleanedInfoWF, wetlabDF, by = "Samples")
+# NFWL <- merge(CleanedInfoNF, wetlabDF, by = "Samples")
+# alternatingorder <- c(1,5,28,6,29,7,30,8,31,9,32,10,33,11,34)
+# WFWLdf <- WFWL[,alternatingorder]
+# NFWLdf <- NFWL[,alternatingorder]
+# WFWLdfEqnStatsR <- R2Vis(WFWLdf[,2:15], "CleanedWSPeqnWF_PredVsWetlab_for_Calibration_Samples", EqnStats(WFWLdf[,2:15]))
+# NFWLdfEqnStatsR <- R2Vis(NFWLdf[,2:15], "CleanedWSPeqnNF_PredVsWetlab_for_Calibration_Samples", EqnStats(NFWLdf[,2:15]))
+# 
+# write.csv(WFWLdfEqnStatsR, "Data/OutputtedData/EqnFitStatisticsAllWetlabWF.csv")
+# write.csv(NFWLdfEqnStatsR, "Data/OutputtedData/EqnFitStatisticsAllWetlabNF.csv")
+# 
+# ######Visualize the validation. Only the samples that were NOT used to create the equation
+# valwetlab <- read.csv("Data/WSMDP_EqnValidation_Wetlab_Data.csv")
+# valwetlabDF <- valwetlab[-2]
+# colnames(valwetlabDF)[1] <- "Samples"
+# 
+# WFValWL <- merge(CleanedInfoWF, valwetlabDF, by = "Samples")
+# NFValWL <- merge(CleanedInfoNF, valwetlabDF, by = "Samples")
+# WFValWLdf <- WFValWL[,alternatingorder]
+# NFValWLdf <- NFValWL[,alternatingorder]
+# WFValWLdfEqnStatsR <- R2Vis(WFValWLdf[,2:15], "CleanedWSPeqnWF_PredVsWetlab_ValidationSubset", EqnStats(WFValWLdf[,2:15]))
+# NFValWLdfEqnStatsR <- R2Vis(NFValWLdf[,2:15], "CleanedWSPeqnNF_PredVsWetlab_ValidationSubset", EqnStats(NFValWLdf[,2:15]))
+# 
+# write.csv(WFValWLdfEqnStatsR, "Data/OutputtedData/EqnFitStatisticsValidationWF.csv")
+# write.csv(NFValWLdfEqnStatsR, "Data/OutputtedData/EqnFitStatisticsValidationNF.csv")
+# 
+# 
+# ####With Jared WetlabDATA
+# # HWSPsJ <- HWSPsDF[which(HWSPsDF$endo == "su1" | HWSPsDF$endo == "se" | is.na(HWSPsDF$endo)),]
+# # alternatingorder2 <- c(1,5,26,6,27,7,28,8,29,9,30,10,31,11,32)
+# # CarbInfoExpandedWFJDF <- rbind(HWSPsJ,LWSPWFs)
+# # CarbInfoExpandedNFJDF <- rbind(HWSPsJ,LWSPNFs)
+# # WFValWLJ <- merge(CarbInfoExpandedWFJDF, valwetlabDF, by = "Samples")
+# # NFValWLJ <- merge(CarbInfoExpandedNFJDF, valwetlabDF, by = "Samples")
+# # WFValWLJdf <- WFValWLJ[,alternatingorder2]
+# # NFValWLJdf <- NFValWLJ[,alternatingorder2]
+# # WFValWLdfJEqnStatsR <- R2Vis(WFValWLJdf[,2:15], "UnCleanedWSPeqnWF_PredVsWetlab_ValidationSubset_WJared", EqnStats(WFValWLdf[,2:15]))
+# # NFValWLdfJEqnStatsR <- R2Vis(NFValWLJdf[,2:15], "UnCleanedWSPeqnNF_PredVsWetlab_ValidationSubset_WJared", EqnStats(NFValWLdf[,2:15]))
+# # 
+# # write.csv(WFValWLdfJEqnStatsR, "Data/OutputtedData/EqnFitStatisticsValidationWF_WJared.csv")
+# # write.csv(NFValWLdfJEqnStatsR, "Data/OutputtedData/EqnFitStatisticsValidationNF_WJared.csv")
+# 
+# #########################
+# ###Linear Model Analysis###
+# #########################
+# 
+# linearmodel <- function(SampleDFtoModel,TitleAddendum){
+#   SampleDFtoModel$superblock <- as.factor(SampleDFtoModel$superblock)
+#   SampleDFtoModel$Col <- as.factor(SampleDFtoModel$Col)
+#   SampleDFtoModel$Row <- as.factor(SampleDFtoModel$Row)
+#   SampleDFtoModel$Year <- as.factor(SampleDFtoModel$Year)
+#   SampleDFtoModel$Envi <- as.factor(SampleDFtoModel$Envi)
+#   SampleDFtoModel$Check <- as.factor(SampleDFtoModel$Check)
+#   SampleDFtoModel$block <- as.factor(SampleDFtoModel$block)
+#   SampleDFtoModel$Rep <- as.factor(SampleDFtoModel$Rep)
+#   SampleDFtoModel$endo <- as.factor(SampleDFtoModel$endo)
+#   SampleDFtoModel$PlotNum <- as.factor(SampleDFtoModel$PlotNum)
+#   
+#   statsfile <- paste0("Data/OutputtedData/WSMDP_CarbPheno_stats_",TitleAddendum,".txt")
+#   cat(paste0("Phenotypic Statistics for the Carbohydrates of ",TitleAddendum," Through Mixed Linear Modeling."), file=statsfile, sep="\n", append=FALSE)
+#   
+#   blupHolder <- data.frame("Variety" = sort(unique(SampleDFtoModel$BookInbred)))
+#   c1 <- which(colnames(SampleDFtoModel)=="Starch")
+#   c2 <- which(colnames(SampleDFtoModel)=="Total.Sugar")
+#   carbs <- colnames(SampleDFtoModel)[c1:c2]
+#   for(j in 1:length(carbs)){
+#     
+#   #output the statistics about this trait
+#     summary <- summary(SampleDFtoModel[,c1+j-1], )
+#     out <- capture.output(summary)
+#     cat(out, file=statsfile, sep="\n", append=TRUE)
+#     
+#     #####Modeling
+#     modelpastecheck<-  paste0(carbs[j], " ~ (1|BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)")
+#     
+#     # Use check if there enough checks in the model set
+#     if(length(unique(SampleDFtoModel$Check))>1){
+#     modelpastecheck<-  paste0(carbs[j], " ~ Check + (1|BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)")
+#     }
+#     cat(modelpastecheck, file=statsfile, sep="\n", append=TRUE)
+#     
+#     
+#     model <- lmer(modelpastecheck,
+#                   data=SampleDFtoModel, REML = TRUE)
+#     # Decreasing stopping tolerances
+#     strict_tol <- lmerControl(optCtrl=list(xtol_abs=1e-8, ftol_abs=1e-8))
+#     if (all(model@optinfo$optimizer=="nloptwrap")) {
+#       model <- update(model, control=strict_tol)
+#     }
+#   RandomEffects <- ranef(model)
+#   tempBlup <- data.frame("Variety" = rownames(RandomEffects$BookInbred), "BLUP" = RandomEffects$BookInbred)
+#   blupHolder <- merge(blupHolder, tempBlup, by = "Variety", all = TRUE)
+#   colnames(blupHolder)[j+1] <- paste0(carbs[j],".BLUP")
+#   
+#   # CheckAssumptions
+#   png(paste0("Figures/WSMDP_LinearModel_assumptions_",TitleAddendum,"_", carbs[j], ".png"), width = 1000, height = 500)
+#   par(mfrow=c(1,3))
+#   
+#   # Model Fit with REML
+#   plot(fitted(model), residuals(model), pch=19, col="dark blue", ylab="Residuals", xlab="Predicted")
+#   abline(h=0,col="red", lwd=1, lty=1)
+#   # histogram of residuals
+#   hist(residuals(model),main=paste0("Histogram of ", carbs[j]," residuals from ", TitleAddendum),freq=F, xlab="Residuals", ylab= "Freq", col="palegreen", col.main="darkblue")
+#   x=seq(-5e-15,9e-15,5e-15)
+#   curve(dnorm(x,mean(residuals(model)),sd(residuals(model))),add=T,lwd=2, col="red", lty=1)
+#   # qq plot
+#   qqnorm(residuals(model), pch=19, col="dark blue", col.lines="red", xlab="Pred quantiles", ylab="Obs quantiles") 
+#   
+#   dev.off()
+#    # Summary of random effects
+#   summary <- summary(model, correlation=FALSE)
+#   out <- capture.output(summary)
+#   cat(out, file=statsfile, sep="\n", append=TRUE)
+#   
+#   # Write out residuals from ANOVA
+#   write.table(resid(model), paste0("Data/OutputtedData/WSMDP_LinearModel_residuals_",TitleAddendum,"_", carbs[j], ".csv"), col.names=F, row.names=F, sep=",")
+# 
+#   #calculate model R2
+#   r2 <- r.squaredGLMM(model)
+#   out <- capture.output(r2[2])
+#   cat(paste("The r^2 value of this model for", carbs[j] ,"is", out), file= statsfile, sep="\n", append=TRUE)
+#     # Calculate hertiability 
+#   model_variances <- as.data.frame(VarCorr(model))
+#   #broad sence heritability calculated as variance of genotype/ (variance of geno + var of gxe / num of enviornments + var of error/num of replicates and environ)
+#   h2 <- model_variances$vcov[2]/(model_variances$vcov[2]+(model_variances$vcov[1]/4)+(model_variances$vcov[8]/8))
+#   out <- capture.output(h2)
+#   cat(paste("The heritability of", carbs[j] ,"is", out), file= statsfile, sep="\n", append=TRUE)
+# 
+#   #Compare model with one with Endosperm
+#   cat("Model Comparison, with and without Endosperm Term", file=statsfile, sep="\n", append=TRUE)
+#   #####Modeling
+#   modelpasteendo<-  paste0(carbs[j], " ~ (1|endo/BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)")
+#   # Use check if there enough checks in the model set
+#   if(length(unique(SampleDFtoModel$Check))>1){
+#   modelpasteendo<-  paste0(carbs[j], " ~ Check + (1|endo/BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)")
+#   }
+#   cat(modelpasteendo, file=statsfile, sep="\n", append=TRUE)
+#   
+#   modelendo <- lmer(modelpasteendo,
+#                 data=SampleDFtoModel, REML = TRUE)
+#   # Decreasing stopping tolerances
+#   strict_tol <- lmerControl(optCtrl=list(xtol_abs=1e-8, ftol_abs=1e-8))
+#   if (all(modelendo@optinfo$optimizer=="nloptwrap")) {
+#     modelendo <- update(modelendo, control=strict_tol)
+#   }
+#   # Summary of random effects
+#   summary <- summary(modelendo, correlation=FALSE)
+#   out <- capture.output(summary)
+#   cat(out, file=statsfile, sep="\n", append=TRUE)
+#   
+#   }
+#   
+#   # Write out BLUPs for Genotypes
+#   write.table(blupHolder, file=paste0("Data/OutputtedData/WSMDP_CarbPheno_InbredBLUPS_",TitleAddendum,".txt"), col.names=T, row.names=F, sep=",")
+#   
+#   return(blupHolder)
+# }
+# 
+# 
+# WFBlups <- linearmodel(CleanedInfoWF,"CleanedOutliersWF")
+# NFBlups <- linearmodel(CleanedInfoNF,"CleanedOutliersNF")
+# 
+# CleanedInfoHWSP_wexcess <- CarbOutlierCleanup(HWSPs,"HWSP",alpha = 0.05)
+# CleanedInfoLWSPNF_wexcess <- CarbOutlierCleanup(LWSPNFs,"LWSPNFs",alpha = 0.05)
+# CleanedInfoLWSPWF_wexcess <- CarbOutlierCleanup(LWSPWFs,"LWSPWFs",alpha = 0.05)
+# 
+# CleanedInfoHWSP <- subset(CleanedInfoHWSP_wexcess, !is.na(IsExperimental))
+# CleanedInfoLWSPNF <- subset(CleanedInfoLWSPNF_wexcess, !is.na(IsExperimental))
+# CleanedInfoLWSPWF <- subset(CleanedInfoLWSPWF_wexcess, !is.na(IsExperimental))
+# HWSPBlups <- linearmodel(CleanedInfoHWSP,"CleanedOutliersHWSP")
+# LWSPNFBlups <- linearmodel(CleanedInfoLWSPNF,"CleanedOutliersLWSPNF")
+# LWSPWFBlups <- linearmodel(CleanedInfoLWSPWF,"CleanedOutliersLWSPWF")
 
 
 
@@ -468,27 +469,28 @@ PCA <- snpgdsPCA(PreLDGeno, snp.id = PostLDGeno.id)
 #cut off the numbers at the end of the sample.id that don't mean things to humans
 holdtrunc<-gsub(PCA$sample.id, pattern = ":.*", replacement = "")
 #only include the samples that are in genoinfo
+#this is a round about way of looking at only the genotype info I have for the things planted in this trial
+#eliminate inbreds tested in other experiments
 genoinfo2014only <- genoinfo[which(genoinfo$Planting20142015 == 1),]
-matching <- unique(PCA$sample.id[na.omit(match(genoinfo2014only$GenoName, holdtrunc))])
-genoInfo2014GenoOnly <- genoinfo2014only[na.omit(match(holdtrunc, genoinfo2014only$GenoName)),]
-genoInfo2014GenoOnly <- genoInfo2014GenoOnly[which(!duplicated(genoInfo2014GenoOnly$GenoName)),]
-
+#look at what inbreds have the same genoname in both the seq file and the data summary
+matching <- data.frame("GenoName" = unique(PCA$sample.id[na.omit(match(genoinfo2014only$GenoName, holdtrunc))]))
+#hold the names of the inbreds I have seq info for
+holdnocol <- unique(holdtrunc[na.omit(match(genoinfo2014only$GenoName, holdtrunc))])
+#combine the geno name with the endosperm mutant time from the genoinfo file
+matching$endo <- genoinfo2014only$endo[match(holdnocol,genoinfo2014only$GenoName)]
 
 #conduct pca again with only those samples
-PCA <- snpgdsPCA(PreLDGeno, sample.id = matching, snp.id = PostLDGeno.id)
+PCA <- snpgdsPCA(PreLDGeno, sample.id = matching$GenoName, snp.id = PostLDGeno.id)
 pc.perc <- PCA$varprop*100
 head(round(pc.perc,2))
 
 
 
 #visualize the PCA with ld pruned snps and only the tested samples 
-PCAFigureCreation(PCA,pc.perc,genoInfo2014GenoOnly,infilename,"endo")
-# PCAFigureCreation(PCA,pc.perc,phenoSubsetGeno,filename,"Program")
-# PCAFigureCreation(PCA,pc.perc,phenoSubsetGeno,filename,"Region")
-# PCAFigureCreation(PCA,pc.perc,phenoSubsetGeno,filename,"SusceptibilityRating03")
-# PCAFigureCreation(PCA,pc.perc,phenoSubsetGeno,filename,"SusceptibilityRating02")
-# PCAFigureCreation(PCA,pc.perc,phenoSubsetGeno,filename,"SusceptibilityRating05")
-# PCAFigureCreation(PCA,pc.perc,phenoSubsetGeno,filename,"PercentInfectedAllRounds")
+PCAFigureCreation(PCA,pc.perc,matching,infilename,"endo")
+# PCAFigureCreation(PCA,pc.perc,matching,filename,"Program")
+# PCAFigureCreation(PCA,pc.perc,matching,filename,"Region")
+
 
 #########################
 ### Close Snp Relate ###
@@ -504,20 +506,25 @@ snpgdsClose(PreLDGeno)
 #read in genetic info post MAF 
 Seq <- "SeqG"
 hmppath <- paste0("Data/RawData/WSMDP_",Seq,".hmp.txt")
+
+
 # hmppath <- "Data/RawData/WSMDP_SCMV_SeqB.hmp.txt"
 # hmppath <- "Data/RawData/WSMDP_SeqC.hmp.txt"
-SCMV_geno <- fread(hmppath,skip = "rs#")
-geno <- SCMV_geno
-str(geno)
-colnames(geno)<-gsub(colnames(geno), pattern = ":.*", replacement = "")
-str(geno)
+# geno <- fread(hmppath,skip = "rs#")
+# str(geno)
+# colnames(geno)<-gsub(colnames(geno), pattern = ":.*", replacement = "")
+# str(geno)
+geno <- read.csv("Data/RawData/SeqG_numericFormat.csv")
 
-BlupGenoCleanup <- function(BlupDF){
+BlupGenoCleanup <- function(BlupDFName){
+BlupDF <- read.csv(file=paste0("Data/OutputtedData/WSMDP_CarbPheno_InbredBLUPS_CleanedOutliers",BlupDFName,".txt"))#, col.names=T, row.names=F)
+  
 BlupDFGeno <- merge(BlupDF,genoinfo, by = "Variety")
 c1 <- which(colnames(BlupDFGeno)=="Starch.BLUP")
 c2 <- which(colnames(BlupDFGeno)=="Total.Sugar.BLUP")
 c3 <- which(colnames(BlupDFGeno)=="GenoName")
 c4 <- which(colnames(BlupDFGeno)=="endo")
+
 #remove rows with no geno information and remove rows that are duplicates. 
 #TODO:Check which duplicates are being deleted and if its a good choice
 # BlupDFGeno <- BlupDFGeno[-which(BlupDFGeno$GenoName == ""),]
@@ -531,17 +538,21 @@ BlupDFGeno <- BlupDFGeno %>% distinct(GenoName, .keep_all = TRUE)
 BlupDFGenoJustPheno <- BlupDFGeno[,c(c3,c1:c2,c4)]
 BlupDFGenoJustPheno$endo <- as.factor(BlupDFGenoJustPheno$endo)
 return(BlupDFGenoJustPheno)
+
 }
-WFBlupsGenoJustPheno <- BlupGenoCleanup(WFBlups)
-NFBlupsGenoJustPheno <- BlupGenoCleanup(NFBlups)
-HWSPBlupsGenoJustPheno <- BlupGenoCleanup(HWSPBlups)
-LWSPNFBlupsGenoJustPheno <- BlupGenoCleanup(LWSPNFBlups)
-LWSPWFBlupsGenoJustPheno <- BlupGenoCleanup(LWSPWFBlups)
 
 
 
-# c1 <- which(colnames(WFBlupsGenoJustPheno)=="Starch.BLUP")
-c1 <- which(colnames(WFBlupsGenoJustPheno)=="Glucose.BLUP")
+WFBlupsGenoJustPheno <- BlupGenoCleanup("WF")
+NFBlupsGenoJustPheno <- BlupGenoCleanup("NF")
+HWSPBlupsGenoJustPheno <- BlupGenoCleanup("HWSP")
+LWSPNFBlupsGenoJustPheno <- BlupGenoCleanup("LWSPNF")
+LWSPWFBlupsGenoJustPheno <- BlupGenoCleanup("LWSPWF")
+
+
+
+c1 <- which(colnames(WFBlupsGenoJustPheno)=="Starch.BLUP")
+# c1 <- which(colnames(WFBlupsGenoJustPheno)=="Glucose.BLUP")
 c2 <- which(colnames(WFBlupsGenoJustPheno)=="Total.Sugar.BLUP")
 blups <- colnames(WFBlupsGenoJustPheno[c1:c2])
 
@@ -568,14 +579,45 @@ GWASPolyRunner(LWSPWFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThr
 ### Genotypes
 setwd("C:/Users/LHislop/Documents/GitHub/WSMDP_Carb")
 path.to.res <- "C:/Users/LHislop/Documents/GitHub/WSMDP_Carb/Data/OutputtedData/GapitOut/"
-
-nbtraits <- 7
-# pheno <- read.table('sweetcorn_toco384_nodent_noHi_NA_20180715.txt', header=T, sep="\t", colClasses=c('factor',rep('numeric', nbtraits)), as.is=T)
-nlines <- nrow(myYWFmerged)
-
-geno <- read.table("Data/RawData/WSMDP_SCMV_SeqB.hmp.txt", header=FALSE, sep = "\t")
+Seq <- "SeqG"
+hmppath <- paste0("Data/RawData/WSMDP_",Seq,".hmp.txt")
+geno <- fread(hmppath,skip = "rs#")
 str(geno)
 colnames(geno)<-gsub(colnames(geno), pattern = ":.*", replacement = "")
+colnames(geno)<-gsub(colnames(geno), pattern = "rs#", replacement = "rs")
+#assemble the info about marker, chromosome and position
+
+#convert from hapmap to numeric
+
+geno_clean <- geno
+geno_clean[which(geno == "A")] <- "AA"
+geno_clean[which(geno == "C")] <- "CC"
+geno_clean[which(geno == "G")] <- "GG"
+geno_clean[which(geno == "T")] <- "TT"
+geno_clean[which(geno == "R")] <- "AG"
+geno_clean[which(geno == "Y")] <- "CT"
+geno_clean[which(geno == "S")] <- "CG"
+geno_clean[which(geno == "W")] <- "AT"
+geno_clean[which(geno == "K")] <- "GT"
+geno_clean[which(geno == "M")] <- "AC"
+geno_clean[which(geno == "N")] <- NA
+geno_clean[which(geno == "0")] <- NA
+geno_clean[which(geno == "-")] <- NA
+
+#some of the SNPs have more than 2 homozygous genotypes. Get rid of them 
+toomanyHomos <- which(apply(geno_clean, 1, function(x) length(unique(x)))>4)
+if(length(toomanyHomos) > 0){
+  geno_clean <- geno_clean[-toomanyHomos,]
+  }
+
+str(geno)
+nbtraits <- 7
+# pheno <- read.table('sweetcorn_toco384_nodent_noHi_NA_20180715.txt', header=T, sep="\t", colClasses=c('factor',rep('numeric', nbtraits)), as.is=T)
+nlines <- nrow(WFBlupsGenoJustPheno)
+
+# geno <- read.table(hmppath, header=FALSE, sep = "\t")
+# str(geno)
+# colnames(geno)<-gsub(colnames(geno), pattern = ":.*", replacement = "")
 str(geno)
 setwd(path.to.res)
 
@@ -604,19 +646,19 @@ colnames(covariates) <- c('trait','snp')
 
 nbtraits <- 7
 # pheno <- read.table('sweetcorn_toco384_nodent_noHi_NA_20180715.txt', header=T, sep="\t", colClasses=c('factor',rep('numeric', nbtraits)), as.is=T)
-
 # path.to.res <- "/local/workdir/mb2446/GWAS/Univariate/Toco/0PC.2yr.K11.174K.384taxa.middle.na.KernelType.20180715/"
 
 # parent.dir <- "/local/workdir/mb2446/GWAS/"
-pheno <- myYWFmerged
+pheno <- WFBlupsGenoJustPheno
 
-
-for (i in seq(1,7)) {
+# library(beepr)
+# system.time(beep() sound = "fanfare"))
+  for (i in seq(1,7)) {
     #### Current trait ####
     curr.trait <- colnames(pheno[ (1 + i) ])
     # curr.trait <- as.character(covariates[i,1])
     # system(paste('mkdir -p ', path.to.res, curr.trait, sep=''))
-    setwd(paste(path.to.res, curr.trait, sep=''))
+    setwd(paste0(path.to.res ,curr.trait))
     j <- which(colnames(pheno)==curr.trait)
     curr.pheno = pheno[,c(1,j)]
     #### User input Kinship

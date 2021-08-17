@@ -1,0 +1,5 @@
+"Trait","Model","Threshold","Marker","Chrom","Position","Ref","Alt","Score","Effect"
+"Fructose.BLUP","diplo-additive",4.63,"S1_75960423","1",75960423,0,1,4.93,0.0879979151773291
+"Fructose.BLUP","diplo-additive",4.63,"S1_80087860","1",80087860,0,1,4.68,-0.0801150170761492
+"Fructose.BLUP","diplo-additive",4.63,"S1_226223226","1",226223226,0,1,4.86,-0.173375792072327
+"Fructose.BLUP","diplo-additive",4.63,"S1_299983471","1",299983471,0,1,5.12,-0.195817065607799

@@ -1,0 +1,16 @@
+"Trait","Model","Threshold","Marker","Chrom","Position","Ref","Alt","Score","Effect"
+"Glucose.BLUP","diplo-general",4.63,"S1_101832138","1",101832138,0,1,4.94,NA
+"Glucose.BLUP","diplo-general",4.63,"S1_102245147","1",102245147,0,1,5.37,NA
+"Glucose.BLUP","diplo-general",4.63,"S1_155195161","1",155195161,0,1,5.05,NA
+"Glucose.BLUP","diplo-general",4.63,"S1_225576132","1",225576132,0,1,5.09,NA
+"Glucose.BLUP","diplo-general",4.63,"S1_226223226","1",226223226,0,1,5.79,NA
+"Glucose.BLUP","diplo-general",4.63,"S1_278909038","1",278909038,0,1,4.82,NA
+"Glucose.BLUP","diplo-additive",4.32,"S1_101832138","1",101832138,0,1,4.94,-0.171806538917536
+"Glucose.BLUP","diplo-additive",4.32,"S1_102245144","1",102245144,0,1,4.61,-0.145902339237077
+"Glucose.BLUP","diplo-additive",4.32,"S1_102245147","1",102245147,0,1,5.81,-0.159510110273722
+"Glucose.BLUP","diplo-additive",4.32,"S1_155195161","1",155195161,0,1,5.05,-0.202405965216605
+"Glucose.BLUP","diplo-additive",4.32,"S1_225576132","1",225576132,0,1,5.09,-0.200175121958966
+"Glucose.BLUP","diplo-additive",4.32,"S1_225576319","1",225576319,0,1,5.29,-0.199922641933155
+"Glucose.BLUP","diplo-additive",4.32,"S1_226223226","1",226223226,0,1,5.79,-0.157154843497662
+"Glucose.BLUP","diplo-additive",4.32,"S1_263152552","1",263152552,0,1,4.42,-0.148332923136247
+"Glucose.BLUP","diplo-additive",4.32,"S1_278909038","1",278909038,0,1,4.82,-0.204595035503485

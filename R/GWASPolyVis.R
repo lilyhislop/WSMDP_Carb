@@ -4,12 +4,13 @@ GWASPolyVis <- function(GWASPolyRunVersion,trait,data3,filename,adendum){
   QQplotfile <- paste(visfileprefix,"_QQplot_General.png", sep = "")
   png(QQplotfile, width = 500, height = 500)
   #,"1-dom-alt-alt","1-dom-alt-ref","1-dom-ref-alt","1-dom-ref-ref")
-  qq.plot(data3,trait=trait,model="general")
+  qq.plot(data3,trait=trait,model="diplo-general")
   dev.off()
   
   data4 <- set.threshold(data3,method="FDR",level=0.05)
   #Here's the QTLS found
   print(get.QTL(data4))
+  # print(fit.QTL(data2, trait))
   
   #Heres the manhattan plots for this
   # MANplotfile <- paste(visfileprefix,"_Manhattan_AllModels.png", sep = "")
@@ -31,7 +32,7 @@ GWASPolyVis <- function(GWASPolyRunVersion,trait,data3,filename,adendum){
   png(MANGenplotfile,width = 750, height = 500)
   print({
   par(mfrow=c(1,1))
-  manhattan.plot(data4,trait=trait,model="general")
+  manhattan.plot(data4,trait=trait,model="diplo-general")
   # abline(a = get.QTL(data4, model="general")$Threshold[1], b = 0, lty = "dashed")
   })
   dev.off()
@@ -40,7 +41,7 @@ GWASPolyVis <- function(GWASPolyRunVersion,trait,data3,filename,adendum){
   png(MANAddplotfile,width = 750, height = 500)
   print({
   par(mfrow=c(1,1))
-  manhattan.plot(data4,trait=trait,model="additive")
+  manhattan.plot(data4,trait=trait,model="diplo-additive")
   })
   dev.off()
   

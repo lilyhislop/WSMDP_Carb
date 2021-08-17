@@ -1,0 +1,15 @@
+"Trait","Model","Threshold","Marker","Chrom","Position","Ref","Alt","Score","Effect"
+"Total.Sugar.BLUP","diplo-general",4.63,"S1_9125134","1",9125134,0,1,5.75,NA
+"Total.Sugar.BLUP","diplo-general",4.63,"S1_258807641","1",258807641,0,1,4.82,NA
+"Total.Sugar.BLUP","diplo-additive",4.25,"S1_6809310","1",6809310,0,1,4.68,1.11365492971747
+"Total.Sugar.BLUP","diplo-additive",4.25,"S1_9125134","1",9125134,0,1,6.49,2.13553026688252
+"Total.Sugar.BLUP","diplo-additive",4.25,"S1_9580616","1",9580616,0,1,4.48,1.19666220533936
+"Total.Sugar.BLUP","diplo-additive",4.25,"S1_12098994","1",12098994,0,1,4.49,-0.918636473344687
+"Total.Sugar.BLUP","diplo-additive",4.25,"S1_60153873","1",60153873,0,1,4.39,0.931337851391306
+"Total.Sugar.BLUP","diplo-additive",4.25,"S1_90219916","1",90219916,0,1,4.67,-1.06904173473303
+"Total.Sugar.BLUP","diplo-additive",4.25,"S1_96623497","1",96623497,0,1,4.32,-3.11789429386908
+"Total.Sugar.BLUP","diplo-additive",4.25,"S1_96623594","1",96623594,0,1,4.61,-2.87726245141925
+"Total.Sugar.BLUP","diplo-additive",4.25,"S1_195181069","1",195181069,0,1,4.38,-3.00265233440775
+"Total.Sugar.BLUP","diplo-additive",4.25,"S1_195181083","1",195181083,0,1,4.38,-3.00265233440775
+"Total.Sugar.BLUP","diplo-additive",4.25,"S1_258807641","1",258807641,0,1,5.62,-1.83120074746275
+"Total.Sugar.BLUP","diplo-additive",4.25,"S1_295191099","1",295191099,0,1,4.51,0.988467708909258
