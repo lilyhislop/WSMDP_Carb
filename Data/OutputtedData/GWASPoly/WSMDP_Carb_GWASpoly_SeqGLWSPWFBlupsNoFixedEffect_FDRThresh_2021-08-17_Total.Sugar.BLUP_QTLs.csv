@@ -1,0 +1,9 @@
+"Trait","Model","Threshold","Marker","Chrom","Position","Ref","Alt","Score","Effect"
+"Total.Sugar.BLUP","general",5.68,"S4_171790608","4",171790608,0,1,6.21,NA
+"Total.Sugar.BLUP","general",5.68,"S9_144764754","9",144764754,0,1,5.87,NA
+"Total.Sugar.BLUP","general",5.68,"S9_151733172","9",151733172,0,1,5.87,NA
+"Total.Sugar.BLUP","additive",5.31,"S1_144432039","1",144432039,0,1,5.63,-2.26968094161633
+"Total.Sugar.BLUP","additive",5.31,"S3_216989086","3",216989086,0,1,5.56,1.52704084462278
+"Total.Sugar.BLUP","additive",5.31,"S4_171790608","4",171790608,0,1,6.21,-1.97253589504269
+"Total.Sugar.BLUP","additive",5.31,"S9_144764754","9",144764754,0,1,5.87,-3.85972521075043
+"Total.Sugar.BLUP","additive",5.31,"S9_151733172","9",151733172,0,1,5.87,-3.85972521075043

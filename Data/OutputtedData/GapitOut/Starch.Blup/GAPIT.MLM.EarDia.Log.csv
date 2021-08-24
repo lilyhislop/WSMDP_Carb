@@ -1,0 +1,12 @@
+Model,Value
+Trait,c("249", "2")
+group.by ,20
+Trait name ,MLM.EarDia
+Kinship,281:282
+Z Matrix,c(250, 250)
+Covariate,c(249, 4)
+SNP.P3D,TRUE
+Clustering algorithms,average
+Group kinship,Mean
+group.from ,281
+group.to ,281

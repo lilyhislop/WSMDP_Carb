@@ -1,0 +1,5 @@
+"Trait","Model","Threshold","Marker","Chrom","Position","Ref","Alt","Score","Effect"
+"Total.Sugar.BLUP","general",6.04,"S2_222219945","2",222219945,0,1,7.78,NA
+"Total.Sugar.BLUP","additive",6.04,"S2_221319689","2",221319689,0,1,6.5,1.79122032455563
+"Total.Sugar.BLUP","additive",6.04,"S2_222219945","2",222219945,0,1,7.66,1.79659594969556
+"Total.Sugar.BLUP","additive",6.04,"S6_112368061","6",112368061,0,1,6.36,1.21658589858604

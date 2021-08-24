@@ -1,15 +1,17 @@
-GWASPolyVis <- function(GWASPolyRunVersion,trait,data3,filename,adendum){
-  visfileprefix <- paste0("Figures/GWASpoly/WSMDP_Carb_GWASpoly_",filename,"_",adendum,"_",GWASPolyRunVersion,"_",trait)
+GWASPolyVis <- function(GWASPolyRunVersion,trait,data3,Seq,DataSet, Thresh = "FDR"){
+  visfileprefix <- paste0("Figures/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,"_",DataSet,"_",GWASPolyRunVersion,"_",trait,"_",Thresh)
   
   QQplotfile <- paste(visfileprefix,"_QQplot_General.png", sep = "")
   png(QQplotfile, width = 500, height = 500)
   #,"1-dom-alt-alt","1-dom-alt-ref","1-dom-ref-alt","1-dom-ref-ref")
-  qq.plot(data3,trait=trait,model="diplo-general")
+  print(qq.plot(data3,trait=trait,model="general"))
+  
   dev.off()
   
-  data4 <- set.threshold(data3,method="FDR",level=0.05)
+  data4 <- set.threshold(data3,method=Thresh,level=0.05)
   #Here's the QTLS found
   print(get.QTL(data4))
+
   # print(fit.QTL(data2, trait))
   
   #Heres the manhattan plots for this
@@ -32,7 +34,7 @@ GWASPolyVis <- function(GWASPolyRunVersion,trait,data3,filename,adendum){
   png(MANGenplotfile,width = 750, height = 500)
   print({
   par(mfrow=c(1,1))
-  manhattan.plot(data4,trait=trait,model="diplo-general")
+  manhattan.plot(data4,trait=trait,model="general")
   # abline(a = get.QTL(data4, model="general")$Threshold[1], b = 0, lty = "dashed")
   })
   dev.off()
@@ -41,16 +43,16 @@ GWASPolyVis <- function(GWASPolyRunVersion,trait,data3,filename,adendum){
   png(MANAddplotfile,width = 750, height = 500)
   print({
   par(mfrow=c(1,1))
-  manhattan.plot(data4,trait=trait,model="diplo-additive")
+  manhattan.plot(data4,trait=trait,model="additive")
   })
   dev.off()
   
-  Scoresfile <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",filename,adendum,GWASPolyRunVersion,"_",trait,"_scores.csv", sep = "")
-  Effectfile <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",filename,adendum,GWASPolyRunVersion,"_",trait,"_effects.csv", sep = "")
+  Scoresfile <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,DataSet,GWASPolyRunVersion,"_",trait,"_",Thresh,"_scores.csv", sep = "")
+  Effectfile <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,DataSet,GWASPolyRunVersion,"_",trait,"_",Thresh,"_effects.csv", sep = "")
   write.GWASpoly(data4, trait, filename=Scoresfile, what = "scores", delim = ",")
   write.GWASpoly(data4, trait, filename=Effectfile, what = "effects", delim = ",")
   
-  QTLfile <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",filename,adendum,GWASPolyRunVersion,"_",trait,"_QTLs.csv", sep = "")
+  QTLfile <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,DataSet,GWASPolyRunVersion,"_",trait,"_",Thresh,"_QTLs.csv", sep = "")
   write.table(get.QTL(data4),
               append = FALSE,
               file = QTLfile,

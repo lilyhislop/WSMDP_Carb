@@ -1,0 +1,43 @@
+Starch Wetlab Data
+  Sample_ID             Starch         Total_Poly          WSP        
+ Length:102         Min.   : 1.606   Min.   : 1.121   Min.   :-7.704  
+ Class :character   1st Qu.:10.124   1st Qu.:20.269   1st Qu.: 2.914  
+ Mode  :character   Median :15.294   Median :29.535   Median :10.987  
+                    Mean   :16.384   Mean   :26.865   Mean   :10.449  
+                    3rd Qu.:22.337   3rd Qu.:34.675   3rd Qu.:17.551  
+                    Max.   :40.304   Max.   :43.338   Max.   :29.752  
+                                     NA's   :1        NA's   :1       
+ Sample_ID     Starch Total_Poly        WSP 
+        NA   8.887002  11.003560   9.237208 
+Starch Wetlab Controls
+  Sample_ID             Starch        Total_Poly         WSP           
+ Length:9           Min.   :60.11   Min.   :71.08   Min.   :-1.815551  
+ Class :character   1st Qu.:72.60   1st Qu.:73.22   1st Qu.:-1.323140  
+ Mode  :character   Median :77.24   Median :75.72   Median :-0.009599  
+                    Mean   :74.82   Mean   :76.10   Mean   : 1.276921  
+                    3rd Qu.:78.51   3rd Qu.:78.61   3rd Qu.: 2.618187  
+                    Max.   :80.45   Max.   :83.60   Max.   :10.972240  
+ Sample_ID     Starch Total_Poly        WSP 
+        NA   6.140384   4.013638   4.056448 
+Sugar Wetlab Data
+    Glucose          Fructose          Sucro            Total        
+ Min.   : 0.038   Min.   :-2.372   Min.   :-3.772   Min.   :-0.3226  
+ 1st Qu.: 3.539   1st Qu.: 3.773   1st Qu.: 6.709   1st Qu.:14.7812  
+ Median : 4.524   Median : 4.928   Median : 9.485   Median :19.0799  
+ Mean   : 4.729   Mean   : 4.968   Mean   :10.912   Mean   :20.6143  
+ 3rd Qu.: 5.847   3rd Qu.: 6.044   3rd Qu.:13.729   3rd Qu.:24.7520  
+ Max.   :14.375   Max.   :15.369   Max.   :39.796   Max.   :54.1076  
+ NA's   :413      NA's   :413      NA's   :414      NA's   :414      
+ Glucose Fructose    Sucro    Total 
+1.915760 2.145014 6.648634 9.116516 
+Sugar Wetlab Controls
+    Glucose           Fructose         Sucro            Total      
+ Min.   :-0.0211   Min.   :15.90   Min.   :-1.002   Min.   :40.47  
+ 1st Qu.:19.2199   1st Qu.:19.92   1st Qu.: 8.860   1st Qu.:49.75  
+ Median :20.5350   Median :20.24   Median :10.853   Median :51.28  
+ Mean   :17.8049   Mean   :21.19   Mean   :15.626   Mean   :54.61  
+ 3rd Qu.:21.4325   3rd Qu.:21.14   3rd Qu.:12.723   3rd Qu.:55.51  
+ Max.   :27.1877   Max.   :44.14   Max.   :54.679   Max.   :98.67  
+ NA's   :37        NA's   :38      NA's   :37       NA's   :38     
+  Glucose  Fructose     Sucro     Total 
+ 6.950873  5.065785 14.036220 11.289749 
