@@ -358,16 +358,8 @@ write.csv(file = "Data/OutputtedData/CleanedInfoNFOutput.csv",CleanedInfoNF)
 #########################
 
 linearmodel <- function(SampleDFtoModel,TitleAddendum){
-  SampleDFtoModel$superblock <- as.factor(SampleDFtoModel$superblock)
-  SampleDFtoModel$Col <- as.factor(SampleDFtoModel$Col)
-  SampleDFtoModel$Row <- as.factor(SampleDFtoModel$Row)
-  SampleDFtoModel$Year <- as.factor(SampleDFtoModel$Year)
-  SampleDFtoModel$Envi <- as.factor(SampleDFtoModel$Envi)
-  SampleDFtoModel$Check <- as.factor(SampleDFtoModel$Check)
-  SampleDFtoModel$block <- as.factor(SampleDFtoModel$block)
-  SampleDFtoModel$Rep <- as.factor(SampleDFtoModel$Rep)
-  SampleDFtoModel$endo <- as.factor(SampleDFtoModel$endo)
-  SampleDFtoModel$PlotNum <- as.factor(SampleDFtoModel$PlotNum)
+  cols <- c('superblock','Col', 'Row', 'Year', 'Envi', 'Check', 'block', 'Rep', 'endo', 'PlotNum' )
+  SampleDFtoModel[cols] <- lapply(SampleDFtoModel[cols], as.factor)
 
   statsfile <- paste0("Data/OutputtedData/WSMDP_CarbPheno_stats_",TitleAddendum,".txt")
   cat(paste0("Phenotypic Statistics for the Carbohydrates of ",TitleAddendum," Through Mixed Linear Modeling."), file=statsfile, sep="\n", append=FALSE)
@@ -480,12 +472,22 @@ linearmodel <- function(SampleDFtoModel,TitleAddendum){
   #######Graph the different variances explained by different factors######
   VarDFMelt <- reshape2::melt(VarDF)
   png(paste("Figures/WSMDP_AllNIRPred_MixedEqn_PercentVarianceExplainedby_Factors_",TitleAddendum,".png",sep=""), width = 1000, height = 500)
-  barchart(~value|variable, group = factor(Carb), data= VarDFMelt,reverse.rows = FALSE,main = "Percent Phenotypic Variance Explained",layout = c(8,1),
+  print(barchart(~value|variable, group = factor(Carb), data= VarDFMelt,reverse.rows = FALSE,main = "Percent Phenotypic Variance Explained",layout = c(8,1),
            key = simpleKey(text = colnames(SampleDFtoModel)[5:11],
-                           rectangles = TRUE, points = FALSE, space = "right"))
-
+                           rectangles = TRUE, points = FALSE, space = "right")))
   dev.off()
-
+  
+  #######Graph the different variances explained by different factors with GGPlot ######
+  png(paste("Figures/WSMDP_AllNIRPred_MixedEqn_PercentVarianceExplainedby_Factors_",TitleAddendum,"_ggplot.png",sep=""), width = 1000, height = 500)
+  p <- ggplot(VarDFMelt, aes(y = Carb, value)) +
+    geom_bar(aes(fill = variable),stat = "identity",  position = position_stack(reverse = TRUE)) + 
+    theme(legend.position = "top")
+  print(p)
+  dev.off()
+  
+  #Write the variances to a file
+  write.table(VarDF, file = paste0("Data/OutputtedData/WSMDP_CarbPheno_Anova_Variances_",TitleAddendum,".txt"), col.names=T, row.names=F, sep=",")
+  
   # Write out BLUPs for Genotypes
   write.table(blupHolder, file=paste0("Data/OutputtedData/WSMDP_CarbPheno_InbredBLUPS_",TitleAddendum,".txt"), col.names=T, row.names=F, sep=",")
 

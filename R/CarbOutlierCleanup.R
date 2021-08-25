@@ -74,8 +74,8 @@ while(counter < end){
       polymean <- mean(pull(outlierincontext[CarbSumPos]),na.rm = TRUE)
       OutlierPoly <- pull(CarbDataFrame[PosOutliers[counter],CarbSumPos])
 
-      #Check if the carb's summation stat is also an outlier. (Total.Poly or Total.Sugar) It is more than 3 sd from the mean?
-      if((polymean+3*polySD < OutlierPoly || polymean-3*polySD > OutlierPoly) && !is.na(OutlierPoly)){
+      #Check if the carb's summation stat is also an outlier. (Total.Poly or Total.Sugar) It is more than 5 sd from the mean?
+      if((polymean+5*polySD < OutlierPoly || polymean-5*polySD > OutlierPoly) && !is.na(OutlierPoly)){
       
         ProbSamples <- recordKeeping("Removed")
         toremove <- c(toremove,CarbDataFrame$DFPosition[i])
@@ -88,7 +88,7 @@ while(counter < end){
       }
       
       # The total summationation stat is not an outlier
-      if((polymean+3*polySD > OutlierPoly && polymean-3*polySD < OutlierPoly) || is.na(OutlierPoly)){
+      if((polymean+5*polySD > OutlierPoly && polymean-5*polySD < OutlierPoly) || is.na(OutlierPoly)){
         ProbSamples <- recordKeeping(paste(colnames(CarbDataFrame[CarbDFPos]),"Nulled"))
         CarbDataFrame[PosOutliers[i],CarbDFPos]<- NA
         CarbDataFrame[PosOutliers[i],CarbSumPos]<- NA
@@ -168,8 +168,8 @@ Carbs <- c("Starch","Total.Polysaccharides", "WSP","Glucose","Fructose","Sucrose
           polymean <- mean(pull(outlierincontext[CarbSumPos]),na.rm = TRUE)
           OutlierPoly <- pull(CarbDataFrame[PosOutliers[counter],CarbSumPos])
           
-          #Check if the carb's summation stat is also an outlier. (Total.Poly or Total.Sugar) It is more than 3 sd from the mean?
-          if((polymean+3*polySD < OutlierPoly || polymean-3*polySD > OutlierPoly) && !is.na(OutlierPoly)){
+          #Check if the carb's summation stat is also an outlier. (Total.Poly or Total.Sugar) It is more than 5 sd from the mean?
+          if((polymean+5*polySD < OutlierPoly || polymean-5*polySD > OutlierPoly) && !is.na(OutlierPoly)){
             
             ProbSamples <- recordKeeping("Removed")
             toremove <- c(toremove,CarbDataFrame$DFPosition[i])
@@ -182,7 +182,7 @@ Carbs <- c("Starch","Total.Polysaccharides", "WSP","Glucose","Fructose","Sucrose
           }
           
           # The total summationation stat is not an outlier
-          if((polymean+3*polySD > OutlierPoly && polymean-3*polySD < OutlierPoly) || is.na(OutlierPoly)){
+          if((polymean+5*polySD > OutlierPoly && polymean-5*polySD < OutlierPoly) || is.na(OutlierPoly)){
             ProbSamples <- recordKeeping(paste(colnames(CarbDataFrame[CarbDFPos]),"Nulled"))
             CarbDataFrame[PosOutliers[i],CarbDFPos]<- NA
             CarbDataFrame[PosOutliers[i],CarbSumPos]<- NA
