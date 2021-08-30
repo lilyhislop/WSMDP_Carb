@@ -651,9 +651,9 @@ ptm <- proc.time()
 for(blup in blups){
 # GWASPolyRunner(WFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_",Sys.Date()),Seq,"WFBLUP")
 # GWASPolyRunner(WFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_",Sys.Date()),Seq,"WFBLUP","endo","factor", "permute")
-GWASPolyRunner(WFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_",Sys.Date()),Seq,"WFBLUP","endo","factor", "M.eff")
+# GWASPolyRunner(WFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_",Sys.Date()),Seq,"WFBLUP","endo","factor", "M.eff")
 # 
-GWASPolyRunner(NFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),Seq,"NFBLUP")
+# GWASPolyRunner(NFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),Seq,"NFBLUP")
 GWASPolyRunner(NFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),Seq,"NFBLUP","endo","factor")
 
 # GWASPolyRunner(HWSPBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),Seq,"HWSPBlups")
@@ -668,6 +668,74 @@ GWASPolyRunner(NFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_
 }
 beep(2)
 proc.time() - ptm
+#########################
+###plot the gwas results###
+#########################
+#read in QTL results from the files made by GWASPolyRunner and GWASPolyVis
+GWASPolyRunVersion <- paste0("EndoFixedEffect_FDRThresh_",Sys.Date())
+DataSet <- "NFBLUP"
+Thresh = "FDR"
+#establish DF to hold the file readins 
+QTLList <- list()
+
+
+#Put these files into a dataframe
+#This is the originally created filename
+for(i in 1:7){
+  file <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,DataSet,GWASPolyRunVersion,"_",blups[i],"_",Thresh,"_QTLs.csv", sep = "")
+  if (file.size(file) > 100){ 
+  QTLList[[i]] <- read.csv(file)}}
+# for(trait in blups){QTLDF[[i]] <- read.table(paste0("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_SeqGNFBLUPEndoFixedEffect_FDRThresh_2021-08-19_",trait,"_FDR_QTLs.csv"))}
+QTLDF <- bind_rows(QTLList)
+QTLDFGen <- QTLDF[which(QTLDF$Model == "general"),]
+genoPosInfo <- geno[,3:4]
+chrMax <- vector()
+for(chr in 1:10){
+chrMax[chr] <- max(genoPosInfo$pos[which(genoPosInfo == chr)])}
+
+
+
+
+
+#### B ####
+# ## Loading in the data
+# SNP <- read.csv("significant_snp_locations_v2.csv", header=T, stringsAsFactors=F)
+# str(SNP)
+# #SNP <- SNP[c(-1:-2),]
+
+# make chromosome and end1 as numeric, trait as factor
+QTLDFGen$chr <- as.factor(QTLDFGen$Chrom)
+QTLDFGen$pos <- as.numeric(QTLDFGen$Position)
+QTLDFGen$Trait <- as.factor(QTLDFGen$Trait)
+# QTLDFGen$Trait <- factor(QTLDFGen$Trait, levels = c("Protein As Is", "Ankom Crude Fiber", "Ash As Is", "Fat As Is", 
+#                                           "Fiber As Is", "Fructose", "Sucrose", "Starch As Is", "Crude Fiber", 
+#                                           "N Combustion", "Ash", "N Kjeltec"))
+
+#create a new table of maize chromosome length and make it a data frame
+maize_chromosomes <- cbind(chromosome = c(1:10), start = c(rep(0,10)), end = c(chrMax))
+maize_chromosomes <- data.frame(maize_chromosomes)
+str(maize_chromosomes)
+
+png(paste0("Figures/GWASpoly/WSMDP_Carb_GWASpoly_",GWASPolyRunVersion,"_",DataSet,"_AllQTLPosition_GeneralModel.png"),width = 750,height =750)
+ggplot(QTLDFGen, aes(as.integer(Chrom), Position)) +
+  geom_segment(data = maize_chromosomes, aes(x = chromosome, xend = chromosome, y = start, yend = end), lineend = "round", color = "black", size = 16, inherit.aes = FALSE) +
+  geom_segment(data = maize_chromosomes, aes(x = chromosome, xend = chromosome, y = start, yend = end), lineend = "round", color = "white", size = 15, inherit.aes = FALSE) +
+  scale_y_reverse(breaks = seq(3.5e8, 0, -50e6), labels = c(350, seq(300, 0, -50)), limits = c(3.5e8, 0)) +
+  scale_x_continuous(breaks = c(1,2,3,4,5,6,7,8,9,10)) +
+  ylab("Genomic positions (Mb)") + xlab ("Chromosome") +
+  theme_classic() +
+  theme(axis.text.x = element_text(size=12), axis.title.x = element_text(size= 12), axis.text.y = element_text(size=11), axis.title.y = element_text(size=12)) +
+  theme(legend.text = element_text(size=12), legend.title = element_text(size=12)) +
+  geom_point(aes(color= Trait), position = position_dodge(width = 0.4), size = 3, alpha = 1) +
+  scale_color_brewer(palette = "Paired") +
+  theme(legend.title = element_blank(), legend.position = c(0.55,0.15), legend.direction = "horizontal", legend.text=element_text(size=10)) +
+  scale_color_manual(values = c("#d55e00",  "#cc79a7", "#0072b2", "#f0e442", "#009e73", "#000000", "#924900"))
+dev.off()
+
+
+
+
+
 
 #########################
 ###GapitKinship Matrix###
