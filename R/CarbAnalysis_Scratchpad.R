@@ -1451,3 +1451,163 @@ myPhenotype<-GAPIT.Phenotype.View(
 
 
 
+
+
+
+
+
+
+
+
+
+
+function (data, trait, qtl, fixed = NULL) 
+{
+  stopifnot(inherits(data, "GWASpoly.K"))
+  stopifnot(is.element(trait, names(data@scores)))
+  stopifnot(qtl$Model %in% c("additive", "general", 
+                             paste(1:(data@ploidy/2), "dom-ref", sep = "-"), 
+                             paste(1:(data@ploidy/2), "dom-alt", sep = "-")))
+  stopifnot(qtl$Marker %in% data@map$Marker)
+  not.miss <- which(!is.na(data@pheno[, trait]))
+  y <- data@pheno[not.miss, trait]
+  pheno.gid <- data@pheno[not.miss, 1]
+  geno.gid <- rownames(data@geno)
+  n.gid <- length(geno.gid)
+  n <- length(y)
+  Z <- matrix(0, n, n.gid)
+  Z[cbind(1:n, match(pheno.gid, geno.gid))] <- 1
+  X <- matrix(1, n, 1)
+  if (!is.null(fixed)) {
+    for (i in 1:nrow(fixed)) {
+      if (fixed$Type[i] == "factor") {
+        xx <- factor(data@fixed[not.miss, fixed$Effect[i]])
+        if (length(levels(xx)) > 1) {
+          X <- cbind(X, model.matrix(~x, data.frame(x = xx))[, 
+                                                             -1])
+        }
+      }
+      else {
+        X <- cbind(X, data@fixed[not.miss, fixed$Effect[i]])
+      }
+    }
+  }
+  chrom <- as.character(data@map$Chrom[match(qtl$Marker, data@map$Marker)])
+  makeLOCO <- function(K,exclude) {
+    #K is list
+    #exclude is vector of indices
+    n.chr <- length(K)
+    tmp <- K[[1]]*0
+    keep <- setdiff(1:n.chr,exclude)
+    for (i in keep) {
+      tmp <- tmp + K[[i]]
+    }
+    return(tmp/length(keep))
+  }
+  if (length(data@K) > 1) {
+    K <- makeLOCO(data@K, exclude = match(chrom, levels(data@map$Chrom)))
+  }
+  else {
+    K <- data@K[[1]]
+  }
+  n.qtl <- nrow(qtl)
+  S <- vector("list", n.qtl)
+  df <- integer(n.qtl)
+  X0 <- X
+  .design.score <- function(Mi,model,ploidy,min.MAF,max.geno.freq){
+    n <- length(Mi)
+    freq <- mean(Mi,na.rm=T)/ploidy
+    if (min(freq,1-freq) < min.MAF){
+      return(NULL)
+    } else {
+      if (model=="additive") {
+        geno.freq <- table(round(Mi))/n
+        if (max(geno.freq) <= max.geno.freq) {
+          return(matrix(Mi))
+        } else {
+          return(NULL)
+        }
+      } else {
+        Mi <- round(Mi)
+        if (model=="diplo-additive") {
+          Mi[which((Mi>0)&(Mi<ploidy))] <- ploidy/2
+          Mi <- Mi/(ploidy/2)
+          geno.freq <- table(Mi)/n
+          if (max(geno.freq) <= max.geno.freq) {
+            return(matrix(Mi))
+          } else {
+            return(NULL)
+          }
+        }
+        if (model=="diplo-general") {
+          Mi[(Mi>0)&(Mi<ploidy)] <- ploidy/2
+          Mi <- Mi/(ploidy/2)
+          geno.freq <- table(Mi)/n
+          if (max(geno.freq)<=max.geno.freq) {
+            tmp <- model.matrix(~x,data.frame(x=factor(Mi)))[,-1]
+            if (is.null(dim(tmp))) {
+              return(matrix(tmp))
+            } else {
+              return(tmp)
+            }
+          } else {
+            return(NULL)
+          }
+        }
+        if (length(grep("dom",model,fixed=T))>0) {
+          tmp <- strsplit(model,split="-",fixed=T)[[1]]
+          dom.order <- as.integer(tmp[1])
+          if (tmp[3]=="alt") {
+            Mi <- ifelse(Mi>=dom.order,1,0)
+          } else {
+            Mi <- ifelse(Mi<=ploidy-dom.order,0,1)
+          }
+          geno.freq <- table(Mi)/n
+          if (max(geno.freq) <= max.geno.freq) {
+            return(matrix(Mi))
+          } else {
+            return(NULL)
+          }
+        }
+        if (model=="general") {
+          geno.freq <- table(Mi)/n
+          if (max(geno.freq)<=max.geno.freq) {
+            tmp <- model.matrix(~x,data.frame(x=factor(Mi)))[,-1]
+            if (is.null(dim(tmp))) {
+              return(matrix(tmp))
+            } else {
+              return(tmp)
+            }
+          } else {
+            return(NULL)
+          }
+        }
+      }
+    }
+  }
+  for (i in 1:n.qtl) {
+    S[[i]] <- .design.score(data@geno[, qtl$Marker[i]], model = qtl$Model[i], 
+                            ploidy = data@ploidy, min.MAF = 0, max.geno.freq = 1)
+    stopifnot(!is.null(S[[i]]))
+    df[i] <- ncol(S[[i]])
+    X <- cbind(X, Z %*% S[[i]])
+  }
+  full.model <- mixed.solve(y = y, X = .make.full(X), Z = Z, 
+                            K = K, method = "ML")
+  pval <- R2 <- numeric(n.qtl)
+  for (i in 1:n.qtl) {
+    X <- X0
+    if (n.qtl > 1) {
+      for (j in setdiff(1:n.qtl, i)) {
+        X <- cbind(X, Z %*% S[[j]])
+      }
+    }
+    reduced.model <- mixed.solve(y = y, X = .make.full(X), 
+                                 Z = Z, K = K, method = "ML")
+    deviance <- 2 * (full.model$LL - reduced.model$LL)
+    pval[i] <- pchisq(q = deviance, df = df[i], lower.tail = FALSE)
+    R2[i] <- 1 - exp(-deviance/n)
+  }
+  return(data.frame(data@map[match(qtl$Marker, data@map$Marker), 
+                             1:3], Model = qtl$Model, R2 = R2, pval = pval))
+}

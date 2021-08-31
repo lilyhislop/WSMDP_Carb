@@ -64,6 +64,8 @@ source("R/GWASPolyRunner.R")
 source("R/WritePhenoGenotoFile.R")
 source("R/PCAFigureCreation.R")
 source("R/hmpToNumeric.R")
+source("getmedianLDVis.R")
+source("getpercentileLDVis.R")
 
 #########################
 ###Read in sample data###
@@ -358,35 +360,46 @@ write.csv(file = "Data/OutputtedData/CleanedInfoNFOutput.csv",CleanedInfoNF)
 #########################
 
 linearmodel <- function(SampleDFtoModel,TitleAddendum){
+  #Set dataframe columns to factors
   cols <- c('superblock','Col', 'Row', 'Year', 'Envi', 'Check', 'block', 'Rep', 'endo', 'PlotNum' )
   SampleDFtoModel[cols] <- lapply(SampleDFtoModel[cols], as.factor)
 
+  #Establish a file to output the statistical analysis results to
   statsfile <- paste0("Data/OutputtedData/WSMDP_CarbPheno_stats_",TitleAddendum,".txt")
+  #write a header in that stats file
   cat(paste0("Phenotypic Statistics for the Carbohydrates of ",TitleAddendum," Through Mixed Linear Modeling."), file=statsfile, sep="\n", append=FALSE)
 
+  #make a dataframe to hold the BLUPs after the models are done
   blupHolder <- data.frame("Variety" = sort(unique(SampleDFtoModel$BookInbred)))
-  c1 <- which(colnames(SampleDFtoModel)=="Starch")
-  c2 <- which(colnames(SampleDFtoModel)=="Total.Sugar")
-  carbs <- colnames(SampleDFtoModel)[c1:c2]
+  #make a dataframe to hold the variances due to different factors
   VarDF <- data.frame("Carb" = colnames(SampleDFtoModel)[5:11],"Variety" = rep(NA,7),"Envi" = rep(NA,7),"Variety:Envi" = rep(NA,7),  "superblock" = rep(NA,7), "Col" = rep(NA,7),"Row" = rep(NA,7),"block" = rep(NA,7),"Residuals"= rep(NA,7))
   
-  for(j in 1:length(carbs)){
+  
+  #figure out where the traits start and stop
+  c1 <- which(colnames(SampleDFtoModel)=="Starch")
+  c2 <- which(colnames(SampleDFtoModel)=="Total.Sugar")
+  #write those traits to a vector
+  carbs <- colnames(SampleDFtoModel)[c1:c2]
+  
+#Itteratite thorugh all the traits
 
-  #output the statistics about this trait
+  for(j in 1:length(carbs)){
+    #output the statistics about this trait to the stats file
     summary <- summary(SampleDFtoModel[,c1+j-1], )
     out <- capture.output(summary)
     cat(out, file=statsfile, sep="\n", append=TRUE)
 
-    #####Modeling
+    #####Establish Model
     modelpastecheck<-  paste0(carbs[j], " ~ (1|BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)")
 
     # Use check if there enough checks in the model set
     if(length(unique(SampleDFtoModel$Check))>1){
     modelpastecheck<-  paste0(carbs[j], " ~ Check + (1|BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)")
     }
+    #Output the model to the stats file
     cat(modelpastecheck, file=statsfile, sep="\n", append=TRUE)
 
-
+    #Run the Model
     model <- lmer(modelpastecheck,
                   data=SampleDFtoModel, REML = TRUE)
     # Decreasing stopping tolerances
@@ -399,6 +412,7 @@ linearmodel <- function(SampleDFtoModel,TitleAddendum){
   blupHolder <- merge(blupHolder, tempBlup, by = "Variety", all = TRUE)
   colnames(blupHolder)[j+1] <- paste0(carbs[j],".BLUP")
 
+  
   # CheckAssumptions
   png(paste0("Figures/WSMDP_LinearModel_assumptions_",TitleAddendum,"_", carbs[j], ".png"), width = 1000, height = 500)
   par(mfrow=c(1,3))
@@ -469,6 +483,7 @@ linearmodel <- function(SampleDFtoModel,TitleAddendum){
     VarDF[j,i+1] <- (out$`Sum Sq`[i]/SStotal)}
   
   }
+
   #######Graph the different variances explained by different factors######
   VarDFMelt <- reshape2::melt(VarDF)
   png(paste("Figures/WSMDP_AllNIRPred_MixedEqn_PercentVarianceExplainedby_Factors_",TitleAddendum,".png",sep=""), width = 1000, height = 500)
@@ -497,6 +512,7 @@ linearmodel <- function(SampleDFtoModel,TitleAddendum){
 
 WFBlups <- linearmodel(CleanedInfoWF,"CleanedOutliersWF")
 NFBlups <- linearmodel(CleanedInfoNF,"CleanedOutliersNF")
+
 
 CleanedInfoHWSP_wexcess <- CarbOutlierCleanup(HWSPs,"HWSP",alpha = 0.05)
 CleanedInfoLWSPNF_wexcess <- CarbOutlierCleanup(LWSPNFs,"LWSPNFs",alpha = 0.05)
@@ -586,6 +602,7 @@ proc.time() - ptm
 outfilename <- "WSMDP_SeqG"
 outfile <- paste("Data/RawData/",outfilename ,sep="")
 snpgdsGDS2PED(PreLDGeno, outfile, snp.id = PostLDGeno.id)
+snpgdsGDS2PED(PreLDGeno, paste0("Data/RawData/",outfilename,"_NoLD_InbredsPruned"), sample.id = matching$GenoName)
 snpgdsClose(PreLDGeno)
 
 
@@ -706,7 +723,7 @@ chrMax[chr] <- max(genoPosInfo$pos[which(genoPosInfo == chr)])}
 # make chromosome and end1 as numeric, trait as factor
 QTLDFGen$chr <- as.factor(QTLDFGen$Chrom)
 QTLDFGen$pos <- as.numeric(QTLDFGen$Position)
-QTLDFGen$Trait <- as.factor(QTLDFGen$Trait)
+QTLDFGen$Trait <- as.factor(paste0(QTLDFGen$Trait," (",QTLDFGen$Threshold, " LOD)"))
 # QTLDFGen$Trait <- factor(QTLDFGen$Trait, levels = c("Protein As Is", "Ankom Crude Fiber", "Ash As Is", "Fat As Is", 
 #                                           "Fiber As Is", "Fructose", "Sucrose", "Starch As Is", "Crude Fiber", 
 #                                           "N Combustion", "Ash", "N Kjeltec"))
@@ -715,6 +732,7 @@ QTLDFGen$Trait <- as.factor(QTLDFGen$Trait)
 maize_chromosomes <- cbind(chromosome = c(1:10), start = c(rep(0,10)), end = c(chrMax))
 maize_chromosomes <- data.frame(maize_chromosomes)
 str(maize_chromosomes)
+
 
 png(paste0("Figures/GWASpoly/WSMDP_Carb_GWASpoly_",GWASPolyRunVersion,"_",DataSet,"_AllQTLPosition_GeneralModel.png"),width = 750,height =750)
 ggplot(QTLDFGen, aes(as.integer(Chrom), Position)) +
@@ -728,10 +746,44 @@ ggplot(QTLDFGen, aes(as.integer(Chrom), Position)) +
   theme(legend.text = element_text(size=12), legend.title = element_text(size=12)) +
   geom_point(aes(color= Trait), position = position_dodge(width = 0.4), size = 3, alpha = 1) +
   scale_color_brewer(palette = "Paired") +
-  theme(legend.title = element_blank(), legend.position = c(0.55,0.15), legend.direction = "horizontal", legend.text=element_text(size=10)) +
+  theme(legend.title = element_blank(), legend.position = c(0.55,0.15), legend.direction = "horizontal", legend.text=element_text(size=12)) +
   scale_color_manual(values = c("#d55e00",  "#cc79a7", "#0072b2", "#f0e442", "#009e73", "#000000", "#924900"))
 dev.off()
 
+
+
+#########################
+###Compare BLUPS by Endosperm###
+#########################
+#remove the single inbred with SE as its mutant type from the analysis
+NFBlupsGenoJustPheno <- NFBlupsGenoJustPheno[-97,]
+
+#establish a file to put the results in
+EndoCompareFile <- paste0("Data/OutputtedData/WSMDP_CarbBLUPComparedbyEndo_NFBlup.txt")
+
+#iterate through all the traits
+for(blup in blups){
+  #paste in a header
+  cat(paste0("Compare the ",blup," by endosperm mutant groups."), file=EndoCompareFile, sep="\n", append=TRUE)
+  EndoCompare<-aov(NFBlupsGenoJustPheno[,blup]~NFBlupsGenoJustPheno$endo)
+  # EndoCompare<-aov(CleanedInfoNF$Starch~CleanedInfoNF$endo)
+  
+  #none of these residuals are normal. I don't know what. UUUUgh
+  # plot(EndoCompare, which=2)
+  # shapiro.test(EndoCompare$residuals)
+  # hist(EndoCompare$residuals)
+  # plot(EndoCompare, which=1)
+  
+  #find the least square means by group
+  LSD<-lsmeans(EndoCompare, ~endo)
+  #get the significant differences between the least square means
+  LSM<-cld(LSD,Letters = LETTERS, decreasing=T)
+
+  #output that data
+  out <- capture.output(LSM)
+  cat(out, file=EndoCompareFile, sep="\n", append=TRUE)
+
+}
 
 
 
@@ -844,3 +896,108 @@ pheno <- WFBlupsGenoJustPheno
     # myCV <- read.table(paste('/local/workdir/mb2446/GWAS/Covariates/KernelType.txt', sep=''), header=T, sep='\t')
     res <- GAPIT( Y = curr.pheno, G = geno, KI=myKI, PCA.total=3, plot.style="Ocean")
   }
+
+
+
+
+#########################
+### LD Visualization ###
+#########################
+
+
+#Import the name of the file. This matrix was calculated on Tassel using the Linkage Disequilibrium tool and the output was saved as a text file
+#since the resulting text file was 8GB, it was pruned using AWK on linux to only include the columns for distance and r2 and only those with results, non with NA as the r2
+LDMatrixfileName <- "WSMDP_SeqG_NoLD_InbredsPruned_LDDecay_200Window_JustLociDistR2_NoNAs"
+fullpath <- paste("Data/RawData/",LDMatrixfileName,".txt",sep = "")
+#Read in the .txt LD matrix file
+readin <- fread(fullpath, sep='\t')
+
+#Uncomment if all the chromosomes want to be visualized individually, or just the whole geno.
+# chrmiterant <- c("All",6)
+chrmiterant <- c("All")
+for(j in 1:length(chrmiterant)){
+  chrmnum = chrmiterant[j]
+  data <- readin
+  
+  #Look at only one chromosome at a time
+  if(chrmnum != "All"){
+    data <- data[data$Locus1 == chrmnum]}
+  
+  #uncomment these if the Matrix file has more than two columns. Eliminate any columns not r2 or dist
+  # data <- data[,c(13,14)]
+  # data <- data[,c(3,4)]
+  data <- data[,c(5,6)]
+  
+  #seperate the distances between chromosomes into 20 bins
+  numbins = 20
+  #change this if wanting to not log transfrom the data
+  log_transform = TRUE
+  absolute_distance = TRUE
+  
+  #change this if you want to eliminate any comparisons less than 500bp apart
+  removefirst500 = FALSE
+  names(data)=c("dist","rsq")
+  data$dist <-as.numeric(data$dist)
+  medians=get.median(data, log_transform=log_transform, numbins = numbins, removefirst500 = removefirst500)
+  write.table(medians, file="medians.txt",quote=FALSE,sep="\t", col.names=TRUE, row.names=T)
+  
+  probs=c(0.5, 0.6, 0.7, 0.8, 0.9)
+  percents=get.percentiles(data, probs=probs, log_transform=log_transform, numbins = numbins, removefirst500 = removefirst500)
+  write.table(percents, file="percents.txt",quote=FALSE,sep="\t", col.names=TRUE, row.names=T)
+  mean=tapply(X=data$rsq, INDEX=cut(data$dist, breaks=numbins), FUN=mean, na.rm=T)
+  
+  percents=read.table('percents.txt',sep='\t',header=T,row.names=1)
+  medians=read.table('medians.txt',sep='\t',header=T,row.names=1)
+  probs=c('50%','60%','70%','80%','90%')
+  colnames(percents) <- probs
+  ## Add all together
+  row.names(percents)[20]
+  
+  #the rownames are the starting and end distance of each bin. convert that into a more usable format
+  xvals = as.numeric(sub(rownames(percents), pattern="\\((.+),.+", repl="\\1"))
+  xvals = c(xvals,8.49)
+  mean.xvals <- NULL
+  
+  #find the middle between each bin border. This will be used for the Xlabel
+  for (i in 1:c(length(xvals)-1)){
+    mean.xvals <- c(mean.xvals,mean(c(xvals[i],xvals[i+1])))
+  }
+  
+  #determine the file name to save the visualization
+  if(removefirst500 == TRUE){
+    outfile = paste("Figures/LD_20bins_less500bprmv_from",LDMatrixfileName,"_Chrm",chrmnum,".pdf",sep = "")}
+  if(removefirst500 == FALSE){
+    outfile = paste("Figures/LD_20bins_from",LDMatrixfileName,"_Chrm",chrmnum,".pdf",sep = "")
+  }
+  
+  #plot and save the visualization
+  {pdf(outfile, pointsize=8,family='serif',width = 5,height = 3.5)
+  # {png(outfile, pointsize=8,family='serif',width = 500,height = 300)
+    lwd=1
+    ylim=c(0,1)
+    xlim= c(0, range(mean.xvals)[2] * 1.1)	# Increase the upper xlim by a little bit
+    par(cex=1,mar=c(5,5,1,1))
+    if(log_transform == TRUE){
+      xlabel = "Physical distance (log scale)"
+    }else{
+      xlabel = "Distance"
+    }
+    plot(NA, xlim=xlim, ylim=ylim, xlab=xlabel, ylab=bquote("Linkage disequilibrium"~(italic(r)^2)), xaxt="n")	#CHD added
+    if(log_transform == TRUE){
+      x_ticks = 0:8
+      x_labels=c("1 bp","10 bp","0.1 kb","1 kb","10 kb","100 kb","1 Mb","10 Mb","100 Mb") #Jason original
+    } else{
+      x_ticks = seq(from=xlim[1], to=xlim[2], length.out=5)
+      x_labels = x_ticks
+    }
+    axis(side=1, at=x_ticks, labels=x_labels)
+    for(j in 1:length(probs)){
+      lines(x=mean.xvals, y=percents[,j], lwd=lwd, col='black', lty=j)
+    }
+    text(x=sort(xvals)[8], y=c(0.11,0.30,0.46,0.68,0.9), labels=colnames(percents), pos=4, cex = 1)
+    dev.off()
+  }
+}
+
+
+

@@ -1,4 +1,12 @@
 GWASPolyRunner <- function(phenoSubsetGeno,geno,trait, RunName, Seq, DataSet,fixedEffect = NULL,fixedType = NULL, Thresh = "FDR"){
+# #DEBugging Info
+# phenoSubsetGeno <- NFBlupsGenoJustPheno
+# trait <- blup
+# RunName <- paste0("EndoFixedEffect_FDRThresh_",Sys.Date())
+# DataSet <- "NFBLUP"
+# fixedEffect <- "endo"
+# fixedType <- "factor"
+#  Thresh = "FDR"
 
 GWASPolyRunVersion <- RunName
 

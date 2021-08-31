@@ -1,4 +1,5 @@
 GWASPolyVis <- function(GWASPolyRunVersion,trait,data3,Seq,DataSet, Thresh = "FDR"){
+  
   visfileprefix <- paste0("Figures/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,"_",DataSet,"_",GWASPolyRunVersion,"_",trait,"_",Thresh)
   
   QQplotfile <- paste(visfileprefix,"_QQplot_General.png", sep = "")
@@ -11,6 +12,29 @@ GWASPolyVis <- function(GWASPolyRunVersion,trait,data3,Seq,DataSet, Thresh = "FD
   data4 <- set.threshold(data3,method=Thresh,level=0.05)
   #Here's the QTLS found
   print(get.QTL(data4))
+  data5 <- get.QTL(data4) 
+  knitr::kable(data5)
+  # Models <- data5$Model
+  # Markers <- data5$Marker[which(data5$Score >= data5$Threshold)] ## this one works!!!
+  # trait <- data5$Trait
+  data5$R2 <- ""
+  fit.ans <- fit.QTL(data=data4,trait=trait,
+                     qtl=data5[,c("Marker","Model")],
+                     fixed=data.frame(Effect="endo",Type="factor"))
+
+  # knitr::kable(fit.ans,digits=3)
+  
+  # p <- LD.plot(data4)
+  # p + xlim(0,30) 
+  # 
+  # system.time(beep(for (i in 1:nrow(data5)) {
+  #   R2 <- fit.QTL(data=data4,trait=trait[i],qtl=data.frame(Q1=c(Markers[i], Models[i])))
+  #   data5[i,]$R2 <- R2[,3]
+  #   print(paste(trait[i], i, "of", nrow(data5))) # "of 97")
+  #   print(data5[i,])
+  # }, sound = "fanfare")) # takes 10 minutes to print everything <3 <3 <3
+  # 
+  # data5
 
   # print(fit.QTL(data2, trait))
   
@@ -53,7 +77,7 @@ GWASPolyVis <- function(GWASPolyRunVersion,trait,data3,Seq,DataSet, Thresh = "FD
   write.GWASpoly(data4, trait, filename=Effectfile, what = "effects", delim = ",")
   
   QTLfile <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,DataSet,GWASPolyRunVersion,"_",trait,"_",Thresh,"_QTLs.csv", sep = "")
-  write.table(get.QTL(data4),
+  write.table(fit.ans,
               append = FALSE,
               file = QTLfile,
               sep = ",",
