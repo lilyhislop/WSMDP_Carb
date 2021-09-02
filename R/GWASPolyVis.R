@@ -13,14 +13,11 @@ GWASPolyVis <- function(GWASPolyRunVersion,trait,data3,Seq,DataSet, Thresh = "FD
   #Here's the QTLS found
   print(get.QTL(data4))
   data5 <- get.QTL(data4) 
-  knitr::kable(data5)
+  # knitr::kable(data5)
   # Models <- data5$Model
   # Markers <- data5$Marker[which(data5$Score >= data5$Threshold)] ## this one works!!!
   # trait <- data5$Trait
-  data5$R2 <- ""
-  fit.ans <- fit.QTL(data=data4,trait=trait,
-                     qtl=data5[,c("Marker","Model")],
-                     fixed=data.frame(Effect="endo",Type="factor"))
+  
 
   # knitr::kable(fit.ans,digits=3)
   
@@ -75,13 +72,25 @@ GWASPolyVis <- function(GWASPolyRunVersion,trait,data3,Seq,DataSet, Thresh = "FD
   Effectfile <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,DataSet,GWASPolyRunVersion,"_",trait,"_",Thresh,"_effects.csv", sep = "")
   write.GWASpoly(data4, trait, filename=Scoresfile, what = "scores", delim = ",")
   write.GWASpoly(data4, trait, filename=Effectfile, what = "effects", delim = ",")
-  
-  QTLfile <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,DataSet,GWASPolyRunVersion,"_",trait,"_",Thresh,"_QTLs.csv", sep = "")
+  data5File <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,DataSet,GWASPolyRunVersion,"_",trait,"_",Thresh,"_SignificantQTL.csv", sep = "")
+  write.table(data5,
+              append = FALSE,
+              file = data5File,
+              sep = ",",
+              dec = ".",
+              row.names = FALSE,
+              col.names = TRUE)
+   if(length(data5)>0){
+    fit.ans <- fit.QTL(data=data4,trait=trait,
+                       qtl=data5[,c("Marker","Model")],
+                       fixed=data.frame(Effect="endo",Type="factor"))
+  QTLfile <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,DataSet,GWASPolyRunVersion,"_",trait,"_",Thresh,"_QTLswithEffects.csv", sep = "")
   write.table(fit.ans,
               append = FALSE,
               file = QTLfile,
               sep = ",",
               dec = ".",
               row.names = FALSE,
-              col.names = TRUE)
+              col.names = TRUE)}
+
 }

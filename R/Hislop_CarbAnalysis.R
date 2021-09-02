@@ -23,6 +23,7 @@ library(lme4)
 library(ggplot2)#for making pretty graphs
 library(ggpmisc)
 library(grDevices)
+library(multcomp)
 library(tidyr) #for separate
 library(stringr)#str_remove
 library(psych)
@@ -35,8 +36,8 @@ library(data.table) #for fread
 library("VariantAnnotation")
 library("snpStats")
 library("compiler") #needed to make GAPIT work
-source("http://zzlab.net/GAPIT/gapit_functions.txt")
-source("http://zzlab.net/FarmCPU/FarmCPU_functions.txt")
+# source("http://zzlab.net/GAPIT/gapit_functions.txt")
+# source("http://zzlab.net/FarmCPU/FarmCPU_functions.txt")
 library("devtools")#for intsalling from github
 install_github("jendelman/GWASpoly")
 library(GWASpoly)#for running Gwas
@@ -64,8 +65,8 @@ source("R/GWASPolyRunner.R")
 source("R/WritePhenoGenotoFile.R")
 source("R/PCAFigureCreation.R")
 source("R/hmpToNumeric.R")
-source("getmedianLDVis.R")
-source("getpercentileLDVis.R")
+source("R/getmedianLDVis.R")
+source("R/getpercentileLDVis.R")
 
 #########################
 ###Read in sample data###
@@ -180,6 +181,7 @@ LWSPNFsDF <- AgPredOutput(StarchDF = CarbDF[[5]], SugDF = CarbDF[[6]], condense 
 InfoCombination <- function(NIRDF, SampleInfoDF, BookInfoDF){
   OutDF <- NIRDF
   OutDF$endo <- SampleInfoDF$endo[match(NIRDF$NIRBase, SampleInfoDF$NIRBase, nomatch = NA)]
+  OutDF$endo[which(OutDF$endo == "SE")] <- "field"
   OutDF$Variety <- SampleInfoDF$Variety[match(NIRDF$NIRBase, SampleInfoDF$NIRBase, nomatch = NA)]
   OutDF$BookInbred <- BookInfoDF$Inbred[match(NIRDF$NIRBase, BookInfoDF$NIRBase, nomatch = NA)]
   OutDF$PlotNum <- NIRDF$Row 
@@ -236,124 +238,134 @@ CleanedInfoNF <- subset(CleanedInfoNF_wexcess, !is.na(IsExperimental))
 write.csv(file = "Data/OutputtedData/CleanedInfoWFOutput.csv",CleanedInfoWF)
 write.csv(file = "Data/OutputtedData/CleanedInfoNFOutput.csv",CleanedInfoNF)
 
-# #revisualize the dataframes 
-# CarbDataFrameVis(CleanedInfoWF,"WithField_Cleaned")
-# CarbDataFrameVis(CleanedInfoNF,"NoField_Cleaned")
-# 
-# #write the names of the varieties used to a csv file so we can find the corresponding GBS data
-# write.csv(file = "Data/OutputtedData/InbredsWithinWSMDPCarbDataNF.csv",unique(CleanedInfoNF[c("Variety", "endo")]))
-# write.csv(file = "Data/OutputtedData/InbredsWithinWSMDPCarbDataWF.csv",unique(CleanedInfoWF[c("Variety", "endo")]))
-# 
-# #########################
-# ###Validate that the NIR Equation is good###
-# #########################
-# 
-# #######Equation Validation!##############
-# #Now I have a variable that has all the projected values, for the values used to calibrate the equations. WHat are the statistics on that?
-# #set carb to a number 1:7. carb <- c(Fructose, Glucose, Sucrose, Total Sugar, Starch, Total Polysaccharide, WSP)
-# #this functions needs to have the data frame set up so the carbs being compared are directly next to eachother 
-# EqnStats <- function(DF){
-#   
-#   #establish dataframe used to record stats
-#   Out <- data.frame(Carb = c("Fructose", "Glucose", "Sucrose", "Total Sugar", "Starch", "Total Polysaccharide", "WSP"),
-#                     RMSEP = rep(NA,7), 
-#                     bias = rep(NA,7),
-#                     SEE = rep(NA,7),
-#                     slope = rep(NA,7),
-#                     intercept = rep(NA,7),
-#                     R2 = rep(NA,7))
-#   dfpos <- c(2,4,6,8,10,12,14)
-#   for(carb in 1:7){
-#     #Calculated the RMSEP
-#     Out$RMSEP[carb] <- sqrt(sum((DF[,dfpos[carb]]- DF[,dfpos[carb]-1])^2, na.rm = TRUE)/dim(DF)[1])
-#     #Calculate the Bias
-#     Out$bias[carb] <- mean(DF[,dfpos[carb]], na.rm = TRUE) - mean(DF[,dfpos[carb]-1],na.rm = TRUE)
-#     #Calculated the SEE
-#     Out$SEE[carb] <- sqrt((dim(DF)[1]/(dim(DF)[1]-1))*(Out$RMSEP[carb]^2-Out$bias[carb]^2))
-#     Out$Carb[carb] <- colnames(DF[dfpos[carb]])
-#   }
-#   return(Out)
-# }
-# 
-# 
-# #Visualize these
-# R2Vis <- function(DF, label, Out){
-#   dfpos <- c(2,4,6,8,10,12,14)
-#   Carb = c("Fructose", "Glucose", "Sucrose", "Total Sugar", "Starch", "Total Polysaccharide", "WSP")
-#   for(i in 1:7){
-#     carbCompare  <- lm(DF[,dfpos[i]]~ DF[,dfpos[i]-1])
-#     carbFileName <- paste("Figures/wsmdp2021_",label,Carb[i],"_NIR_Eqn_Prediction_vis.png", sep = "")
-#     png(carbFileName)
-#     par(mfrow=c(1,1))
-#     print(summary(carbCompare))
-#     rsqua <- summary(carbCompare)$r.squared
-#     plot(DF[,dfpos[i]]~ DF[,dfpos[i]-1],
-#          pch = 16,
-#          xlab = paste(Carb[i]," wetlab (%)",sep = ""),
-#          ylab = paste(Carb[i]," NIR Prediction (%)",sep = ""),
-#          main = paste("Actual Vs Predicted ",Carb[i]," r^2 =",trunc(rsqua*10^3)/10^3,sep = ""))
-#     abline(coefficients(carbCompare), lwd = 2, lty = 2, col = "red")
-#     # text(15,max(Prediction[,i])-5,labels = paste("r^2 =",trunc(rsqua*10^3)/10^3))
-#     
-#     Out$slope[i] <- trunc(10^3*summary(carbCompare)$coefficients[2])/10^3
-#     Out$intercept[i] <- trunc(10^3*summary(carbCompare)$coefficients[1])/10^3
-#     Out$R2[i] <- trunc(10^3*summary(carbCompare)$r.squared)/10^3
-#     
-#     
-#     dev.off()
-#   }
-#   return(Out)
-# }
-# 
-# 
-# ######Visualize the validation. Look at all the samples that were wetlabbed and used to calibrate the equation
-# wetlab <- read.csv("Data/WSMDP_Wetlab_StarchSugarData_FormatedForWinISI_WithR.csv")
-# wetlabDF <- wetlab[,c(1,6:8,3,2,4,5)]
-# 
-# WLLabels <- c("Samples","Starch_WL","Total.Polysaccharides_WL", "WSP_WL","Glucose_WL","Fructose_WL","Sucrose_WL","Total.Sugar_WL")
-# colnames(wetlabDF) <- WLLabels 
-# 
-# WFWL <- merge(CleanedInfoWF, wetlabDF, by = "Samples")
-# NFWL <- merge(CleanedInfoNF, wetlabDF, by = "Samples")
-# alternatingorder <- c(1,5,28,6,29,7,30,8,31,9,32,10,33,11,34)
-# WFWLdf <- WFWL[,alternatingorder]
-# NFWLdf <- NFWL[,alternatingorder]
-# WFWLdfEqnStatsR <- R2Vis(WFWLdf[,2:15], "CleanedWSPeqnWF_PredVsWetlab_for_Calibration_Samples", EqnStats(WFWLdf[,2:15]))
-# NFWLdfEqnStatsR <- R2Vis(NFWLdf[,2:15], "CleanedWSPeqnNF_PredVsWetlab_for_Calibration_Samples", EqnStats(NFWLdf[,2:15]))
-# 
-# write.csv(WFWLdfEqnStatsR, "Data/OutputtedData/EqnFitStatisticsAllWetlabWF.csv")
-# write.csv(NFWLdfEqnStatsR, "Data/OutputtedData/EqnFitStatisticsAllWetlabNF.csv")
-# 
-# ######Visualize the validation. Only the samples that were NOT used to create the equation
-# valwetlab <- read.csv("Data/WSMDP_EqnValidation_Wetlab_Data.csv")
-# valwetlabDF <- valwetlab[-2]
-# colnames(valwetlabDF)[1] <- "Samples"
-# 
-# WFValWL <- merge(CleanedInfoWF, valwetlabDF, by = "Samples")
-# NFValWL <- merge(CleanedInfoNF, valwetlabDF, by = "Samples")
-# WFValWLdf <- WFValWL[,alternatingorder]
-# NFValWLdf <- NFValWL[,alternatingorder]
-# WFValWLdfEqnStatsR <- R2Vis(WFValWLdf[,2:15], "CleanedWSPeqnWF_PredVsWetlab_ValidationSubset", EqnStats(WFValWLdf[,2:15]))
-# NFValWLdfEqnStatsR <- R2Vis(NFValWLdf[,2:15], "CleanedWSPeqnNF_PredVsWetlab_ValidationSubset", EqnStats(NFValWLdf[,2:15]))
-# 
-# write.csv(WFValWLdfEqnStatsR, "Data/OutputtedData/EqnFitStatisticsValidationWF.csv")
-# write.csv(NFValWLdfEqnStatsR, "Data/OutputtedData/EqnFitStatisticsValidationNF.csv")
-# 
-# 
-# ####With Jared WetlabDATA
-# # HWSPsJ <- HWSPsDF[which(HWSPsDF$endo == "su1" | HWSPsDF$endo == "se" | is.na(HWSPsDF$endo)),]
-# # alternatingorder2 <- c(1,5,26,6,27,7,28,8,29,9,30,10,31,11,32)
-# # CarbInfoExpandedWFJDF <- rbind(HWSPsJ,LWSPWFs)
-# # CarbInfoExpandedNFJDF <- rbind(HWSPsJ,LWSPNFs)
-# # WFValWLJ <- merge(CarbInfoExpandedWFJDF, valwetlabDF, by = "Samples")
-# # NFValWLJ <- merge(CarbInfoExpandedNFJDF, valwetlabDF, by = "Samples")
-# # WFValWLJdf <- WFValWLJ[,alternatingorder2]
-# # NFValWLJdf <- NFValWLJ[,alternatingorder2]
-# # WFValWLdfJEqnStatsR <- R2Vis(WFValWLJdf[,2:15], "UnCleanedWSPeqnWF_PredVsWetlab_ValidationSubset_WJared", EqnStats(WFValWLdf[,2:15]))
-# # NFValWLdfJEqnStatsR <- R2Vis(NFValWLJdf[,2:15], "UnCleanedWSPeqnNF_PredVsWetlab_ValidationSubset_WJared", EqnStats(NFValWLdf[,2:15]))
-# # 
-# # write.csv(WFValWLdfJEqnStatsR, "Data/OutputtedData/EqnFitStatisticsValidationWF_WJared.csv")
-# # write.csv(NFValWLdfJEqnStatsR, "Data/OutputtedData/EqnFitStatisticsValidationNF_WJared.csv")
+
+#clean up the predictive seperated data frames. Reassign or delete outliers
+CleanedInfoHWSP_wexcess <- CarbOutlierCleanup(HWSPs,"HWSP",alpha = 0.05)
+CleanedInfoLWSPNF_wexcess <- CarbOutlierCleanup(LWSPNFs,"LWSPNFs",alpha = 0.05)
+CleanedInfoLWSPWF_wexcess <- CarbOutlierCleanup(LWSPWFs,"LWSPWFs",alpha = 0.05)
+
+CleanedInfoHWSP <- subset(CleanedInfoHWSP_wexcess, !is.na(IsExperimental))
+CleanedInfoLWSPNF <- subset(CleanedInfoLWSPNF_wexcess, !is.na(IsExperimental))
+CleanedInfoLWSPWF <- subset(CleanedInfoLWSPWF_wexcess, !is.na(IsExperimental))
+
+#revisualize the dataframes
+CarbDataFrameVis(CleanedInfoWF,"WithField_Cleaned")
+CarbDataFrameVis(CleanedInfoNF,"NoField_Cleaned")
+
+#write the names of the varieties used to a csv file so we can find the corresponding GBS data
+write.csv(file = "Data/OutputtedData/InbredsWithinWSMDPCarbDataNF.csv",unique(CleanedInfoNF[c("Variety", "endo")]))
+write.csv(file = "Data/OutputtedData/InbredsWithinWSMDPCarbDataWF.csv",unique(CleanedInfoWF[c("Variety", "endo")]))
+
+#########################
+###Validate that the NIR Equation is good###
+#########################
+
+#######Equation Validation!##############
+#Now I have a variable that has all the projected values, for the values used to calibrate the equations. WHat are the statistics on that?
+#set carb to a number 1:7. carb <- c(Fructose, Glucose, Sucrose, Total Sugar, Starch, Total Polysaccharide, WSP)
+#this functions needs to have the data frame set up so the carbs being compared are directly next to eachother
+EqnStats <- function(DF){
+
+  #establish dataframe used to record stats
+  Out <- data.frame(Carb = c("Fructose", "Glucose", "Sucrose", "Total Sugar", "Starch", "Total Polysaccharide", "WSP"),
+                    RMSEP = rep(NA,7),
+                    bias = rep(NA,7),
+                    SEE = rep(NA,7),
+                    slope = rep(NA,7),
+                    intercept = rep(NA,7),
+                    R2 = rep(NA,7))
+  dfpos <- c(2,4,6,8,10,12,14)
+  for(carb in 1:7){
+    #Calculated the RMSEP
+    Out$RMSEP[carb] <- sqrt(sum((DF[,dfpos[carb]]- DF[,dfpos[carb]-1])^2, na.rm = TRUE)/dim(DF)[1])
+    #Calculate the Bias
+    Out$bias[carb] <- mean(DF[,dfpos[carb]], na.rm = TRUE) - mean(DF[,dfpos[carb]-1],na.rm = TRUE)
+    #Calculated the SEE
+    Out$SEE[carb] <- sqrt((dim(DF)[1]/(dim(DF)[1]-1))*(Out$RMSEP[carb]^2-Out$bias[carb]^2))
+    Out$Carb[carb] <- colnames(DF[dfpos[carb]])
+  }
+  return(Out)
+}
+
+
+#Visualize these
+R2Vis <- function(DF, label, Out){
+  dfpos <- c(2,4,6,8,10,12,14)
+  Carb = c("Fructose", "Glucose", "Sucrose", "Total Sugar", "Starch", "Total Polysaccharide", "WSP")
+  for(i in 1:7){
+    carbCompare  <- lm(DF[,dfpos[i]]~ DF[,dfpos[i]-1])
+    carbFileName <- paste("Figures/wsmdp2021_",label,Carb[i],"_NIR_Eqn_Prediction_vis.png", sep = "")
+    png(carbFileName)
+    par(mfrow=c(1,1))
+    print(summary(carbCompare))
+    rsqua <- summary(carbCompare)$r.squared
+    plot(DF[,dfpos[i]]~ DF[,dfpos[i]-1],
+         pch = 16,
+         xlab = paste(Carb[i]," wetlab (%)",sep = ""),
+         ylab = paste(Carb[i]," NIR Prediction (%)",sep = ""),
+         main = paste("Actual Vs Predicted ",Carb[i]," r^2 =",trunc(rsqua*10^3)/10^3,sep = ""))
+    abline(coefficients(carbCompare), lwd = 2, lty = 2, col = "red")
+    # text(15,max(Prediction[,i])-5,labels = paste("r^2 =",trunc(rsqua*10^3)/10^3))
+
+    Out$slope[i] <- trunc(10^3*summary(carbCompare)$coefficients[2])/10^3
+    Out$intercept[i] <- trunc(10^3*summary(carbCompare)$coefficients[1])/10^3
+    Out$R2[i] <- trunc(10^3*summary(carbCompare)$r.squared)/10^3
+
+
+    dev.off()
+  }
+  return(Out)
+}
+
+
+######Visualize the validation. Look at all the samples that were wetlabbed and used to calibrate the equation
+wetlab <- read.csv("Data/WSMDP_Wetlab_StarchSugarData_FormatedForWinISI_WithR.csv")
+wetlabDF <- wetlab[,c(1,6:8,3,2,4,5)]
+
+WLLabels <- c("Samples","Starch_WL","Total.Polysaccharides_WL", "WSP_WL","Glucose_WL","Fructose_WL","Sucrose_WL","Total.Sugar_WL")
+colnames(wetlabDF) <- WLLabels
+
+WFWL <- merge(CleanedInfoWF, wetlabDF, by = "Samples")
+NFWL <- merge(CleanedInfoNF, wetlabDF, by = "Samples")
+alternatingorder <- c(1,5,28,6,29,7,30,8,31,9,32,10,33,11,34)
+WFWLdf <- WFWL[,alternatingorder]
+NFWLdf <- NFWL[,alternatingorder]
+WFWLdfEqnStatsR <- R2Vis(WFWLdf[,2:15], "CleanedWSPeqnWF_PredVsWetlab_for_Calibration_Samples", EqnStats(WFWLdf[,2:15]))
+NFWLdfEqnStatsR <- R2Vis(NFWLdf[,2:15], "CleanedWSPeqnNF_PredVsWetlab_for_Calibration_Samples", EqnStats(NFWLdf[,2:15]))
+
+write.csv(WFWLdfEqnStatsR, "Data/OutputtedData/EqnFitStatisticsAllWetlabWF.csv")
+write.csv(NFWLdfEqnStatsR, "Data/OutputtedData/EqnFitStatisticsAllWetlabNF.csv")
+
+######Visualize the validation. Only the samples that were NOT used to create the equation
+valwetlab <- read.csv("Data/WSMDP_EqnValidation_Wetlab_Data.csv")
+valwetlabDF <- valwetlab[-2]
+colnames(valwetlabDF)[1] <- "Samples"
+
+WFValWL <- merge(CleanedInfoWF, valwetlabDF, by = "Samples")
+NFValWL <- merge(CleanedInfoNF, valwetlabDF, by = "Samples")
+WFValWLdf <- WFValWL[,alternatingorder]
+NFValWLdf <- NFValWL[,alternatingorder]
+WFValWLdfEqnStatsR <- R2Vis(WFValWLdf[,2:15], "CleanedWSPeqnWF_PredVsWetlab_ValidationSubset", EqnStats(WFValWLdf[,2:15]))
+NFValWLdfEqnStatsR <- R2Vis(NFValWLdf[,2:15], "CleanedWSPeqnNF_PredVsWetlab_ValidationSubset", EqnStats(NFValWLdf[,2:15]))
+
+write.csv(WFValWLdfEqnStatsR, "Data/OutputtedData/EqnFitStatisticsValidationWF.csv")
+write.csv(NFValWLdfEqnStatsR, "Data/OutputtedData/EqnFitStatisticsValidationNF.csv")
+
+
+####With Jared WetlabDATA
+# HWSPsJ <- HWSPsDF[which(HWSPsDF$endo == "su1" | HWSPsDF$endo == "se" | is.na(HWSPsDF$endo)),]
+# alternatingorder2 <- c(1,5,26,6,27,7,28,8,29,9,30,10,31,11,32)
+# CarbInfoExpandedWFJDF <- rbind(HWSPsJ,LWSPWFs)
+# CarbInfoExpandedNFJDF <- rbind(HWSPsJ,LWSPNFs)
+# WFValWLJ <- merge(CarbInfoExpandedWFJDF, valwetlabDF, by = "Samples")
+# NFValWLJ <- merge(CarbInfoExpandedNFJDF, valwetlabDF, by = "Samples")
+# WFValWLJdf <- WFValWLJ[,alternatingorder2]
+# NFValWLJdf <- NFValWLJ[,alternatingorder2]
+# WFValWLdfJEqnStatsR <- R2Vis(WFValWLJdf[,2:15], "UnCleanedWSPeqnWF_PredVsWetlab_ValidationSubset_WJared", EqnStats(WFValWLdf[,2:15]))
+# NFValWLdfJEqnStatsR <- R2Vis(NFValWLJdf[,2:15], "UnCleanedWSPeqnNF_PredVsWetlab_ValidationSubset_WJared", EqnStats(NFValWLdf[,2:15]))
+#
+# write.csv(WFValWLdfJEqnStatsR, "Data/OutputtedData/EqnFitStatisticsValidationWF_WJared.csv")
+# write.csv(NFValWLdfJEqnStatsR, "Data/OutputtedData/EqnFitStatisticsValidationNF_WJared.csv")
 
 #########################
 ###Linear Model Analysis###
@@ -514,13 +526,6 @@ WFBlups <- linearmodel(CleanedInfoWF,"CleanedOutliersWF")
 NFBlups <- linearmodel(CleanedInfoNF,"CleanedOutliersNF")
 
 
-CleanedInfoHWSP_wexcess <- CarbOutlierCleanup(HWSPs,"HWSP",alpha = 0.05)
-CleanedInfoLWSPNF_wexcess <- CarbOutlierCleanup(LWSPNFs,"LWSPNFs",alpha = 0.05)
-CleanedInfoLWSPWF_wexcess <- CarbOutlierCleanup(LWSPWFs,"LWSPWFs",alpha = 0.05)
-
-CleanedInfoHWSP <- subset(CleanedInfoHWSP_wexcess, !is.na(IsExperimental))
-CleanedInfoLWSPNF <- subset(CleanedInfoLWSPNF_wexcess, !is.na(IsExperimental))
-CleanedInfoLWSPWF <- subset(CleanedInfoLWSPWF_wexcess, !is.na(IsExperimental))
 HWSPBlups <- linearmodel(CleanedInfoHWSP,"CleanedOutliersHWSP")
 LWSPNFBlups <- linearmodel(CleanedInfoLWSPNF,"CleanedOutliersLWSPNF")
 LWSPWFBlups <- linearmodel(CleanedInfoLWSPWF,"CleanedOutliersLWSPWF")
@@ -537,7 +542,7 @@ colnames(genoinfo) <- c("Index","Variety","Planting2019","Planting20142015","SCM
 test1 <- which(genoinfo$Planting20142015==1)
 test2 <- which(!is.na(genoinfo$GenoName))
 intersect(test1,test2)
-
+genoinfo$endo[which(genoinfo$endo == "SE")] <- "field"
 #########################
 ###SNP Relate Establishment###
 #########################
@@ -663,25 +668,25 @@ c1 <- which(colnames(WFBlupsGenoJustPheno)=="Starch.BLUP")
 c2 <- which(colnames(WFBlupsGenoJustPheno)=="Total.Sugar.BLUP")
 blups <- colnames(WFBlupsGenoJustPheno[c1:c2])
 
+
 # Start the clock!
 ptm <- proc.time()
 for(blup in blups){
-# GWASPolyRunner(WFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_",Sys.Date()),Seq,"WFBLUP")
-# GWASPolyRunner(WFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_",Sys.Date()),Seq,"WFBLUP","endo","factor", "permute")
-# GWASPolyRunner(WFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_",Sys.Date()),Seq,"WFBLUP","endo","factor", "M.eff")
-# 
-# GWASPolyRunner(NFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),Seq,"NFBLUP")
-GWASPolyRunner(NFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),Seq,"NFBLUP","endo","factor")
-
-# GWASPolyRunner(HWSPBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),Seq,"HWSPBlups")
-# GWASPolyRunner(HWSPBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),Seq,"WFBLUP","endo","factor")
-# 
-# GWASPolyRunner(LWSPNFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),Seq,"LWSPNFBlups")
-# GWASPolyRunner(LWSPNFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),Seq,"LWSPNFBlups","endo","factor")
-# 
-# GWASPolyRunner(LWSPWFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),Seq,"LWSPWFBlups")
-# GWASPolyRunner(LWSPWFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),Seq,"LWSPWFBlups","endo","factor")
-
+  # GWASPolyRunner(WFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_",Sys.Date()),Seq,"WFBLUP")
+  # GWASPolyRunner(WFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_",Sys.Date()),Seq,"WFBLUP","endo","factor", "permute")
+  # GWASPolyRunner(WFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_",Sys.Date()),Seq,"WFBLUP","endo","factor", "M.eff")
+  # 
+  # GWASPolyRunner(NFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),Seq,"NFBLUP")
+  GWASPolyRunner(NFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),Seq,"NFBLUP","endo","factor")
+  
+  # GWASPolyRunner(HWSPBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),Seq,"WFBLUP","endo","factor")
+  # 
+  # GWASPolyRunner(LWSPNFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),Seq,"LWSPNFBlups")
+  # GWASPolyRunner(LWSPNFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),Seq,"LWSPNFBlups","endo","factor")
+  # 
+  # GWASPolyRunner(LWSPWFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),Seq,"LWSPWFBlups")
+  # GWASPolyRunner(LWSPWFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),Seq,"LWSPWFBlups","endo","factor")
+  
 }
 beep(2)
 proc.time() - ptm
@@ -689,7 +694,8 @@ proc.time() - ptm
 ###plot the gwas results###
 #########################
 #read in QTL results from the files made by GWASPolyRunner and GWASPolyVis
-GWASPolyRunVersion <- paste0("EndoFixedEffect_FDRThresh_",Sys.Date())
+# GWASPolyRunVersion <- paste0("EndoFixedEffect_FDRThresh_",Sys.Date())
+GWASPolyRunVersion <- paste0("EndoFixedEffect_FDRThresh_2021-08-29")
 DataSet <- "NFBLUP"
 Thresh = "FDR"
 #establish DF to hold the file readins 
@@ -706,6 +712,7 @@ for(i in 1:7){
 QTLDF <- bind_rows(QTLList)
 QTLDFGen <- QTLDF[which(QTLDF$Model == "general"),]
 genoPosInfo <- geno[,3:4]
+
 chrMax <- vector()
 for(chr in 1:10){
 chrMax[chr] <- max(genoPosInfo$pos[which(genoPosInfo == chr)])}
@@ -755,8 +762,6 @@ dev.off()
 #########################
 ###Compare BLUPS by Endosperm###
 #########################
-#remove the single inbred with SE as its mutant type from the analysis
-NFBlupsGenoJustPheno <- NFBlupsGenoJustPheno[-97,]
 
 #establish a file to put the results in
 EndoCompareFile <- paste0("Data/OutputtedData/WSMDP_CarbBLUPComparedbyEndo_NFBlup.txt")
@@ -783,6 +788,7 @@ for(blup in blups){
   out <- capture.output(LSM)
   cat(out, file=EndoCompareFile, sep="\n", append=TRUE)
 
+ 
 }
 
 

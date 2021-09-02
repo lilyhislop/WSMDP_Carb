@@ -27,12 +27,13 @@ write.table(phenoSubsetGeno_trait_Only,
 #export as the geno info as CSV
 # genooutput <- paste("Data/RawData/",Seq,DataSet,"_",GWASPolyRunVersion,"_numericFormat",Sys.Date(),".csv",sep = "")
 genooutput <- paste0("Data/RawData/",Seq,"_numericFormat.csv")
+if(!file.exists(genooutput)){
 write.table(SCMVPanel_nwithpos,
             append = FALSE,
             file = genooutput,
             sep = ",",
             dec = ".",
             row.names = FALSE,
-            col.names = TRUE)
+            col.names = TRUE)}
 return(c(phenooutfilefull,genooutput))
 }
