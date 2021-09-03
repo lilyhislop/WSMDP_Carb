@@ -50,7 +50,7 @@ GWASPolyVis <- function(GWASPolyRunVersion,trait,data3,Seq,DataSet, Thresh = "FD
   # })
   # dev.off()
   # 
-  
+
   MANGenplotfile <- paste(visfileprefix,"_Manhattan_GeneralModel.png", sep = "")
   png(MANGenplotfile,width = 750, height = 500)
   print({
@@ -67,7 +67,7 @@ GWASPolyVis <- function(GWASPolyRunVersion,trait,data3,Seq,DataSet, Thresh = "FD
   manhattan.plot(data4,trait=trait,model="additive")
   })
   dev.off()
-  
+
   Scoresfile <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,DataSet,GWASPolyRunVersion,"_",trait,"_",Thresh,"_scores.csv", sep = "")
   Effectfile <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,DataSet,GWASPolyRunVersion,"_",trait,"_",Thresh,"_effects.csv", sep = "")
   write.GWASpoly(data4, trait, filename=Scoresfile, what = "scores", delim = ",")

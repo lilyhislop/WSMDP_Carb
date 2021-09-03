@@ -662,11 +662,12 @@ LWSPNFBlupsGenoJustPheno <- BlupGenoCleanup("LWSPNF")
 LWSPWFBlupsGenoJustPheno <- BlupGenoCleanup("LWSPWF")
 
 
-
-c1 <- which(colnames(WFBlupsGenoJustPheno)=="Starch.BLUP")
+c1 <- which(colnames(NFBlupsGenoJustPheno)=="Total.Polysaccharides.BLUP")
+c2 <- which(colnames(NFBlupsGenoJustPheno)=="WSP.BLUP")
+c1 <- which(colnames(NFBlupsGenoJustPheno)=="Starch.BLUP")
 # c1 <- which(colnames(WFBlupsGenoJustPheno)=="Glucose.BLUP")
-c2 <- which(colnames(WFBlupsGenoJustPheno)=="Total.Sugar.BLUP")
-blups <- colnames(WFBlupsGenoJustPheno[c1:c2])
+c2 <- which(colnames(NFBlupsGenoJustPheno)=="Total.Sugar.BLUP")
+blups <- colnames(NFBlupsGenoJustPheno[c1:c2])
 
 
 # Start the clock!
