@@ -24,3 +24,12 @@ I double checked within the 2015 field book to make sure the capitalization was 
 the endo mutant denotation for W822GSe varieties from se to field since they are wild type.
 Also, in checking the INBHYB documentation I found that varieties denoted with sm*sm smooth and sm sm wrinkled are probably also 
 W822GSe and W822Gse rewpectively. I have changed their variety names and endo sperm denotation appropriately. 
+
+On 2021.09.06 I went through the "Data/RawData/WSMDP_2014-2015_WINY_SampleInfo.csv" file and manually added samples that were not included, but I did have data for through NIR and or the Book Inbred information
+I double check the samples with the appropriate book. Anything Labled "Sugar Buns" was relabeled "FILL". Anything labled CTS62 was relabeled "FILL" as that is a commercial tester
+tropicals were assigned "field" endosperm labels
+
+The following Inbreds had their endosperm marker changed due to contridiction with "Supplemental Figure Genome-Wide Association and Genomic Prediction Models of Tocochromanols in Fresh Sweet Corn Kernels":
+B5765. Labled as se. Note says B5765 Se (maked as su1 in diversity panel)
+Changed to su1 according to visual classification by baseggio
+

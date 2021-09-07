@@ -1,12 +1,16 @@
 CarbOutlierCleanup <- function(CarbDataFrame,DFType = NA, alpha = 0.05){
-#lets tease out outliers
+  #For Debugging
+  # CarbDataFrame <- CarbInfoExpandedWFDF
+  # DFType = "WF"
+  # alpha = 0.05
+  #lets tease out outliers
   #Establish to remove list
   sink(paste("Data/OutputtedData/EdittedSampleRecords_VerboseChanges_",DFType,".txt",sep = ""), split = TRUE)
   toremove <- c()
   
   #make sure the original positions of the samples are recorded before we go futtzing around with them 
   CarbDataFrame$DFPosition <- rownames(CarbDataFrame)
-  VarietyPos <- which(colnames(CarbDataFrame) == "Variety")
+  InbredPos <- which(colnames(CarbDataFrame) == "Inbred")
   SamplesPos <- which(colnames(CarbDataFrame) == "Samples")
   StarchPos <- which(colnames(CarbDataFrame) == "Starch")
   SugarPos <- which(colnames(CarbDataFrame) == "Total.Sugar")
@@ -14,8 +18,8 @@ CarbOutlierCleanup <- function(CarbDataFrame,DFType = NA, alpha = 0.05){
   #establish outlier record dataframe
   ProbSamples <- data.frame()
   
-  #lets get just the sample, variety and carb info positions
-  Subset <- c(SamplesPos,c(StarchPos:SugarPos), VarietyPos)
+  #lets get just the sample, Inbred and carb info positions
+  Subset <- c(SamplesPos,c(StarchPos:SugarPos), InbredPos)
   
   #For each outlier to be analyzed, lets record what we are doing to it 
   recordKeeping <- function(Action){
@@ -24,11 +28,11 @@ CarbOutlierCleanup <- function(CarbDataFrame,DFType = NA, alpha = 0.05){
     ProbSamples <- rbind(ProbSamples,out)
     return(ProbSamples)
   }
-##### Remove samples with incorrect rep types
-BadRepPos <- which(CarbDataFrame$SampleRep > 4 )
-print(paste("The Sample Replicate number above 4 mean it was taken after fresh harvest time. Remove all of these sample.", length(BadRepPos), "samples removed."))
-if(length(BadRepPos) != 0){
-CarbDataFrame <- CarbDataFrame[-BadRepPos,]  }
+  ##### Remove samples with incorrect rep types
+  BadRepPos <- which(as.numeric(as.character(CarbDataFrame$SampleRep)) > 4 )
+  print(paste("The Sample Replicate number above 4, which mean it was taken after fresh harvest time. Remove all of these sample.", length(BadRepPos), "samples removed."))
+  if(length(BadRepPos) != 0){
+    CarbDataFrame <- CarbDataFrame[-BadRepPos,]  }
 
 ##########Iterate through Carb lower Outliers First##########
 Carbs <- c("Starch","Total.Polysaccharides", "WSP","Glucose","Fructose","Sucrose","Total.Sugar")
@@ -42,7 +46,7 @@ CarbDFPos <- c+StarchPos - 1
 
 CarbDataFrame <- CarbDataFrame[order(CarbDataFrame[CarbDFPos]),]
 PosOutliers <- which(CarbDataFrame[CarbDFPos] < 0)
-PosOutliersVar <- CarbDataFrame[PosOutliers,"Variety"]
+PosOutliersVar <- CarbDataFrame[PosOutliers,"Inbred"]
 head(CarbDataFrame[PosOutliers, Subset])
   
 
@@ -50,7 +54,7 @@ counter <- 1
 end <- length(PosOutliers)+1
 i <- 1
 
-#lets look at each potential outlier within the context of the the other examples of that variety. 
+#lets look at each potential outlier within the context of the the other examples of that Inbred. 
 while(counter < end){
   #reporting out whats going on
   print(paste("The ",colnames(CarbDataFrame[CarbDFPos])," content of sample ", CarbDataFrame$DFPosition[PosOutliers[counter]], " is ",round(CarbDataFrame[PosOutliers[counter],CarbDFPos],2),"%.",sep = ""))
@@ -59,10 +63,10 @@ while(counter < end){
     print(paste("The",colnames(CarbDataFrame[CarbDFPos]),"content of sample", CarbDataFrame$DFPosition[PosOutliers[counter]], "is NA. Skip this sample."))
   }
   if(!is.na(PosOutliersVar[[1]][i])){
-  #ok, so what is the outlier in the context of the variety
-  outlierincontext <- CarbDataFrame[which(CarbDataFrame$Variety == PosOutliersVar[[1]][i]),]
+  #ok, so what is the outlier in the context of the Inbred
+  outlierincontext <- CarbDataFrame[which(CarbDataFrame$Inbred == PosOutliersVar[[1]][i]),]
   #how much of an outlier is it?
-  outlierData <- grubbs.test(pull(CarbDataFrame[which(CarbDataFrame$Variety == PosOutliersVar[[1]][i]),colnames(CarbDataFrame[CarbDFPos])]))
+  outlierData <- grubbs.test(pull(CarbDataFrame[which(CarbDataFrame$Inbred == PosOutliersVar[[1]][i]),colnames(CarbDataFrame[CarbDFPos])]))
   
   if(!is.na(outlierData$p.value) && !is.na(pull(CarbDataFrame[PosOutliers[counter],CarbDFPos]))){
     #if the outlier has a pvalue of less than alpha
@@ -110,7 +114,7 @@ while(counter < end){
   }
   }
   if(is.na(PosOutliersVar[[1]][i]))
-  {   print(paste("The variety of the sample is NA. Skip this sample."))
+  {   print(paste("The Inbred of the sample is NA. Skip this sample."))
   }
   i = i+1
   counter = counter + 1
@@ -136,14 +140,14 @@ Carbs <- c("Starch","Total.Polysaccharides", "WSP","Glucose","Fructose","Sucrose
     
     #ok, what are the samples that are above that upper wisker
     PosOutliers <- which(CarbDataFrame[CarbDFPos] > UpperWisk)
-    PosOutliersVar <- CarbDataFrame[PosOutliers,"Variety"]
+    PosOutliersVar <- CarbDataFrame[PosOutliers,"Inbred"]
     head(CarbDataFrame[PosOutliers, Subset])
     
     counter <- 1
     end <- length(PosOutliers)+1
     i <- 1
     
-    #lets look at each potential outlier within the context of the the other examples of that variety. 
+    #lets look at each potential outlier within the context of the the other examples of that Inbred. 
     while(counter < end){
       
       #reporting out whats going on
@@ -153,10 +157,10 @@ Carbs <- c("Starch","Total.Polysaccharides", "WSP","Glucose","Fructose","Sucrose
         print(paste("The",colnames(CarbDataFrame[CarbDFPos]),"content of sample", CarbDataFrame$DFPosition[PosOutliers[counter]], "is NA. Skip this sample."))
       }
       if(!is.na(PosOutliersVar[[1]][i])){
-      #ok, so what is the outlier in the context of the variety
-      outlierincontext <- CarbDataFrame[which(CarbDataFrame$Variety == PosOutliersVar[[1]][i]),]
+      #ok, so what is the outlier in the context of the Inbred
+      outlierincontext <- CarbDataFrame[which(CarbDataFrame$Inbred == PosOutliersVar[[1]][i]),]
       #how much of an outlier is it?
-      outlierData <- grubbs.test(pull(CarbDataFrame[which(CarbDataFrame$Variety == PosOutliersVar[[1]][i]),colnames(CarbDataFrame[CarbDFPos])]))
+      outlierData <- grubbs.test(pull(CarbDataFrame[which(CarbDataFrame$Inbred == PosOutliersVar[[1]][i]),colnames(CarbDataFrame[CarbDFPos])]))
       
       if(!is.na(outlierData$p.value ) && !is.na(pull(CarbDataFrame[PosOutliers[counter],CarbDFPos]))){
         #if the outlier has a pvalue of less than alpha
@@ -204,7 +208,7 @@ Carbs <- c("Starch","Total.Polysaccharides", "WSP","Glucose","Fructose","Sucrose
       }
       }
       if(is.na(PosOutliersVar[[1]][i]))
-      {   print(paste("The variety of the sample is NA. Skip this sample."))
+      {   print(paste("The Inbred of the sample is NA. Skip this sample."))
       }
       i = i+1
       counter = counter + 1

@@ -79,19 +79,25 @@ BookInfo <- read.csv("Data/20142015_WSMDP_PlantingInfo_Condensation.csv")
 BookInfo <- BookInfo[!duplicated(BookInfo$SampleLabel),]
 length(unique(BookInfo$Inbred))
 
-#this file containes the year, location,variety and endosperm of every sample
-SampleInfo <- read.csv("Data/WSMDP_2014-2015_WINY_SampleInfo.csv")
+
+
+#this file containes the year, location,Inbred and endosperm of every sample
+SampleInfo <- read.csv("Data/RawData/WSMDP_2014-2015_WINY_SampleInfo.csv")
 #Fix the sample numbers that are labeled in the NY style e.g " 14A0255" or "15A0005" and change to just the row numbers
 SampleInfo$Row <- SampleInfo$Sample.Number
 SampleInfo$Row[which(nchar(SampleInfo$Row)>6)] <- substr(SampleInfo$Row[which(nchar(SampleInfo$Row)>6)],4,15)
 tail(SampleInfo)
 #Generate NIR Code. NIR codes are all YearLocationRow - Rep
 SampleInfo$NIRBase <- paste(substr(SampleInfo$year,3,4), ifelse(SampleInfo$location == "Wisconsin", "W","NY"), SampleInfo$Row,sep = "")
+
+#look at the sample info file to make sure it looks ok
 tail(SampleInfo)
 str(unique(SampleInfo$Variety))
 summary.factor(SampleInfo$endo)
 length(unique(SampleInfo$Variety))
 setdiff(unique(BookInfo$Inbred),unique(SampleInfo$Variety))
+sampledInbreds<- intersect(unique(BookInfo$Inbred),unique(SampleInfo$Variety))
+SampleInfo$endo <- as.factor(SampleInfo$endo)
 
 #########Read in Wetlab Starch Data##########
 wetLabStarch <- read.csv("Data/RawData/WSMDP_Wetlab_Starchs.csv")
@@ -181,8 +187,9 @@ LWSPNFsDF <- AgPredOutput(StarchDF = CarbDF[[5]], SugDF = CarbDF[[6]], condense 
 InfoCombination <- function(NIRDF, SampleInfoDF, BookInfoDF){
   OutDF <- NIRDF
   OutDF$endo <- SampleInfoDF$endo[match(NIRDF$NIRBase, SampleInfoDF$NIRBase, nomatch = NA)]
+  #eliminate SE markers
   OutDF$endo[which(OutDF$endo == "SE")] <- "field"
-  OutDF$Variety <- SampleInfoDF$Variety[match(NIRDF$NIRBase, SampleInfoDF$NIRBase, nomatch = NA)]
+  OutDF$Inbred <- SampleInfoDF$Variety[match(NIRDF$NIRBase, SampleInfoDF$NIRBase, nomatch = NA)]
   OutDF$BookInbred <- BookInfoDF$Inbred[match(NIRDF$NIRBase, BookInfoDF$NIRBase, nomatch = NA)]
   OutDF$PlotNum <- NIRDF$Row 
   OutDF$SampleRep <- NIRDF$Rep 
@@ -198,6 +205,10 @@ InfoCombination <- function(NIRDF, SampleInfoDF, BookInfoDF){
   #add in a year/location environment factor
   OutDF$Envi <- paste0(BookInfoDF$Year[match(NIRDF$NIRBase, BookInfoDF$NIRBase, nomatch = NA)], BookInfoDF$Location[match(NIRDF$NIRBase, BookInfoDF$NIRBase, nomatch = NA)])
 
+  #set everything to factors thats not carb data
+  c1 <- which(colnames(OutDF)=="Starch")
+  c2 <- which(colnames(OutDF)=="Total.Sugar")
+  OutDF[-c(c1:c2)] <- lapply(OutDF[-c(c1:c2)], as.factor)
   return(OutDF)
 }
 
@@ -206,11 +217,10 @@ LWSPWFsDF <- InfoCombination(LWSPWFsDF,SampleInfo,BookInfo)
 LWSPNFsDF <- InfoCombination(LWSPNFsDF,SampleInfo,BookInfo)
 
 #Eliminate irrelivant endosperm mutants from each df. We don't want to include sh2 samples that were predicted by the HWSP calibrated equations
-#should sh2i samples be estimated by the sh2 calibrated equations or the other calibrated equation?
-HWSPs <- HWSPsDF[which(HWSPsDF$endo == "su1" | HWSPsDF$endo == "se" | (is.na(HWSPsDF$endo)& (HWSPsDF$Year== "15"|HWSPsDF$Year == "14"))),]
-# HWSPs <- HWSPsDF[which(HWSPsDF$endo == "su1" | HWSPsDF$endo == "se" | is.na(HWSPsDF$endo)),]
-LWSPWFs <- LWSPWFsDF[which(LWSPNFsDF$endo != "se" & LWSPNFsDF$endo != "su1"),]
-LWSPNFs <- LWSPNFsDF[which(LWSPNFsDF$endo == "sh2" | LWSPNFsDF$endo == "sh2i"),]
+
+HWSPs <- HWSPsDF[which(HWSPsDF$endo == "su1" | HWSPsDF$endo == "su1se1"),]
+LWSPWFs <- LWSPWFsDF[which(LWSPNFsDF$endo != "su1se1" & LWSPNFsDF$endo != "su1" & LWSPNFsDF$endo != ""),]
+LWSPNFs <- LWSPNFsDF[which(LWSPNFsDF$endo == "sh2" | LWSPNFsDF$endo == "su1sh2-i"),]
 
 # #lets look at the validation data that I predicted from kahtleen and Jareds data and output it for further analysis
 # jared <- HWSPsDF[which(HWSPsDF$Year == "sc"),]
@@ -220,9 +230,9 @@ LWSPNFs <- LWSPNFsDF[which(LWSPNFsDF$endo == "sh2" | LWSPNFsDF$endo == "sh2i"),]
 # 
 ########mash it all together ######
 #All the predictions with the field lines
-CarbInfoExpandedWFDF <- rbind(HWSPs,LWSPWFs)
+CarbInfoExpandedWFDF <- subset(rbind(HWSPs,LWSPWFs), !is.na(IsExperimental))
 #all the predictions without the field lines
-CarbInfoExpandedNFDF <- rbind(HWSPs,LWSPNFs)
+CarbInfoExpandedNFDF <- subset(rbind(HWSPs,LWSPNFs), !is.na(IsExperimental))
 
 
 
@@ -231,30 +241,35 @@ CarbDataFrameVis(CarbInfoExpandedWFDF,"WithField_WithOutliers")
 CarbDataFrameVis(CarbInfoExpandedNFDF,"NoField_WithOutliers")
 
 #clean up the predictive data frames. Reassign or delete outliers
-CleanedInfoWF_wexcess <- CarbOutlierCleanup(CarbInfoExpandedWFDF,"WF",alpha = 0.05)
-CleanedInfoNF_wexcess <- CarbOutlierCleanup(CarbInfoExpandedNFDF,"NF",alpha = 0.05)
-CleanedInfoWF <- subset(CleanedInfoWF_wexcess, !is.na(IsExperimental))
-CleanedInfoNF <- subset(CleanedInfoNF_wexcess, !is.na(IsExperimental))
+CleanedInfoWF <- CarbOutlierCleanup(CarbInfoExpandedWFDF,"WF",alpha = 0.05)
+CleanedInfoNF <- CarbOutlierCleanup(CarbInfoExpandedNFDF,"NF",alpha = 0.05)
+
 write.csv(file = "Data/OutputtedData/CleanedInfoWFOutput.csv",CleanedInfoWF)
 write.csv(file = "Data/OutputtedData/CleanedInfoNFOutput.csv",CleanedInfoNF)
 
 
 #clean up the predictive seperated data frames. Reassign or delete outliers
-CleanedInfoHWSP_wexcess <- CarbOutlierCleanup(HWSPs,"HWSP",alpha = 0.05)
-CleanedInfoLWSPNF_wexcess <- CarbOutlierCleanup(LWSPNFs,"LWSPNFs",alpha = 0.05)
-CleanedInfoLWSPWF_wexcess <- CarbOutlierCleanup(LWSPWFs,"LWSPWFs",alpha = 0.05)
+CleanedInfoHWSP <- CarbOutlierCleanup(HWSPs,"HWSP",alpha = 0.05)
+CleanedInfoLWSPNF <- CarbOutlierCleanup(LWSPNFs,"LWSPNFs",alpha = 0.05)
+CleanedInfoLWSPWF <- CarbOutlierCleanup(LWSPWFs,"LWSPWFs",alpha = 0.05)
 
-CleanedInfoHWSP <- subset(CleanedInfoHWSP_wexcess, !is.na(IsExperimental))
-CleanedInfoLWSPNF <- subset(CleanedInfoLWSPNF_wexcess, !is.na(IsExperimental))
-CleanedInfoLWSPWF <- subset(CleanedInfoLWSPWF_wexcess, !is.na(IsExperimental))
 
 #revisualize the dataframes
 CarbDataFrameVis(CleanedInfoWF,"WithField_Cleaned")
 CarbDataFrameVis(CleanedInfoNF,"NoField_Cleaned")
 
 #write the names of the varieties used to a csv file so we can find the corresponding GBS data
-write.csv(file = "Data/OutputtedData/InbredsWithinWSMDPCarbDataNF.csv",unique(CleanedInfoNF[c("Variety", "endo")]))
-write.csv(file = "Data/OutputtedData/InbredsWithinWSMDPCarbDataWF.csv",unique(CleanedInfoWF[c("Variety", "endo")]))
+write.csv(file = "Data/OutputtedData/InbredsWithinWSMDPCarbDataNF.csv",unique(CleanedInfoNF[c("Inbred", "endo")]))
+write.csv(file = "Data/OutputtedData/InbredsWithinWSMDPCarbDataWF.csv",unique(CleanedInfoWF[c("Inbred", "endo")]))
+
+
+#######################
+### Summarize the samples within CleanedInfoNF
+
+summary(CleanedInfoNF)
+
+
+
 
 #########################
 ###Validate that the NIR Equation is good###
@@ -382,9 +397,9 @@ linearmodel <- function(SampleDFtoModel,TitleAddendum){
   cat(paste0("Phenotypic Statistics for the Carbohydrates of ",TitleAddendum," Through Mixed Linear Modeling."), file=statsfile, sep="\n", append=FALSE)
 
   #make a dataframe to hold the BLUPs after the models are done
-  blupHolder <- data.frame("Variety" = sort(unique(SampleDFtoModel$BookInbred)))
+  blupHolder <- data.frame("Inbred" = sort(unique(SampleDFtoModel$BookInbred)))
   #make a dataframe to hold the variances due to different factors
-  VarDF <- data.frame("Carb" = colnames(SampleDFtoModel)[5:11],"Variety" = rep(NA,7),"Envi" = rep(NA,7),"Variety:Envi" = rep(NA,7),  "superblock" = rep(NA,7), "Col" = rep(NA,7),"Row" = rep(NA,7),"block" = rep(NA,7),"Residuals"= rep(NA,7))
+  VarDF <- data.frame("Carb" = colnames(SampleDFtoModel)[5:11],"Inbred" = rep(NA,7),"Envi" = rep(NA,7),"Inbred:Envi" = rep(NA,7),  "superblock" = rep(NA,7), "Col" = rep(NA,7),"Row" = rep(NA,7),"block" = rep(NA,7),"Residuals"= rep(NA,7))
   
   
   #figure out where the traits start and stop
@@ -420,8 +435,8 @@ linearmodel <- function(SampleDFtoModel,TitleAddendum){
       model <- update(model, control=strict_tol)
     }
   RandomEffects <- ranef(model)
-  tempBlup <- data.frame("Variety" = rownames(RandomEffects$BookInbred), "BLUP" = RandomEffects$BookInbred)
-  blupHolder <- merge(blupHolder, tempBlup, by = "Variety", all = TRUE)
+  tempBlup <- data.frame("Inbred" = rownames(RandomEffects$BookInbred), "BLUP" = RandomEffects$BookInbred)
+  blupHolder <- merge(blupHolder, tempBlup, by = "Inbred", all = TRUE)
   colnames(blupHolder)[j+1] <- paste0(carbs[j],".BLUP")
 
   
@@ -537,8 +552,8 @@ LWSPWFBlups <- linearmodel(CleanedInfoLWSPWF,"CleanedOutliersLWSPWF")
 #########################
 # genoinfo <- read.csv("Data/WSMDP_Inbreds.txt",head = FALSE)
 genoinfo <- read.csv("Data/WSMDP_Inbreds_2021.6.30.csv",head = TRUE)
-# colnames(genoinfo) <- c("Variety","","","","","","","GenoName","source","endo","notes","Region","Program")
-colnames(genoinfo) <- c("Index","Variety","Planting2019","Planting20142015","SCMVTest","CAP","Sugar2019","GBS","endo","GenoName")
+# colnames(genoinfo) <- c("Inbred","","","","","","","GenoName","source","endo","notes","Region","Program")
+colnames(genoinfo) <- c("Index","Inbred","Planting2019","Planting20142015","SCMVTest","CAP","Sugar2019","GBS","endo","GenoName")
 test1 <- which(genoinfo$Planting20142015==1)
 test2 <- which(!is.na(genoinfo$GenoName))
 intersect(test1,test2)
@@ -632,7 +647,7 @@ str(geno)
 BlupGenoCleanup <- function(BlupDFName){
 BlupDF <- read.csv(file=paste0("Data/OutputtedData/WSMDP_CarbPheno_InbredBLUPS_CleanedOutliers",BlupDFName,".txt"))#, col.names=T, row.names=F)
   
-BlupDFGeno <- merge(BlupDF,genoinfo, by = "Variety")
+BlupDFGeno <- merge(BlupDF,genoinfo, by = "Inbred")
 c1 <- which(colnames(BlupDFGeno)=="Starch.BLUP")
 c2 <- which(colnames(BlupDFGeno)=="Total.Sugar.BLUP")
 c3 <- which(colnames(BlupDFGeno)=="GenoName")
