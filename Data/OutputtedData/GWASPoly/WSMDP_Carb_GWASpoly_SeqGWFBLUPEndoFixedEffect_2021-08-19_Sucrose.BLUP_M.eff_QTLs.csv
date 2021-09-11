@@ -1,4 +1,0 @@
-"Trait","Model","Threshold","Marker","Chrom","Position","Ref","Alt","Score","Effect"
-"Sucrose.BLUP","general",6.04,"S1_234771064","1",234771064,0,1,6.14,NA
-"Sucrose.BLUP","general",6.04,"S2_222219945","2",222219945,0,1,7.48,NA
-"Sucrose.BLUP","additive",6.04,"S2_222219945","2",222219945,0,1,7.56,1.23267102314038

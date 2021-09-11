@@ -1,7 +1,13 @@
 
 PCAFigureCreation <- function(PCA,pc.perc,genoinfo,infilename, Colourant ){
-
+  #ForDebugging
+  genoinfo <- matching
+  Colourant <- "Program"
 progfile <- paste("Figures/Plot_PCA_",infilename,"_by_",Colourant,".png",sep = "")
+
+colors <-c("#f0e442","#000000", "#cc79a7","#0072b2", "#009e73","#d55e00")
+# symbols <- c(0,1,15,2,3,4,18,6)
+symbols <- c(25,16,17,18,19,15)
 
 if(Colourant == "Program"){
   #label with program
@@ -9,13 +15,11 @@ if(Colourant == "Program"){
   toOther <- c("FL","GA","MA","ME","MO","ND","NJ","OH","SC","SP","TN","USDA","")
   levels(genoinfo$ProgramOthered) <- c(levels(genoinfo$ProgramOthered),"Other")
   genoinfo$ProgramOthered[genoinfo$Program %in% toOther]<- "Other"
-  colors <- c("slategray3", "violet", "royalblue4", "palegreen", "mediumpurple", "khaki", "red", "grey")
-  symbols <- c(0,1,15,2,3,4,18,6)
+  colors <- c("slategray3", "violet", "royalblue4", "palegreen", "mediumpurple", "khaki", "grey", "red")
+  symbols <- c(0,1,15,2,3,4,6,18)
   Colourant <- "ProgramOthered"
 }
-colors <-c("#f0e442","#000000", "#cc79a7","#0072b2", "#009e73","#d55e00")
-# symbols <- c(0,1,15,2,3,4,18,6)
-symbols <- c(25,16,17,18,19,15)
+
 
 if(Colourant == "SusceptibilityRating03"){
   colors <- c("royalblue4", "palegreen", "mediumpurple", "red")

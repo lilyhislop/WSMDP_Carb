@@ -1,5 +1,0 @@
-"Trait","Model","Threshold","Marker","Chrom","Position","Ref","Alt","Score","Effect"
-"Fructose.BLUP","general",5.52,"S2_230884531","2",230884531,0,1,5.88,NA
-"Fructose.BLUP","general",5.52,"S2_232384328","2",232384328,0,1,5.9,NA
-"Fructose.BLUP","additive",5.84,"S2_230884531","2",230884531,0,1,6.54,0.283549929123313
-"Fructose.BLUP","additive",5.84,"S2_232384328","2",232384328,0,1,6.45,0.285419129573837

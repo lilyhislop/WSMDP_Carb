@@ -1611,3 +1611,128 @@ function (data, trait, qtl, fixed = NULL)
   return(data.frame(data@map[match(qtl$Marker, data@map$Marker), 
                              1:3], Model = qtl$Model, R2 = R2, pval = pval))
 }
+
+
+
+
+genoinfo <- read.csv("Data/RawData/GenoInfo_of_WSMDP_Carb_Inbreds.csv",head = TRUE)
+head(genoinfo)
+OnlyUnique <- genoinfo %>% distinct(Inbred, .keep_all = TRUE)
+
+
+
+
+
+
+
+#########################
+###GapitKinship Matrix###
+#########################
+#####Altered from Baseggio's code GWAS_sweet_toco_univ_withcovariate_20180202.R
+### Genotypes
+setwd("C:/Users/LHislop/Documents/GitHub/WSMDP_Carb")
+path.to.res <- "C:/Users/LHislop/Documents/GitHub/WSMDP_Carb/Data/OutputtedData/GapitOut/"
+Seq <- "SeqG"
+hmppath <- paste0("Data/RawData/WSMDP_",Seq,".hmp.txt")
+geno <- fread(hmppath,skip = "rs#")
+str(geno)
+colnames(geno)<-gsub(colnames(geno), pattern = ":.*", replacement = "")
+colnames(geno)<-gsub(colnames(geno), pattern = "rs#", replacement = "rs")
+colnames(geno)<-gsub(colnames(geno), pattern = "panelLSID", replacement = "panel")
+colnames(geno)<-gsub(colnames(geno), pattern = "assembly#", replacement = "assembly")
+#assemble the info about marker, chromosome and position
+
+#convert from hapmap to numeric
+
+genoMat <- as.matrix(geno)
+genoMatMeta <- genoMat[,(1:11)]
+genoMat <- genoMat[,-(1:11)]
+genoClean <- genoMat
+
+genoClean[which(genoMat == "A")] <- "AA"
+genoClean[which(genoMat == "C")] <- "CC"
+genoClean[which(genoMat == "G")] <- "GG"
+genoClean[which(genoMat == "T")] <- "TT"
+genoClean[which(genoMat == "R")] <- "AG"
+genoClean[which(genoMat == "Y")] <- "CT"
+genoClean[which(genoMat == "S")] <- "CG"
+genoClean[which(genoMat == "W")] <- "AT"
+genoClean[which(genoMat == "K")] <- "GT"
+genoClean[which(genoMat == "M")] <- "AC"
+genoClean[which(genoMat == "N")] <- NA
+genoClean[which(genoMat == "0")] <- NA
+genoClean[which(genoMat == "-")] <- NA
+
+#some of the SNPs have more than 2 homozygous genotypes. Get rid of them 
+toomanyHomos <- which(apply(genoClean, 1, function(x) length(unique(x)))>4)
+if(length(toomanyHomos) > 0){
+  genoClean <- genoClean[-toomanyHomos,]
+}
+genoCleanandBound <- cbind(genoMatMeta,genoClean)
+genoCleanandBoundDF <- as.data.frame(genoCleanandBound)
+firstRow <- colnames(genoCleanandBoundDF)
+geno <- rbind(firstRow, genoCleanandBoundDF)
+names(geno) <- paste0("V",1:592)
+# write.table(genoCleanandBound, paste0("Data/RawData/WSMDP_",Seq,"_EditedforGAPIT.hmp.txt"), sep = ",")
+# geno <- read.delim(paste0("Data/RawData/WSMDP_",Seq,"_EditedforGAPIT.hmp.txt"), head = TRUE)
+
+str(geno)
+nbtraits <- 7
+# pheno <- read.table('sweetcorn_toco384_nodent_noHi_NA_20180715.txt', header=T, sep="\t", colClasses=c('factor',rep('numeric', nbtraits)), as.is=T)
+nlines <- nrow(WFBlupsGenoJustPheno)
+
+# geno <- read.table(hmppath, header=FALSE, sep = "\t")
+# str(geno)
+# colnames(geno)<-gsub(colnames(geno), pattern = ":.*", replacement = "")
+# str(geno)
+setwd(path.to.res)
+ptm <- proc.time()
+kin.alg <- "VanRaden"
+res <- GAPIT( G = geno, kinship.cluster = c("average"), kinship.group = c("Mean"), kinship.algorithm = kin.alg,SNP.impute = "Middle", Major.allele.zero = TRUE)
+proc.time() - ptm
+
+############################################
+####### Run GWAS for TOCOCHROMANOLS ########
+############################################
+
+## Read the files
+# setwd("/local/workdir/mb2446/GWAS/")
+
+
+covariates <- rbind.data.frame(c('Starch','Starch'),
+                               c('Total.Polysaccharides','Total.Polysaccharides'),
+                               c('WSP','WSP'),
+                               c('Glucose','Glucose'),
+                               c('Fructose','Fructose'),
+                               c('Sucrose','Sucrose'),
+                               c('Total.Sugar','Total.Sugar'))
+colnames(covariates) <- c('trait','snp')
+
+# geno <- read.delim('sweet_parimp_toco384_174K.hmp.txt', header=FALSE, sep='\t')
+
+nbtraits <- 7
+# pheno <- read.table('sweetcorn_toco384_nodent_noHi_NA_20180715.txt', header=T, sep="\t", colClasses=c('factor',rep('numeric', nbtraits)), as.is=T)
+# path.to.res <- "/local/workdir/mb2446/GWAS/Univariate/Toco/0PC.2yr.K11.174K.384taxa.middle.na.KernelType.20180715/"
+
+# parent.dir <- "/local/workdir/mb2446/GWAS/"
+pheno <- WFBlupsGenoJustPheno
+
+# library(beepr)
+# system.time(beep() sound = "fanfare"))
+for (i in seq(1,7)) {
+  #### Current trait ####
+  curr.trait <- colnames(pheno[ (1 + i) ])
+  # curr.trait <- as.character(covariates[i,1])
+  # system(paste('mkdir -p ', path.to.res, curr.trait, sep=''))
+  setwd(paste0(path.to.res ,curr.trait))
+  j <- which(colnames(pheno)==curr.trait)
+  curr.pheno = pheno[,c(1,j)]
+  #### User input Kinship
+  myKI <- read.table(paste(path.to.res, '/GAPIT.Kin.VanRaden.csv', sep=''), header=FALSE, sep=',')
+  # myCV <- read.table(paste('/local/workdir/mb2446/GWAS/Covariates/KernelType.txt', sep=''), header=T, sep='\t')
+  res <- GAPIT( Y = curr.pheno, G = geno, KI=myKI, PCA.total=3, plot.style="Ocean")
+}
+
+
+
+

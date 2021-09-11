@@ -80,17 +80,17 @@ GWASPolyVis <- function(GWASPolyRunVersion,trait,data3,Seq,DataSet, Thresh = "FD
               dec = ".",
               row.names = FALSE,
               col.names = TRUE)
-   if(length(data5)>0){
-    fit.ans <- fit.QTL(data=data4,trait=trait,
-                       qtl=data5[,c("Marker","Model")],
-                       fixed=data.frame(Effect="endo",Type="factor"))
-  QTLfile <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,DataSet,GWASPolyRunVersion,"_",trait,"_",Thresh,"_QTLswithEffects.csv", sep = "")
-  write.table(fit.ans,
-              append = FALSE,
-              file = QTLfile,
-              sep = ",",
-              dec = ".",
-              row.names = FALSE,
-              col.names = TRUE)}
+  #  if(length(data5)>0){
+  #   fit.ans <- fit.QTL(data=data4,trait=trait,
+  #                      qtl=data5[,c("Marker","Model")],
+  #                      fixed=data.frame(Effect="endo",Type="factor"))
+  # QTLfile <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,DataSet,GWASPolyRunVersion,"_",trait,"_",Thresh,"_QTLswithEffects.csv", sep = "")
+  # write.table(fit.ans,
+  #             append = FALSE,
+  #             file = QTLfile,
+  #             sep = ",",
+  #             dec = ".",
+  #             row.names = FALSE,
+  #             col.names = TRUE)}
 
 }

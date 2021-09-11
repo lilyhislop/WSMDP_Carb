@@ -1,0 +1,611 @@
+Phenotypic Statistics for the Carbohydrates of CarbInfo_UncleanedWF Through Mixed Linear Modeling.
+     Starch      
+ Min.   :-4.464  
+ 1st Qu.:10.482  
+ Median :14.916  
+ Mean   :15.265  
+ 3rd Qu.:19.264  
+ Max.   :56.948  
+Starch ~ Check + (1|BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)
+Linear mixed model fit by REML. t-tests use Satterthwaite's method ['lmerModLmerTest']
+Formula: modelpastecheck
+   Data: SampleDFtoModel
+Control: strict_tol
+
+REML criterion at convergence: 22126.2
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-3.9797 -0.4854 -0.0494  0.4216  6.0818 
+
+Random effects:
+ Groups                  Name        Variance  Std.Dev. 
+ BookInbred:Envi         (Intercept) 5.977e+00 2.445e+00
+ BookInbred              (Intercept) 2.617e+01 5.116e+00
+ Envi:Col                (Intercept) 2.210e-02 1.487e-01
+ block:(superblock:Envi) (Intercept) 7.537e-09 8.682e-05
+ Envi:Row                (Intercept) 0.000e+00 0.000e+00
+ superblock:Envi         (Intercept) 2.435e-01 4.934e-01
+ Envi                    (Intercept) 5.360e+00 2.315e+00
+ Residual                            2.041e+01 4.518e+00
+Number of obs: 3520, groups:  
+BookInbred:Envi, 1524; BookInbred, 440; Envi:Col, 130; block:(superblock:Envi), 112; Envi:Row, 102; superblock:Envi, 12; Envi, 4
+
+Fixed effects:
+            Estimate Std. Error      df t value Pr(>|t|)
+(Intercept)    6.890      5.443 303.872   1.266    0.207
+Check2         7.001      7.490 348.238   0.935    0.351
+Check3        10.767      7.493 348.613   1.437    0.152
+Check4         5.697      7.517 353.105   0.758    0.449
+Check99        8.562      5.324 353.969   1.608    0.109
+optimizer (nloptwrap) convergence code: 0 (OK)
+boundary (singular) fit: see ?isSingular
+
+The r^2 value of this model for Starch is [1] 0.6563909
+The heritability of Starch is [1] 0.8661245
+The Shapiro-Wilk test normality test results of Starch is c(W = 0.951092528095768) . p-val < alpha : reject H~0~ that the residuals are normally distributed.
+The Shapiro-Wilk test normality test results of Starch is 9.23560801234834e-33 . p-val < alpha : reject H~0~ that the residuals are normally distributed.
+The Shapiro-Wilk test normality test results of Starch is Shapiro-Wilk normality test . p-val < alpha : reject H~0~ that the residuals are normally distributed.
+The Shapiro-Wilk test normality test results of Starch is residuals(model) . p-val < alpha : reject H~0~ that the residuals are normally distributed.
+Model Comparison, with and without Endosperm Term
+Starch ~ Check + (1|endo/BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)
+Linear mixed model fit by REML. t-tests use Satterthwaite's method ['lmerModLmerTest']
+Formula: modelpasteendo
+   Data: SampleDFtoModel
+Control: strict_tol
+
+REML criterion at convergence: 22009.5
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-4.0217 -0.4848 -0.0434  0.4344  6.1026 
+
+Random effects:
+ Groups                  Name        Variance Std.Dev.
+ BookInbred:Envi         (Intercept)  5.97896 2.4452  
+ BookInbred:endo         (Intercept) 18.52634 4.3042  
+ Envi:Col                (Intercept)  0.02501 0.1582  
+ block:(superblock:Envi) (Intercept)  0.00000 0.0000  
+ Envi:Row                (Intercept)  0.00000 0.0000  
+ superblock:Envi         (Intercept)  0.40597 0.6372  
+ endo                    (Intercept) 35.62432 5.9686  
+ Envi                    (Intercept)  5.24010 2.2891  
+ Residual                            20.27739 4.5030  
+Number of obs: 3520, groups:  
+BookInbred:Envi, 1524; BookInbred:endo, 442; Envi:Col, 130; block:(superblock:Envi), 112; Envi:Row, 102; superblock:Envi, 12; endo, 6; Envi, 4
+
+Fixed effects:
+            Estimate Std. Error       df t value Pr(>|t|)   
+(Intercept)  15.7231     5.3594  84.7416   2.934  0.00431 **
+Check2       -0.3141     6.4564 320.4621  -0.049  0.96123   
+Check3        3.5543     6.4585 320.8932   0.550  0.58248   
+Check4       -1.4749     6.4875 326.7950  -0.227  0.82030   
+Check99       1.2735     4.6284 328.4635   0.275  0.78338   
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+optimizer (nloptwrap) convergence code: 0 (OK)
+boundary (singular) fit: see ?isSingular
+
+ Total.Polysaccharides
+ Min.   :-4.641       
+ 1st Qu.:21.367       
+ Median :28.654       
+ Mean   :26.753       
+ 3rd Qu.:33.154       
+ Max.   :55.018       
+Total.Polysaccharides ~ Check + (1|BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)
+Linear mixed model fit by REML. t-tests use Satterthwaite's method ['lmerModLmerTest']
+Formula: modelpastecheck
+   Data: SampleDFtoModel
+Control: strict_tol
+
+REML criterion at convergence: 22370.9
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-4.9583 -0.5186  0.0116  0.4739  3.9047 
+
+Random effects:
+ Groups                  Name        Variance  Std.Dev. 
+ BookInbred:Envi         (Intercept) 4.000e+00 2.000e+00
+ BookInbred              (Intercept) 5.460e+01 7.389e+00
+ Envi:Col                (Intercept) 6.389e-06 2.528e-03
+ block:(superblock:Envi) (Intercept) 2.491e-01 4.991e-01
+ Envi:Row                (Intercept) 5.284e-09 7.269e-05
+ superblock:Envi         (Intercept) 2.618e-01 5.116e-01
+ Envi                    (Intercept) 1.463e+00 1.209e+00
+ Residual                            2.103e+01 4.586e+00
+Number of obs: 3520, groups:  
+BookInbred:Envi, 1524; BookInbred, 440; Envi:Col, 130; block:(superblock:Envi), 112; Envi:Row, 102; superblock:Envi, 12; Envi, 4
+
+Fixed effects:
+            Estimate Std. Error      df t value Pr(>|t|)  
+(Intercept)   16.786      7.524 388.781   2.231   0.0262 *
+Check2        12.316     10.583 383.135   1.164   0.2452  
+Check3        14.187     10.584 383.380   1.340   0.1809  
+Check4        14.461     10.602 385.974   1.364   0.1734  
+Check99        9.633      7.507 386.375   1.283   0.2002  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+optimizer (nloptwrap) convergence code: 0 (OK)
+boundary (singular) fit: see ?isSingular
+
+The r^2 value of this model for Total.Polysaccharides is [1] 0.7497399
+The heritability of Total.Polysaccharides is [1] 0.9376788
+The Shapiro-Wilk test normality test results of Total.Polysaccharides is c(W = 0.977594249306294) . p-val < alpha : reject H~0~ that the residuals are normally distributed.
+The Shapiro-Wilk test normality test results of Total.Polysaccharides is 3.87958990786904e-23 . p-val < alpha : reject H~0~ that the residuals are normally distributed.
+The Shapiro-Wilk test normality test results of Total.Polysaccharides is Shapiro-Wilk normality test . p-val < alpha : reject H~0~ that the residuals are normally distributed.
+The Shapiro-Wilk test normality test results of Total.Polysaccharides is residuals(model) . p-val < alpha : reject H~0~ that the residuals are normally distributed.
+Model Comparison, with and without Endosperm Term
+Total.Polysaccharides ~ Check + (1|endo/BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)
+Linear mixed model fit by REML. t-tests use Satterthwaite's method ['lmerModLmerTest']
+Formula: modelpasteendo
+   Data: SampleDFtoModel
+Control: strict_tol
+
+REML criterion at convergence: 21929
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-5.0176 -0.5306  0.0112  0.4762  4.0413 
+
+Random effects:
+ Groups                  Name        Variance  Std.Dev. 
+ BookInbred:Envi         (Intercept) 3.973e+00 1.993e+00
+ BookInbred:endo         (Intercept) 1.557e+01 3.946e+00
+ Envi:Col                (Intercept) 9.517e-03 9.755e-02
+ block:(superblock:Envi) (Intercept) 2.548e-01 5.047e-01
+ Envi:Row                (Intercept) 2.109e-09 4.593e-05
+ superblock:Envi         (Intercept) 3.195e-01 5.653e-01
+ endo                    (Intercept) 3.826e+01 6.186e+00
+ Envi                    (Intercept) 1.525e+00 1.235e+00
+ Residual                            2.105e+01 4.588e+00
+Number of obs: 3520, groups:  
+BookInbred:Envi, 1524; BookInbred:endo, 442; Envi:Col, 130; block:(superblock:Envi), 112; Envi:Row, 102; superblock:Envi, 12; endo, 6; Envi, 4
+
+Fixed effects:
+            Estimate Std. Error      df t value Pr(>|t|)   
+(Intercept)   15.775      4.967  63.014   3.176  0.00231 **
+Check2         5.387      5.887 293.268   0.915  0.36091   
+Check3         7.358      5.889 293.692   1.249  0.21249   
+Check4         7.969      5.921 300.246   1.346  0.17935   
+Check99        6.841      4.225 302.121   1.619  0.10651   
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+optimizer (nloptwrap) convergence code: 0 (OK)
+boundary (singular) fit: see ?isSingular
+
+      WSP         
+ Min.   :-22.651  
+ 1st Qu.:  2.993  
+ Median : 12.997  
+ Mean   : 11.371  
+ 3rd Qu.: 17.912  
+ Max.   : 35.101  
+WSP ~ Check + (1|BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)
+Linear mixed model fit by REML. t-tests use Satterthwaite's method ['lmerModLmerTest']
+Formula: modelpastecheck
+   Data: SampleDFtoModel
+Control: strict_tol
+
+REML criterion at convergence: 21923.4
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-6.1264 -0.4756 -0.0142  0.4612  4.0371 
+
+Random effects:
+ Groups                  Name        Variance Std.Dev.
+ BookInbred:Envi         (Intercept)  2.82122 1.6796  
+ BookInbred              (Intercept) 55.82915 7.4719  
+ Envi:Col                (Intercept)  0.10476 0.3237  
+ block:(superblock:Envi) (Intercept)  0.26297 0.5128  
+ Envi:Row                (Intercept)  0.04292 0.2072  
+ superblock:Envi         (Intercept)  0.01249 0.1118  
+ Envi                    (Intercept)  1.66506 1.2904  
+ Residual                            18.40399 4.2900  
+Number of obs: 3520, groups:  
+BookInbred:Envi, 1524; BookInbred, 440; Envi:Col, 130; block:(superblock:Envi), 112; Envi:Row, 102; superblock:Envi, 12; Envi, 4
+
+Fixed effects:
+            Estimate Std. Error      df t value Pr(>|t|)
+(Intercept)    9.352      7.582 395.901   1.234    0.218
+Check2         6.108     10.665 390.380   0.573    0.567
+Check3         3.411     10.666 390.495   0.320    0.749
+Check4         9.612     10.681 392.650   0.900    0.369
+Check99        1.639      7.563 393.075   0.217    0.829
+The r^2 value of this model for WSP is [1] 0.7723223
+The heritability of WSP is [1] 0.9489113
+The Shapiro-Wilk test normality test results of WSP is c(W = 0.971285205702435) . p-val < alpha : reject H~0~ that the residuals are normally distributed.
+The Shapiro-Wilk test normality test results of WSP is 5.26985888226635e-26 . p-val < alpha : reject H~0~ that the residuals are normally distributed.
+The Shapiro-Wilk test normality test results of WSP is Shapiro-Wilk normality test . p-val < alpha : reject H~0~ that the residuals are normally distributed.
+The Shapiro-Wilk test normality test results of WSP is residuals(model) . p-val < alpha : reject H~0~ that the residuals are normally distributed.
+Model Comparison, with and without Endosperm Term
+WSP ~ Check + (1|endo/BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)
+Linear mixed model fit by REML. t-tests use Satterthwaite's method ['lmerModLmerTest']
+Formula: modelpasteendo
+   Data: SampleDFtoModel
+Control: strict_tol
+
+REML criterion at convergence: 21284.8
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-6.1126 -0.4473  0.0047  0.4598  4.0018 
+
+Random effects:
+ Groups                  Name        Variance Std.Dev.
+ BookInbred:Envi         (Intercept)  2.86065 1.6913  
+ BookInbred:endo         (Intercept)  9.83406 3.1359  
+ Envi:Col                (Intercept)  0.12580 0.3547  
+ block:(superblock:Envi) (Intercept)  0.13194 0.3632  
+ Envi:Row                (Intercept)  0.09224 0.3037  
+ superblock:Envi         (Intercept)  0.08754 0.2959  
+ endo                    (Intercept) 59.87372 7.7378  
+ Envi                    (Intercept)  1.73499 1.3172  
+ Residual                            18.23658 4.2704  
+Number of obs: 3520, groups:  
+BookInbred:Envi, 1524; BookInbred:endo, 442; Envi:Col, 130; block:(superblock:Envi), 112; Envi:Row, 102; superblock:Envi, 12; endo, 6; Envi, 4
+
+Fixed effects:
+            Estimate Std. Error       df t value Pr(>|t|)  
+(Intercept)  -0.7158     4.6893  23.1634  -0.153   0.8800  
+Check2        6.6593     4.7195 272.2849   1.411   0.1594  
+Check3        3.9585     4.7214 272.7094   0.838   0.4025  
+Check4       10.3245     4.7550 280.6656   2.171   0.0307 *
+Check99       6.3490     3.3962 283.2280   1.869   0.0626 .
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+    Glucose       
+ Min.   : 0.3509  
+ 1st Qu.: 3.8842  
+ Median : 4.7996  
+ Mean   : 4.9661  
+ 3rd Qu.: 5.9124  
+ Max.   :12.1108  
+Glucose ~ Check + (1|BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)
+Linear mixed model fit by REML. t-tests use Satterthwaite's method ['lmerModLmerTest']
+Formula: modelpastecheck
+   Data: SampleDFtoModel
+Control: strict_tol
+
+REML criterion at convergence: 12038
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-4.2609 -0.5055  0.0386  0.5258  5.8842 
+
+Random effects:
+ Groups                  Name        Variance Std.Dev.
+ BookInbred:Envi         (Intercept) 0.18225  0.4269  
+ BookInbred              (Intercept) 0.98342  0.9917  
+ Envi:Col                (Intercept) 0.00000  0.0000  
+ block:(superblock:Envi) (Intercept) 0.02549  0.1597  
+ Envi:Row                (Intercept) 0.00000  0.0000  
+ superblock:Envi         (Intercept) 0.02857  0.1690  
+ Envi                    (Intercept) 0.08065  0.2840  
+ Residual                            1.29025  1.1359  
+Number of obs: 3520, groups:  
+BookInbred:Envi, 1524; BookInbred, 440; Envi:Col, 130; block:(superblock:Envi), 112; Envi:Row, 102; superblock:Envi, 12; Envi, 4
+
+Fixed effects:
+            Estimate Std. Error      df t value Pr(>|t|)    
+(Intercept)    8.288      1.044 310.667   7.940 3.72e-14 ***
+Check2        -3.980      1.451 305.386  -2.743  0.00646 ** 
+Check3        -3.927      1.452 306.034  -2.704  0.00723 ** 
+Check4        -3.702      1.460 312.931  -2.535  0.01173 *  
+Check99       -3.239      1.034 313.866  -3.131  0.00191 ** 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+optimizer (nloptwrap) convergence code: 0 (OK)
+boundary (singular) fit: see ?isSingular
+
+The r^2 value of this model for Glucose is [1] 0.5312412
+The heritability of Glucose is [1] 0.8262212
+The Shapiro-Wilk test normality test results of Glucose is c(W = 0.981214728827087) . p-val < alpha : reject H~0~ that the residuals are normally distributed.
+The Shapiro-Wilk test normality test results of Glucose is 3.29010792650012e-21 . p-val < alpha : reject H~0~ that the residuals are normally distributed.
+The Shapiro-Wilk test normality test results of Glucose is Shapiro-Wilk normality test . p-val < alpha : reject H~0~ that the residuals are normally distributed.
+The Shapiro-Wilk test normality test results of Glucose is residuals(model) . p-val < alpha : reject H~0~ that the residuals are normally distributed.
+Model Comparison, with and without Endosperm Term
+Glucose ~ Check + (1|endo/BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)
+Linear mixed model fit by REML. t-tests use Satterthwaite's method ['lmerModLmerTest']
+Formula: modelpasteendo
+   Data: SampleDFtoModel
+Control: strict_tol
+
+REML criterion at convergence: 11883.9
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-4.2587 -0.4990  0.0453  0.5369  5.9497 
+
+Random effects:
+ Groups                  Name        Variance Std.Dev.
+ BookInbred:Envi         (Intercept) 0.17702  0.4207  
+ BookInbred:endo         (Intercept) 0.57119  0.7558  
+ Envi:Col                (Intercept) 0.00000  0.0000  
+ block:(superblock:Envi) (Intercept) 0.02577  0.1605  
+ Envi:Row                (Intercept) 0.00000  0.0000  
+ superblock:Envi         (Intercept) 0.03097  0.1760  
+ endo                    (Intercept) 0.36013  0.6001  
+ Envi                    (Intercept) 0.07756  0.2785  
+ Residual                            1.29611  1.1385  
+Number of obs: 3520, groups:  
+BookInbred:Envi, 1524; BookInbred:endo, 442; Envi:Col, 130; block:(superblock:Envi), 112; Envi:Row, 102; superblock:Envi, 12; endo, 6; Envi, 4
+
+Fixed effects:
+            Estimate Std. Error       df t value Pr(>|t|)    
+(Intercept)   7.8772     0.8718 201.6109   9.036  < 2e-16 ***
+Check2       -2.6506     1.1433 245.3753  -2.318  0.02125 *  
+Check3       -2.6259     1.1440 245.9463  -2.295  0.02255 *  
+Check4       -2.4907     1.1543 255.0235  -2.158  0.03188 *  
+Check99      -2.3617     0.8239 257.5581  -2.867  0.00449 ** 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+optimizer (nloptwrap) convergence code: 0 (OK)
+boundary (singular) fit: see ?isSingular
+
+    Fructose      
+ Min.   : 0.3653  
+ 1st Qu.: 3.9887  
+ Median : 5.0469  
+ Mean   : 5.1116  
+ 3rd Qu.: 6.3049  
+ Max.   :10.6984  
+Fructose ~ Check + (1|BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)
+Linear mixed model fit by REML. t-tests use Satterthwaite's method ['lmerModLmerTest']
+Formula: modelpastecheck
+   Data: SampleDFtoModel
+Control: strict_tol
+
+REML criterion at convergence: 12233.9
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-4.4727 -0.4305  0.0138  0.5260  5.4384 
+
+Random effects:
+ Groups                  Name        Variance  Std.Dev. 
+ BookInbred:Envi         (Intercept) 1.025e-01 3.201e-01
+ BookInbred              (Intercept) 1.227e+00 1.108e+00
+ Envi:Col                (Intercept) 3.678e-03 6.065e-02
+ block:(superblock:Envi) (Intercept) 6.334e-02 2.517e-01
+ Envi:Row                (Intercept) 0.000e+00 0.000e+00
+ superblock:Envi         (Intercept) 2.839e-10 1.685e-05
+ Envi                    (Intercept) 1.125e-01 3.355e-01
+ Residual                            1.378e+00 1.174e+00
+Number of obs: 3520, groups:  
+BookInbred:Envi, 1524; BookInbred, 440; Envi:Col, 130; block:(superblock:Envi), 112; Envi:Row, 102; superblock:Envi, 12; Envi, 4
+
+Fixed effects:
+            Estimate Std. Error      df t value Pr(>|t|)    
+(Intercept)    8.130      1.149 323.558   7.077  9.2e-12 ***
+Check2        -4.151      1.598 320.081  -2.597  0.00983 ** 
+Check3        -3.517      1.599 320.500  -2.200  0.02854 *  
+Check4        -3.815      1.606 326.622  -2.375  0.01813 *  
+Check99       -2.936      1.138 327.553  -2.581  0.01029 *  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+optimizer (nloptwrap) convergence code: 0 (OK)
+boundary (singular) fit: see ?isSingular
+
+The r^2 value of this model for Fructose is [1] 0.5508309
+The heritability of Fructose is [1] 0.8611424
+The Shapiro-Wilk test normality test results of Fructose is c(W = 0.96645202594119) . p-val < alpha : reject H~0~ that the residuals are normally distributed.
+The Shapiro-Wilk test normality test results of Fructose is 6.80958417852691e-28 . p-val < alpha : reject H~0~ that the residuals are normally distributed.
+The Shapiro-Wilk test normality test results of Fructose is Shapiro-Wilk normality test . p-val < alpha : reject H~0~ that the residuals are normally distributed.
+The Shapiro-Wilk test normality test results of Fructose is residuals(model) . p-val < alpha : reject H~0~ that the residuals are normally distributed.
+Model Comparison, with and without Endosperm Term
+Fructose ~ Check + (1|endo/BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)
+Linear mixed model fit by REML. t-tests use Satterthwaite's method ['lmerModLmerTest']
+Formula: modelpasteendo
+   Data: SampleDFtoModel
+Control: strict_tol
+
+REML criterion at convergence: 12022.1
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-4.4752 -0.4417  0.0137  0.5126  5.4790 
+
+Random effects:
+ Groups                  Name        Variance Std.Dev.
+ BookInbred:Envi         (Intercept) 0.101937 0.31928 
+ BookInbred:endo         (Intercept) 0.605782 0.77832 
+ Envi:Col                (Intercept) 0.003192 0.05650 
+ block:(superblock:Envi) (Intercept) 0.067624 0.26005 
+ Envi:Row                (Intercept) 0.000000 0.00000 
+ superblock:Envi         (Intercept) 0.008173 0.09041 
+ endo                    (Intercept) 0.563612 0.75074 
+ Envi                    (Intercept) 0.107283 0.32754 
+ Residual                            1.379386 1.17447 
+Number of obs: 3520, groups:  
+BookInbred:Envi, 1524; BookInbred:endo, 442; Envi:Col, 130; block:(superblock:Envi), 112; Envi:Row, 102; superblock:Envi, 12; endo, 6; Envi, 4
+
+Fixed effects:
+            Estimate Std. Error       df t value Pr(>|t|)    
+(Intercept)   7.6433     0.9052 159.0290   8.444 1.81e-14 ***
+Check2       -2.5839     1.1584 241.0169  -2.231   0.0266 *  
+Check3       -1.9852     1.1590 241.6235  -1.713   0.0880 .  
+Check4       -2.3662     1.1695 251.1869  -2.023   0.0441 *  
+Check99      -1.9188     0.8351 253.1524  -2.298   0.0224 *  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+optimizer (nloptwrap) convergence code: 0 (OK)
+boundary (singular) fit: see ?isSingular
+
+    Sucrose       
+ Min.   :-11.120  
+ 1st Qu.:  7.045  
+ Median : 10.449  
+ Mean   : 11.934  
+ 3rd Qu.: 16.305  
+ Max.   : 36.705  
+Sucrose ~ Check + (1|BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)
+Linear mixed model fit by REML. t-tests use Satterthwaite's method ['lmerModLmerTest']
+Formula: modelpastecheck
+   Data: SampleDFtoModel
+Control: strict_tol
+
+REML criterion at convergence: 19266.1
+
+Scaled residuals: 
+     Min       1Q   Median       3Q      Max 
+-10.0843  -0.4449  -0.0148   0.4694   5.2313 
+
+Random effects:
+ Groups                  Name        Variance  Std.Dev.
+ BookInbred:Envi         (Intercept) 2.238e+00 1.49609 
+ BookInbred              (Intercept) 2.990e+01 5.46830 
+ Envi:Col                (Intercept) 1.486e-02 0.12190 
+ block:(superblock:Envi) (Intercept) 2.817e-04 0.01678 
+ Envi:Row                (Intercept) 6.591e-02 0.25673 
+ superblock:Envi         (Intercept) 1.763e-01 0.41982 
+ Envi                    (Intercept) 4.847e+00 2.20168 
+ Residual                            8.033e+00 2.83422 
+Number of obs: 3520, groups:  
+BookInbred:Envi, 1524; BookInbred, 440; Envi:Col, 130; block:(superblock:Envi), 112; Envi:Row, 102; superblock:Envi, 12; Envi, 4
+
+Fixed effects:
+            Estimate Std. Error      df t value Pr(>|t|)   
+(Intercept)   18.290      5.651 354.857   3.237  0.00132 **
+Check2       -12.138      7.825 395.509  -1.551  0.12168   
+Check3       -10.651      7.826 395.768  -1.361  0.17434   
+Check4        -8.804      7.836 397.796  -1.123  0.26193   
+Check99       -5.775      5.548 397.999  -1.041  0.29856   
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+optimizer (nloptwrap) convergence code: 0 (OK)
+Model failed to converge with max|grad| = 0.00544001 (tol = 0.002, component 1)
+
+The r^2 value of this model for Sucrose is [1] 0.8337681
+The heritability of Sucrose is [1] 0.950306
+The Shapiro-Wilk test normality test results of Sucrose is c(W = 0.943430692940502) . p-val < alpha : reject H~0~ that the residuals are normally distributed.
+The Shapiro-Wilk test normality test results of Sucrose is 9.45741506438951e-35 . p-val < alpha : reject H~0~ that the residuals are normally distributed.
+The Shapiro-Wilk test normality test results of Sucrose is Shapiro-Wilk normality test . p-val < alpha : reject H~0~ that the residuals are normally distributed.
+The Shapiro-Wilk test normality test results of Sucrose is residuals(model) . p-val < alpha : reject H~0~ that the residuals are normally distributed.
+Model Comparison, with and without Endosperm Term
+Sucrose ~ Check + (1|endo/BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)
+Linear mixed model fit by REML. t-tests use Satterthwaite's method ['lmerModLmerTest']
+Formula: modelpasteendo
+   Data: SampleDFtoModel
+Control: strict_tol
+
+REML criterion at convergence: 18710.8
+
+Scaled residuals: 
+     Min       1Q   Median       3Q      Max 
+-10.0536  -0.4630  -0.0167   0.4844   5.3417 
+
+Random effects:
+ Groups                  Name        Variance  Std.Dev.
+ BookInbred:Envi         (Intercept)  2.191948 1.48052 
+ BookInbred:endo         (Intercept)  6.412140 2.53222 
+ Envi:Col                (Intercept)  0.020344 0.14263 
+ block:(superblock:Envi) (Intercept)  0.003781 0.06149 
+ Envi:Row                (Intercept)  0.082473 0.28718 
+ superblock:Envi         (Intercept)  0.239888 0.48978 
+ endo                    (Intercept) 19.832068 4.45332 
+ Envi                    (Intercept)  4.772331 2.18457 
+ Residual                             8.034244 2.83447 
+Number of obs: 3520, groups:  
+BookInbred:Envi, 1524; BookInbred:endo, 442; Envi:Col, 130; block:(superblock:Envi), 112; Envi:Row, 102; superblock:Envi, 12; endo, 6; Envi, 4
+
+Fixed effects:
+            Estimate Std. Error      df t value Pr(>|t|)    
+(Intercept)   18.805      3.466  49.469   5.425 1.73e-06 ***
+Check2        -6.415      3.813 305.434  -1.682   0.0935 .  
+Check3        -5.019      3.814 305.957  -1.316   0.1892    
+Check4        -3.421      3.834 312.547  -0.892   0.3730    
+Check99       -3.330      2.736 314.093  -1.217   0.2244    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+  Total.Sugar    
+ Min.   :-2.008  
+ 1st Qu.:15.778  
+ Median :19.809  
+ Mean   :22.020  
+ 3rd Qu.:29.144  
+ Max.   :52.843  
+Total.Sugar ~ Check + (1|BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)
+Linear mixed model fit by REML. t-tests use Satterthwaite's method ['lmerModLmerTest']
+Formula: modelpastecheck
+   Data: SampleDFtoModel
+Control: strict_tol
+
+REML criterion at convergence: 23089.6
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-5.4047 -0.4149  0.0352  0.5005  5.2961 
+
+Random effects:
+ Groups                  Name        Variance  Std.Dev. 
+ BookInbred:Envi         (Intercept) 2.142e+00 1.464e+00
+ BookInbred              (Intercept) 5.466e+01 7.393e+00
+ Envi:Col                (Intercept) 9.366e-09 9.678e-05
+ block:(superblock:Envi) (Intercept) 5.426e-01 7.366e-01
+ Envi:Row                (Intercept) 0.000e+00 0.000e+00
+ superblock:Envi         (Intercept) 3.541e-01 5.951e-01
+ Envi                    (Intercept) 5.030e+00 2.243e+00
+ Residual                            2.802e+01 5.293e+00
+Number of obs: 3520, groups:  
+BookInbred:Envi, 1524; BookInbred, 440; Envi:Col, 130; block:(superblock:Envi), 112; Envi:Row, 102; superblock:Envi, 12; Envi, 4
+
+Fixed effects:
+            Estimate Std. Error      df t value Pr(>|t|)    
+(Intercept)   35.256      7.569 369.591   4.658 4.46e-06 ***
+Check2       -20.649     10.555 373.234  -1.956   0.0512 .  
+Check3       -18.702     10.557 373.577  -1.771   0.0773 .  
+Check4       -17.032     10.581 377.038  -1.610   0.1083    
+Check99      -12.378      7.493 377.412  -1.652   0.0994 .  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+optimizer (nloptwrap) convergence code: 0 (OK)
+boundary (singular) fit: see ?isSingular
+
+The r^2 value of this model for Total.Sugar is [1] 0.7114216
+The heritability of Total.Sugar is [1] 0.9312145
+The Shapiro-Wilk test normality test results of Total.Sugar is c(W = 0.953589186629197) . p-val < alpha : reject H~0~ that the residuals are normally distributed.
+The Shapiro-Wilk test normality test results of Total.Sugar is 4.6425952884439e-32 . p-val < alpha : reject H~0~ that the residuals are normally distributed.
+The Shapiro-Wilk test normality test results of Total.Sugar is Shapiro-Wilk normality test . p-val < alpha : reject H~0~ that the residuals are normally distributed.
+The Shapiro-Wilk test normality test results of Total.Sugar is residuals(model) . p-val < alpha : reject H~0~ that the residuals are normally distributed.
+Model Comparison, with and without Endosperm Term
+Total.Sugar ~ Check + (1|endo/BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)
+Linear mixed model fit by REML. t-tests use Satterthwaite's method ['lmerModLmerTest']
+Formula: modelpasteendo
+   Data: SampleDFtoModel
+Control: strict_tol
+
+REML criterion at convergence: 22618.7
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-5.0237 -0.4343  0.0361  0.5253  5.2262 
+
+Random effects:
+ Groups                  Name        Variance Std.Dev.
+ BookInbred:Envi         (Intercept)  1.9924  1.4115  
+ BookInbred:endo         (Intercept) 14.0484  3.7481  
+ Envi:Col                (Intercept)  0.0000  0.0000  
+ block:(superblock:Envi) (Intercept)  0.5602  0.7484  
+ Envi:Row                (Intercept)  0.0000  0.0000  
+ superblock:Envi         (Intercept)  0.5273  0.7261  
+ endo                    (Intercept) 33.9133  5.8235  
+ Envi                    (Intercept)  4.8716  2.2072  
+ Residual                            28.1090  5.3018  
+Number of obs: 3520, groups:  
+BookInbred:Envi, 1524; BookInbred:endo, 442; Envi:Col, 130; block:(superblock:Envi), 112; Envi:Row, 102; superblock:Envi, 12; endo, 6; Envi, 4
+
+Fixed effects:
+            Estimate Std. Error      df t value Pr(>|t|)    
+(Intercept)   35.129      4.787  64.664   7.339 4.48e-10 ***
+Check2       -11.963      5.549 262.275  -2.156   0.0320 *  
+Check3       -10.193      5.552 262.810  -1.836   0.0675 .  
+Check4        -9.045      5.597 271.767  -1.616   0.1073    
+Check99       -8.105      3.996 273.758  -2.028   0.0435 *  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+optimizer (nloptwrap) convergence code: 0 (OK)
+boundary (singular) fit: see ?isSingular
+

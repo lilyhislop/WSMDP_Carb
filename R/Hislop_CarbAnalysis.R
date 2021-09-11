@@ -48,7 +48,7 @@ library(bigmemory)
 library(MuMIn)
 library(SNPRelate)
 library(beepr)#beep when code is done
-
+library("cAIC4")
 
 getwd()
 setwd("C:/Users/LHislop/Documents/GitHub/WSMDP_Carb")
@@ -235,7 +235,6 @@ CarbInfoExpandedWFDF <- subset(rbind(HWSPs,LWSPWFs), !is.na(IsExperimental))
 CarbInfoExpandedNFDF <- subset(rbind(HWSPs,LWSPNFs), !is.na(IsExperimental))
 
 
-
 #visualize these data sets pre cleaning
 CarbDataFrameVis(CarbInfoExpandedWFDF,"WithField_WithOutliers")
 CarbDataFrameVis(CarbInfoExpandedNFDF,"NoField_WithOutliers")
@@ -247,13 +246,6 @@ CleanedInfoNF <- CarbOutlierCleanup(CarbInfoExpandedNFDF,"NF",alpha = 0.05)
 write.csv(file = "Data/OutputtedData/CleanedInfoWFOutput.csv",CleanedInfoWF)
 write.csv(file = "Data/OutputtedData/CleanedInfoNFOutput.csv",CleanedInfoNF)
 
-
-#clean up the predictive seperated data frames. Reassign or delete outliers
-CleanedInfoHWSP <- CarbOutlierCleanup(HWSPs,"HWSP",alpha = 0.05)
-CleanedInfoLWSPNF <- CarbOutlierCleanup(LWSPNFs,"LWSPNFs",alpha = 0.05)
-CleanedInfoLWSPWF <- CarbOutlierCleanup(LWSPWFs,"LWSPWFs",alpha = 0.05)
-
-
 #revisualize the dataframes
 CarbDataFrameVis(CleanedInfoWF,"WithField_Cleaned")
 CarbDataFrameVis(CleanedInfoNF,"NoField_Cleaned")
@@ -263,14 +255,21 @@ write.csv(file = "Data/OutputtedData/InbredsWithinWSMDPCarbDataNF.csv",unique(Cl
 write.csv(file = "Data/OutputtedData/InbredsWithinWSMDPCarbDataWF.csv",unique(CleanedInfoWF[c("Inbred", "endo")]))
 
 
+#clean up the predictive seperated data frames. Reassign or delete outliers
+CleanedInfoHWSP <- CarbOutlierCleanup(HWSPs,"HWSP",alpha = 0.05)
+CleanedInfoLWSPNF <- CarbOutlierCleanup(LWSPNFs,"LWSPNFs",alpha = 0.05)
+CleanedInfoLWSPWF <- CarbOutlierCleanup(LWSPWFs,"LWSPWFs",alpha = 0.05)
+
 #######################
 ### Summarize the samples within CleanedInfoNF
-
-summary(CleanedInfoNF)
-
-
-
-
+summarizeDF <- function(DF){
+print(summary(DF))
+print(length(unique(DF$Inbred)))
+OnlyUnique <- DF %>% distinct(Inbred, .keep_all = TRUE)
+print(summary(OnlyUnique))
+}
+summarizeDF(CleanedInfoWF)
+summarizeDF(CleanedInfoNF)
 #########################
 ###Validate that the NIR Equation is good###
 #########################
@@ -386,11 +385,11 @@ write.csv(NFValWLdfEqnStatsR, "Data/OutputtedData/EqnFitStatisticsValidationNF.c
 ###Linear Model Analysis###
 #########################
 
-linearmodel <- function(SampleDFtoModel,TitleAddendum){
-  #Set dataframe columns to factors
-  cols <- c('superblock','Col', 'Row', 'Year', 'Envi', 'Check', 'block', 'Rep', 'endo', 'PlotNum' )
-  SampleDFtoModel[cols] <- lapply(SampleDFtoModel[cols], as.factor)
-
+linearmodel <- function(SampleDFtoModel,TitleAddendum, endoCheck = FALSE){
+  ptm <- proc.time()
+  #For Debugging
+  # SampleDFtoModel <- CleanedInfoNF
+  # TitleAddendum <- "CleanedOutliersNF"
   #Establish a file to output the statistical analysis results to
   statsfile <- paste0("Data/OutputtedData/WSMDP_CarbPheno_stats_",TitleAddendum,".txt")
   #write a header in that stats file
@@ -408,9 +407,10 @@ linearmodel <- function(SampleDFtoModel,TitleAddendum){
   #write those traits to a vector
   carbs <- colnames(SampleDFtoModel)[c1:c2]
   
-#Itteratite thorugh all the traits
+  ######Iteratite though all the traits#####
 
   for(j in 1:length(carbs)){
+    print(paste0("Starting ",carbs[j]," Model Generation"))
     #output the statistics about this trait to the stats file
     summary <- summary(SampleDFtoModel[,c1+j-1], )
     out <- capture.output(summary)
@@ -423,24 +423,36 @@ linearmodel <- function(SampleDFtoModel,TitleAddendum){
     if(length(unique(SampleDFtoModel$Check))>1){
     modelpastecheck<-  paste0(carbs[j], " ~ Check + (1|BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)")
     }
-    #Output the model to the stats file
-    cat(modelpastecheck, file=statsfile, sep="\n", append=TRUE)
+    
+  #Output the model to the stats file
+  cat(modelpastecheck, file=statsfile, sep="\n", append=TRUE)
 
-    #Run the Model
-    model <- lmer(modelpastecheck,
-                  data=SampleDFtoModel, REML = TRUE)
-    # Decreasing stopping tolerances
-    strict_tol <- lmerControl(optCtrl=list(xtol_abs=1e-8, ftol_abs=1e-8))
-    if (all(model@optinfo$optimizer=="nloptwrap")) {
-      model <- update(model, control=strict_tol)
-    }
+  #Run the Model
+  #get rid of the one sample that is throwing an error because its NA
+  SampleDFtoModel_noTraitNAs<-subset(SampleDFtoModel, !is.na(superblock))   
+  # SampleDFtoModel_noTraitNAs <- SampleDFtoModel_noTraitNAs[-which(is.na(SampleDFtoModel_noTraitNAs[carbs[j]])),]
+  #plug in the model
+  print("Run the Big Model")
+  modelExpansive <- lme4::lmer(modelpastecheck,
+                data=SampleDFtoModel, REML = TRUE)
+  #Step through the model to find the shortened, better fitting version
+  print(paste0("Step Through ",carbs[j]," Model Generation"))
+  x <- stepcAIC(modelExpansive,direction="backward")
+  #Extract that shorter model
+  model <- x$finalModel
+  
+  print(paste0("Read Out ",carbs[j]," BLUPS from selected model"))
+  #get the random effects of that model
   RandomEffects <- ranef(model)
+  #hold the blups
   tempBlup <- data.frame("Inbred" = rownames(RandomEffects$BookInbred), "BLUP" = RandomEffects$BookInbred)
   blupHolder <- merge(blupHolder, tempBlup, by = "Inbred", all = TRUE)
   colnames(blupHolder)[j+1] <- paste0(carbs[j],".BLUP")
+  
 
   
-  # CheckAssumptions
+  ###### Check Assumptions#######
+  print(paste0("Check  ",carbs[j]," Model Assumption"))
   png(paste0("Figures/WSMDP_LinearModel_assumptions_",TitleAddendum,"_", carbs[j], ".png"), width = 1000, height = 500)
   par(mfrow=c(1,3))
 
@@ -453,9 +465,9 @@ linearmodel <- function(SampleDFtoModel,TitleAddendum){
   curve(dnorm(x,mean(residuals(model)),sd(residuals(model))),add=T,lwd=2, col="red", lty=1)
   # qq plot
   qqnorm(residuals(model), pch=19, col="dark blue", col.lines="red", xlab="Pred quantiles", ylab="Obs quantiles")
-
   dev.off()
-   # Summary of random effects
+
+  # Summary of random effects
   summary <- summary(model, correlation=FALSE)
   out <- capture.output(summary)
   cat(out, file=statsfile, sep="\n", append=TRUE)
@@ -463,20 +475,44 @@ linearmodel <- function(SampleDFtoModel,TitleAddendum){
   # Write out residuals from ANOVA
   write.table(resid(model), paste0("Data/OutputtedData/WSMDP_LinearModel_residuals_",TitleAddendum,"_", carbs[j], ".csv"), col.names=F, row.names=F, sep=",")
 
-  #calculate model R2
-  r2 <- r.squaredGLMM(model)
+  #######calculate model R2
+  print(paste0("Calculate ",carbs[j]," R2"))
+  r2 <- MuMIn::r.squaredGLMM(model)
   out <- capture.output(r2[2])
   cat(paste("The r^2 value of this model for", carbs[j] ,"is", out), file= statsfile, sep="\n", append=TRUE)
-    # Calculate hertiability
+    
+  
+  ######## Calculate heritability
   model_variances <- as.data.frame(VarCorr(model))
+  print(paste0("Calculate ",carbs[j]," Heritability"))
+  #Where are the geno, gxe, and residual stats located in the dataframe?
+  geno <- which(model_variances$grp == "BookInbred")
+  gxe <- which(model_variances$grp == "BookInbred:Envi")
+  resid <- which(model_variances$grp == "Residual")
+
   #broad sence heritability calculated as variance of genotype/ (variance of geno + var of gxe / num of enviornments + var of error/num of replicates and environ)
-  h2 <- model_variances$vcov[2]/(model_variances$vcov[2]+(model_variances$vcov[1]/4)+(model_variances$vcov[8]/8))
+  h2 <- model_variances$vcov[geno]/(model_variances$vcov[geno]+(model_variances$vcov[gxe]/4)+(model_variances$vcov[resid]/8))
   out <- capture.output(h2)
   cat(paste("The heritability of", carbs[j] ,"is", out), file= statsfile, sep="\n", append=TRUE)
-
-  #Compare model with one with Endosperm
+  
+  #### Shapiro-Wilk test normality test 
+  ####p-val < alpha : reject H~0~ that the residuals are normally distributed.
+  out <- shapiro.test(residuals(model))
+  print(out)
+  cat(paste("The Shapiro-Wilk test normality test results of", carbs[j] ,"is", out, ". p-val < alpha : reject H~0~ that the residuals are normally distributed."), file= statsfile, sep="\n", append=TRUE)
+  
+  # ###### Levene's test 
+  # ###Will provide a p-value to unequal variance testing.p-val < alpha : reject H~0~ that the variances are equal.
+  # out <- leveneTest(carbs[j]~endo,data=SampleDFtoModel)
+  # print(out)
+  # cat(paste("The Levene's test results of", carbs[j] ," and endosperm mutant is", out, ". Will provide a p-value to unequal variance testing.p-val < alpha : reject H~0~ that the variances are equal."), file= statsfile, sep="\n", append=TRUE)
+  # 
+  #Only Do the parts with the endosperm component if endoCheck is set to true since it takes a long time
+  if(endoCheck == TRUE){
+  ######## Compare model with one with Endosperm #####
   cat("Model Comparison, with and without Endosperm Term", file=statsfile, sep="\n", append=TRUE)
   #####Modeling
+  print(paste0("Check ",carbs[j]," Model with Endosperm components"))
   modelpasteendo<-  paste0(carbs[j], " ~ (1|endo/BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)")
   # Use check if there enough checks in the model set
   if(length(unique(SampleDFtoModel$Check))>1){
@@ -484,19 +520,24 @@ linearmodel <- function(SampleDFtoModel,TitleAddendum){
   }
   cat(modelpasteendo, file=statsfile, sep="\n", append=TRUE)
 
-  modelendo <- lmer(modelpasteendo,
-                data=SampleDFtoModel, REML = TRUE)
-  # Decreasing stopping tolerances
-  strict_tol <- lmerControl(optCtrl=list(xtol_abs=1e-8, ftol_abs=1e-8))
-  if (all(modelendo@optinfo$optimizer=="nloptwrap")) {
-    modelendo <- update(modelendo, control=strict_tol)
-  }
+  #plug in the model
+  modelendoExpansive <- lmer(modelpasteendo,
+                         data=SampleDFtoModel_noTraitNAs, REML = TRUE)
+  #Step through the model to find the shortened, better fitting version
+  print(paste0("Step through ",carbs[j]," Model with Endosperm components"))
+  x <- stepcAIC(modelExpansive,direction="backward")
+  #Extract that shorter model
+  modelendo <- x$finalModel
+  
   # Summary of random effects
   summary <- summary(modelendo, correlation=FALSE)
   out <- capture.output(summary)
   cat(out, file=statsfile, sep="\n", append=TRUE)
+  }
   
-
+  
+  
+  print(paste0("Find what variances arribute to what in ",carbs[j]))
   formula1 <- paste0(colnames(SampleDFtoModel)[j+4],"~ BookInbred*Envi  + superblock%in%Envi + superblock%in%block%in%Envi+ Row%in%Envi+ Col%in%Envi")
   fit1 <- lm(formula1,data=SampleDFtoModel)
   AIC1 <- extractAIC(fit1)
@@ -530,15 +571,16 @@ linearmodel <- function(SampleDFtoModel,TitleAddendum){
   #Write the variances to a file
   write.table(VarDF, file = paste0("Data/OutputtedData/WSMDP_CarbPheno_Anova_Variances_",TitleAddendum,".txt"), col.names=T, row.names=F, sep=",")
   
+  
   # Write out BLUPs for Genotypes
   write.table(blupHolder, file=paste0("Data/OutputtedData/WSMDP_CarbPheno_InbredBLUPS_",TitleAddendum,".txt"), col.names=T, row.names=F, sep=",")
-
+  beep(3)
+  print(proc.time() - ptm)
   return(blupHolder)
 }
-
-
+#######TOFIX######
 WFBlups <- linearmodel(CleanedInfoWF,"CleanedOutliersWF")
-NFBlups <- linearmodel(CleanedInfoNF,"CleanedOutliersNF")
+NFBlups <- linearmodel(CleanedInfoNF,"CleanedOutliersNF",endoCheck = FALSE)
 
 
 HWSPBlups <- linearmodel(CleanedInfoHWSP,"CleanedOutliersHWSP")
@@ -550,81 +592,86 @@ LWSPWFBlups <- linearmodel(CleanedInfoLWSPWF,"CleanedOutliersLWSPWF")
 #########################
 ###Genomic Info###
 #########################
-# genoinfo <- read.csv("Data/WSMDP_Inbreds.txt",head = FALSE)
-genoinfo <- read.csv("Data/WSMDP_Inbreds_2021.6.30.csv",head = TRUE)
-# colnames(genoinfo) <- c("Inbred","","","","","","","GenoName","source","endo","notes","Region","Program")
-colnames(genoinfo) <- c("Index","Inbred","Planting2019","Planting20142015","SCMVTest","CAP","Sugar2019","GBS","endo","GenoName")
-test1 <- which(genoinfo$Planting20142015==1)
-test2 <- which(!is.na(genoinfo$GenoName))
-intersect(test1,test2)
-genoinfo$endo[which(genoinfo$endo == "SE")] <- "field"
-#########################
-###SNP Relate Establishment###
-#########################
-infilename <- "WSMDP_SeqG_PreLD"
+genoinfo <- read.csv("Data/RawData/WSMDP_Inbreds_2021.9.8.csv",head = TRUE)
 
-
-#read in VCF. This file has been previously filtered for 90% SNP call rate and MinorAlleleFrequency of 0.025
-infilename
-vcfpath <- paste("Data/RawData/",infilename,".vcf",sep = "")
-snpgdsVCF2GDS(vcfpath, "Data/test.gds", method = "biallelic.only")
-snpgdsSummary("Data/test.gds")
-PreLDGeno <- snpgdsOpen("Data/test.gds")
-
-# #LDVisualization
-# L1 <- snpgdsLDMat(PreLDGeno, method="r", slide=250)
-# # plot
-# LDMatFile <- paste0("Figures/",Sys.Date(),"SNPRelate_LDMatrix.png")
-# png(LDMatFile, width = 1000, height = 1000)
-# image(abs(L1$LD), col=terrain.colors(64))
-# dev.off()
-
-#Lets prune anything with an LD over 0.98
-PostLDGeno <- snpgdsLDpruning(PreLDGeno, ld.threshold = 0.98, start.pos = "first", verbose = TRUE)
-names(PostLDGeno)
-head(PostLDGeno$chr1)
-PostLDGeno.id <- unlist(PostLDGeno)
-
-#########################
-### PCA ###
-#########################
-#Read in the SCMV gdsobj with only the snp.id's found by LD pruning and only the sample.id's that we phenotypes
-
-PCA <- snpgdsPCA(PreLDGeno, snp.id = PostLDGeno.id)
-#cut off the numbers at the end of the sample.id that don't mean things to humans
-holdtrunc<-gsub(PCA$sample.id, pattern = ":.*", replacement = "")
-#only include the samples that are in genoinfo
-#this is a round about way of looking at only the genotype info I have for the things planted in this trial
-#eliminate inbreds tested in other experiments
-genoinfo2014only <- genoinfo[which(genoinfo$Planting20142015 == 1),]
-#look at what inbreds have the same genoname in both the seq file and the data summary
-matching <- data.frame("GenoName" = unique(PCA$sample.id[na.omit(match(genoinfo2014only$GenoName, holdtrunc))]))
-#hold the names of the inbreds I have seq info for
-holdnocol <- unique(holdtrunc[na.omit(match(genoinfo2014only$GenoName, holdtrunc))])
-#combine the geno name with the endosperm mutant time from the genoinfo file
-matching$endo <- genoinfo2014only$endo[match(holdnocol,genoinfo2014only$GenoName)]
-
-#conduct pca again with only those samples
-PCA <- snpgdsPCA(PreLDGeno, sample.id = matching$GenoName, snp.id = PostLDGeno.id)
-pc.perc <- PCA$varprop*100
-head(round(pc.perc,2))
-
-
-ptm <- proc.time()
-#visualize the PCA with ld pruned snps and only the tested samples 
-PCAFigureCreation(PCA,pc.perc,matching,infilename,"endo")
-# PCAFigureCreation(PCA,pc.perc,matching,filename,"Program")
-# PCAFigureCreation(PCA,pc.perc,matching,filename,"Region")
-proc.time() - ptm
-#########################
-### Close Snp Relate ###
-#########################
-outfilename <- "WSMDP_SeqG"
-outfile <- paste("Data/RawData/",outfilename ,sep="")
-snpgdsGDS2PED(PreLDGeno, outfile, snp.id = PostLDGeno.id)
-snpgdsGDS2PED(PreLDGeno, paste0("Data/RawData/",outfilename,"_NoLD_InbredsPruned"), sample.id = matching$GenoName)
-snpgdsClose(PreLDGeno)
-
+# 
+# #########################
+# ###SNP Relate Establishment###
+# #########################
+# infilename <- "WSMDP_SeqG_PreLD"
+# 
+# 
+# #read in VCF. This file has been previously filtered for 90% SNP call rate and MinorAlleleFrequency of 0.025
+# infilename
+# vcfpath <- paste("Data/RawData/",infilename,".vcf",sep = "")
+# snpgdsVCF2GDS(vcfpath, "Data/test.gds", method = "biallelic.only")
+# snpgdsSummary("Data/test.gds")
+# PreLDGeno <- snpgdsOpen("Data/test.gds")
+# 
+# # #LDVisualization
+# # L1 <- snpgdsLDMat(PreLDGeno, method="r", slide=250)
+# # # plot
+# # LDMatFile <- paste0("Figures/",Sys.Date(),"SNPRelate_LDMatrix.png")
+# # png(LDMatFile, width = 1000, height = 1000)
+# # image(abs(L1$LD), col=terrain.colors(64))
+# # dev.off()
+# 
+# #Lets prune anything with an LD over 0.98
+# PostLDGeno <- snpgdsLDpruning(PreLDGeno, ld.threshold = 0.98, start.pos = "first", verbose = TRUE)
+# names(PostLDGeno)
+# head(PostLDGeno$chr1)
+# PostLDGeno.id <- unlist(PostLDGeno)
+# 
+# #########################
+# ### PCA ###
+# #########################
+# #Read in the SCMV gdsobj with only the snp.id's found by LD pruning and only the sample.id's that we phenotypes
+# 
+# PCA <- snpgdsPCA(PreLDGeno, snp.id = PostLDGeno.id)
+# #cut off the numbers at the end of the sample.id that don't mean things to humans
+# holdtrunc<-gsub(PCA$sample.id, pattern = ":.*", replacement = "")
+# 
+# #########only include the samples that are in genoinfo########
+# #this is a round about way of looking at only the genotype info I have for the things planted in this trial
+# #eliminate inbreds tested in other experiments
+# genoinfo2014only <- genoinfo[which(genoinfo$Planting20142015 == 1),]
+# 
+# #look at what inbreds have the same genoname in both the seq file and the data summary
+# matching <- data.frame("GenoName" = unique(PCA$sample.id[na.omit(match(genoinfo2014only$GenoName, holdtrunc))]))
+# 
+# #hold the names of the inbreds I have seq info for
+# holdnocol <- unique(holdtrunc[na.omit(match(genoinfo2014only$GenoName, holdtrunc))])
+# 
+# #combine the geno name with the endosperm mutant type from the genoinfo file
+# matching$endo <- genoinfo2014only$endo[match(holdnocol,genoinfo2014only$GenoName)]
+# 
+# #combine the geno name with the endosperm mutant type from the genoinfo file
+# matching$Program <- genoinfo2014only$Program[match(holdnocol,genoinfo2014only$GenoName)]
+# #combine the geno name with the endosperm mutant type from the genoinfo file
+# matching$Region <- genoinfo2014only$Region[match(holdnocol,genoinfo2014only$GenoName)]
+# 
+# 
+# #conduct pca again with only those samples
+# PCA <- snpgdsPCA(PreLDGeno, sample.id = matching$GenoName, snp.id = PostLDGeno.id)
+# pc.perc <- PCA$varprop*100
+# head(round(pc.perc,2))
+# 
+# 
+# ptm <- proc.time()
+# #visualize the PCA with ld pruned snps and only the tested samples 
+# PCAFigureCreation(PCA,pc.perc,matching,infilename,"endo")
+# PCAFigureCreation(PCA,pc.perc,matching,infilename,"Program")
+# PCAFigureCreation(PCA,pc.perc,matching,infilename,"Region")
+# proc.time() - ptm
+# #########################
+# ### Close Snp Relate ###
+# #########################
+# outfilename <- "WSMDP_SeqG"
+# outfile <- paste("Data/RawData/",outfilename ,sep="")
+# snpgdsGDS2PED(PreLDGeno, outfile, snp.id = PostLDGeno.id)
+# snpgdsGDS2PED(PreLDGeno, paste0("Data/RawData/",outfilename,"_NoLD_InbredsPruned"), sample.id = matching$GenoName)
+# snpgdsClose(PreLDGeno)
+# 
 
 
 #########################
@@ -655,9 +702,9 @@ c4 <- which(colnames(BlupDFGeno)=="endo")
 
 #remove rows with no geno information and remove rows that are duplicates. 
 #TODO:Check which duplicates are being deleted and if its a good choice
-# BlupDFGeno <- BlupDFGeno[-which(BlupDFGeno$GenoName == ""),]
+BlupDFGeno <- BlupDFGeno[-which(BlupDFGeno$GenoName == ""),]
 # BlupDFGeno <- BlupDFGeno[-which(BlupDFGeno$GenoName == "0"),]
-BlupDFGeno <- BlupDFGeno[-which(is.na(BlupDFGeno$GenoName)),]
+# BlupDFGeno <- BlupDFGeno[-which(is.na(BlupDFGeno$GenoName)),]
 if(length(which(is.na(BlupDFGeno$endo)))>0){
 BlupDFGeno <- BlupDFGeno[-which(is.na(BlupDFGeno$endo)),]}
 BlupDFGeno <- BlupDFGeno %>% distinct(GenoName, .keep_all = TRUE)
@@ -688,21 +735,21 @@ blups <- colnames(NFBlupsGenoJustPheno[c1:c2])
 # Start the clock!
 ptm <- proc.time()
 for(blup in blups){
-  # GWASPolyRunner(WFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_",Sys.Date()),Seq,"WFBLUP")
-  # GWASPolyRunner(WFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_",Sys.Date()),Seq,"WFBLUP","endo","factor", "permute")
-  # GWASPolyRunner(WFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_",Sys.Date()),Seq,"WFBLUP","endo","factor", "M.eff")
-  # 
-  # GWASPolyRunner(NFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),Seq,"NFBLUP")
+  GWASPolyRunner(WFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_",Sys.Date()),Seq,"WFBLUP")
+  GWASPolyRunner(WFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_",Sys.Date()),Seq,"WFBLUP","endo","factor")
+
+  GWASPolyRunner(NFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),Seq,"NFBLUP")
   GWASPolyRunner(NFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),Seq,"NFBLUP","endo","factor")
-  
-  # GWASPolyRunner(HWSPBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),Seq,"WFBLUP","endo","factor")
-  # 
-  # GWASPolyRunner(LWSPNFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),Seq,"LWSPNFBlups")
-  # GWASPolyRunner(LWSPNFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),Seq,"LWSPNFBlups","endo","factor")
-  # 
-  # GWASPolyRunner(LWSPWFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),Seq,"LWSPWFBlups")
-  # GWASPolyRunner(LWSPWFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),Seq,"LWSPWFBlups","endo","factor")
-  
+
+  GWASPolyRunner(HWSPBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),Seq,"WFBLUP")
+  GWASPolyRunner(HWSPBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),Seq,"WFBLUP","endo","factor")
+
+  GWASPolyRunner(LWSPNFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),Seq,"LWSPNFBlups")
+  GWASPolyRunner(LWSPNFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),Seq,"LWSPNFBlups","endo","factor")
+
+  GWASPolyRunner(LWSPWFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),Seq,"LWSPWFBlups")
+  GWASPolyRunner(LWSPWFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),Seq,"LWSPWFBlups","endo","factor")
+
 }
 beep(2)
 proc.time() - ptm
@@ -711,9 +758,8 @@ proc.time() - ptm
 #########################
 #read in QTL results from the files made by GWASPolyRunner and GWASPolyVis
 # GWASPolyRunVersion <- paste0("EndoFixedEffect_FDRThresh_",Sys.Date())
-GWASPolyRunVersion <- paste0("EndoFixedEffect_FDRThresh_2021-08-29")
-DataSet <- "NFBLUP"
-Thresh = "FDR"
+
+FullGWASVisualize <- function(GWASPolyRunVersion, DataSet = "NFBLUP", Thresh = "FDR"){
 #establish DF to hold the file readins 
 QTLList <- list()
 
@@ -721,35 +767,29 @@ QTLList <- list()
 #Put these files into a dataframe
 #This is the originally created filename
 for(i in 1:7){
-  file <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,DataSet,GWASPolyRunVersion,"_",blups[i],"_",Thresh,"_QTLs.csv", sep = "")
+  file <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,DataSet,GWASPolyRunVersion,"_",blups[i],"_",Thresh,"_SignificantQTL.csv", sep = "")
+  #make sure theres actually something in the file: As in, there are any QTLs and you don't try to open an empty file
   if (file.size(file) > 100){ 
   QTLList[[i]] <- read.csv(file)}}
-# for(trait in blups){QTLDF[[i]] <- read.table(paste0("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_SeqGNFBLUPEndoFixedEffect_FDRThresh_2021-08-19_",trait,"_FDR_QTLs.csv"))}
+#bind the QTLs into one dataframe
 QTLDF <- bind_rows(QTLList)
+#pull out only the general QTL
 QTLDFGen <- QTLDF[which(QTLDF$Model == "general"),]
+#Write those aggregated QTL to fild
+outfile <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,DataSet,GWASPolyRunVersion,"_",Thresh,"_SignificantQTL_Aggregated.csv", sep = "")
+write.csv(QTLDFGen, outfile)
+#get the positions of the snps
 genoPosInfo <- geno[,3:4]
-
+#find the final snp position for each chromosome. This is what will determind the size of the chromosome map in the figure 
 chrMax <- vector()
 for(chr in 1:10){
 chrMax[chr] <- max(genoPosInfo$pos[which(genoPosInfo == chr)])}
 
 
-
-
-
-#### B ####
-# ## Loading in the data
-# SNP <- read.csv("significant_snp_locations_v2.csv", header=T, stringsAsFactors=F)
-# str(SNP)
-# #SNP <- SNP[c(-1:-2),]
-
 # make chromosome and end1 as numeric, trait as factor
 QTLDFGen$chr <- as.factor(QTLDFGen$Chrom)
 QTLDFGen$pos <- as.numeric(QTLDFGen$Position)
 QTLDFGen$Trait <- as.factor(paste0(QTLDFGen$Trait," (",QTLDFGen$Threshold, " LOD)"))
-# QTLDFGen$Trait <- factor(QTLDFGen$Trait, levels = c("Protein As Is", "Ankom Crude Fiber", "Ash As Is", "Fat As Is", 
-#                                           "Fiber As Is", "Fructose", "Sucrose", "Starch As Is", "Crude Fiber", 
-#                                           "N Combustion", "Ash", "N Kjeltec"))
 
 #create a new table of maize chromosome length and make it a data frame
 maize_chromosomes <- cbind(chromosome = c(1:10), start = c(rep(0,10)), end = c(chrMax))
@@ -757,8 +797,8 @@ maize_chromosomes <- data.frame(maize_chromosomes)
 str(maize_chromosomes)
 
 
-png(paste0("Figures/GWASpoly/WSMDP_Carb_GWASpoly_",GWASPolyRunVersion,"_",DataSet,"_AllQTLPosition_GeneralModel.png"),width = 750,height =750)
-ggplot(QTLDFGen, aes(as.integer(Chrom), Position)) +
+png(paste0("Figures/GWASpoly/WSMDP_Carb_GWASpoly_",GWASPolyRunVersion,"_",DataSet,"_AllQTLPosition_GeneralModel.png"),width = 900,height =750)
+p <- ggplot(QTLDFGen, aes(as.integer(Chrom), Position)) +
   geom_segment(data = maize_chromosomes, aes(x = chromosome, xend = chromosome, y = start, yend = end), lineend = "round", color = "black", size = 16, inherit.aes = FALSE) +
   geom_segment(data = maize_chromosomes, aes(x = chromosome, xend = chromosome, y = start, yend = end), lineend = "round", color = "white", size = 15, inherit.aes = FALSE) +
   scale_y_reverse(breaks = seq(3.5e8, 0, -50e6), labels = c(350, seq(300, 0, -50)), limits = c(3.5e8, 0)) +
@@ -769,24 +809,29 @@ ggplot(QTLDFGen, aes(as.integer(Chrom), Position)) +
   theme(legend.text = element_text(size=12), legend.title = element_text(size=12)) +
   geom_point(aes(color= Trait), position = position_dodge(width = 0.4), size = 3, alpha = 1) +
   scale_color_brewer(palette = "Paired") +
-  theme(legend.title = element_blank(), legend.position = c(0.55,0.15), legend.direction = "horizontal", legend.text=element_text(size=12)) +
+  theme(legend.title = element_blank(), legend.position = c(0.55,0.05), legend.direction = "horizontal", legend.text=element_text(size=12)) +
   scale_color_manual(values = c("#d55e00",  "#cc79a7", "#0072b2", "#f0e442", "#009e73", "#000000", "#924900"))
+  print(p)
 dev.off()
+}
 
-
+FullGWASVisualize("EndoFixedEffect_FDRThresh_2021-09-09")
+FullGWASVisualize("NoFixedEffect_FDRThresh_2021-09-10")
+FullGWASVisualize("NoFixedEffect_FDRThresh_2021-09-10","WFBLUP")
 
 #########################
 ###Compare BLUPS by Endosperm###
 #########################
 
+endoTukey <- function(BlupDF, DataSet){
 #establish a file to put the results in
-EndoCompareFile <- paste0("Data/OutputtedData/WSMDP_CarbBLUPComparedbyEndo_NFBlup.txt")
+EndoCompareFile <- paste0("Data/OutputtedData/WSMDP_CarbBLUPComparedbyEndo_",DataSet,".txt")
 
 #iterate through all the traits
 for(blup in blups){
   #paste in a header
   cat(paste0("Compare the ",blup," by endosperm mutant groups."), file=EndoCompareFile, sep="\n", append=TRUE)
-  EndoCompare<-aov(NFBlupsGenoJustPheno[,blup]~NFBlupsGenoJustPheno$endo)
+  EndoCompare<-aov(BlupDF[,blup]~BlupDF$endo)
   # EndoCompare<-aov(CleanedInfoNF$Starch~CleanedInfoNF$endo)
   
   #none of these residuals are normal. I don't know what. UUUUgh
@@ -803,122 +848,18 @@ for(blup in blups){
   #output that data
   out <- capture.output(LSM)
   cat(out, file=EndoCompareFile, sep="\n", append=TRUE)
-
- 
-}
-
-
-
-
-
-#########################
-###GapitKinship Matrix###
-#########################
-#####Altered from Baseggio's code GWAS_sweet_toco_univ_withcovariate_20180202.R
-### Genotypes
-setwd("C:/Users/LHislop/Documents/GitHub/WSMDP_Carb")
-path.to.res <- "C:/Users/LHislop/Documents/GitHub/WSMDP_Carb/Data/OutputtedData/GapitOut/"
-Seq <- "SeqG"
-hmppath <- paste0("Data/RawData/WSMDP_",Seq,".hmp.txt")
-geno <- fread(hmppath,skip = "rs#")
-str(geno)
-colnames(geno)<-gsub(colnames(geno), pattern = ":.*", replacement = "")
-colnames(geno)<-gsub(colnames(geno), pattern = "rs#", replacement = "rs")
-colnames(geno)<-gsub(colnames(geno), pattern = "panelLSID", replacement = "panel")
-colnames(geno)<-gsub(colnames(geno), pattern = "assembly#", replacement = "assembly")
-#assemble the info about marker, chromosome and position
-
-#convert from hapmap to numeric
-
-genoMat <- as.matrix(geno)
-genoMatMeta <- genoMat[,(1:11)]
-genoMat <- genoMat[,-(1:11)]
-genoClean <- genoMat
-
-genoClean[which(genoMat == "A")] <- "AA"
-genoClean[which(genoMat == "C")] <- "CC"
-genoClean[which(genoMat == "G")] <- "GG"
-genoClean[which(genoMat == "T")] <- "TT"
-genoClean[which(genoMat == "R")] <- "AG"
-genoClean[which(genoMat == "Y")] <- "CT"
-genoClean[which(genoMat == "S")] <- "CG"
-genoClean[which(genoMat == "W")] <- "AT"
-genoClean[which(genoMat == "K")] <- "GT"
-genoClean[which(genoMat == "M")] <- "AC"
-genoClean[which(genoMat == "N")] <- NA
-genoClean[which(genoMat == "0")] <- NA
-genoClean[which(genoMat == "-")] <- NA
-
-#some of the SNPs have more than 2 homozygous genotypes. Get rid of them 
-toomanyHomos <- which(apply(genoClean, 1, function(x) length(unique(x)))>4)
-if(length(toomanyHomos) > 0){
-  genoClean <- genoClean[-toomanyHomos,]
-}
-genoCleanandBound <- cbind(genoMatMeta,genoClean)
-genoCleanandBoundDF <- as.data.frame(genoCleanandBound)
-firstRow <- colnames(genoCleanandBoundDF)
-geno <- rbind(firstRow, genoCleanandBoundDF)
-names(geno) <- paste0("V",1:592)
-# write.table(genoCleanandBound, paste0("Data/RawData/WSMDP_",Seq,"_EditedforGAPIT.hmp.txt"), sep = ",")
-# geno <- read.delim(paste0("Data/RawData/WSMDP_",Seq,"_EditedforGAPIT.hmp.txt"), head = TRUE)
-
-str(geno)
-nbtraits <- 7
-# pheno <- read.table('sweetcorn_toco384_nodent_noHi_NA_20180715.txt', header=T, sep="\t", colClasses=c('factor',rep('numeric', nbtraits)), as.is=T)
-nlines <- nrow(WFBlupsGenoJustPheno)
-
-# geno <- read.table(hmppath, header=FALSE, sep = "\t")
-# str(geno)
-# colnames(geno)<-gsub(colnames(geno), pattern = ":.*", replacement = "")
-# str(geno)
-setwd(path.to.res)
-ptm <- proc.time()
-kin.alg <- "VanRaden"
-res <- GAPIT( G = geno, kinship.cluster = c("average"), kinship.group = c("Mean"), kinship.algorithm = kin.alg,SNP.impute = "Middle", Major.allele.zero = TRUE)
-proc.time() - ptm
-
-############################################
-####### Run GWAS for TOCOCHROMANOLS ########
-############################################
-
-## Read the files
-# setwd("/local/workdir/mb2446/GWAS/")
-
-
-covariates <- rbind.data.frame(c('Starch','Starch'),
-                               c('Total.Polysaccharides','Total.Polysaccharides'),
-                               c('WSP','WSP'),
-                               c('Glucose','Glucose'),
-                               c('Fructose','Fructose'),
-                               c('Sucrose','Sucrose'),
-                               c('Total.Sugar','Total.Sugar'))
-colnames(covariates) <- c('trait','snp')
-
-# geno <- read.delim('sweet_parimp_toco384_174K.hmp.txt', header=FALSE, sep='\t')
-
-nbtraits <- 7
-# pheno <- read.table('sweetcorn_toco384_nodent_noHi_NA_20180715.txt', header=T, sep="\t", colClasses=c('factor',rep('numeric', nbtraits)), as.is=T)
-# path.to.res <- "/local/workdir/mb2446/GWAS/Univariate/Toco/0PC.2yr.K11.174K.384taxa.middle.na.KernelType.20180715/"
-
-# parent.dir <- "/local/workdir/mb2446/GWAS/"
-pheno <- WFBlupsGenoJustPheno
-
-# library(beepr)
-# system.time(beep() sound = "fanfare"))
-  for (i in seq(1,7)) {
-    #### Current trait ####
-    curr.trait <- colnames(pheno[ (1 + i) ])
-    # curr.trait <- as.character(covariates[i,1])
-    # system(paste('mkdir -p ', path.to.res, curr.trait, sep=''))
-    setwd(paste0(path.to.res ,curr.trait))
-    j <- which(colnames(pheno)==curr.trait)
-    curr.pheno = pheno[,c(1,j)]
-    #### User input Kinship
-    myKI <- read.table(paste(path.to.res, '/GAPIT.Kin.VanRaden.csv', sep=''), header=FALSE, sep=',')
-    # myCV <- read.table(paste('/local/workdir/mb2446/GWAS/Covariates/KernelType.txt', sep=''), header=T, sep='\t')
-    res <- GAPIT( Y = curr.pheno, G = geno, KI=myKI, PCA.total=3, plot.style="Ocean")
   }
+}
+endoTukey(NFBlupsGenoJustPheno,"NFBlup")
+endoTukey(WFBlupsGenoJustPheno,"WFBlup")
 
+
+
+
+justthebitsNF <- NFBlupsGenoJustPheno[2:8]
+png(paste("Figures/WSMDP_AllNIRPred_MixedEqn_CorrelationfromPSYCH_BLUPs_NoField.png",sep=""), width = 500, height = 500)
+pairs.panels(justthebitsNF, scale = TRUE)
+dev.off()
 
 
 
