@@ -69,6 +69,12 @@ source("R/getmedianLDVis.R")
 source("R/getpercentileLDVis.R")
 
 #########################
+###Read in Genomic Info###
+#########################
+genoinfo <- read.csv("Data/RawData/WSMDP_Inbreds_2021.9.8.csv",head = TRUE)
+
+
+#########################
 ###Read in sample data###
 #########################
 
@@ -99,7 +105,10 @@ setdiff(unique(BookInfo$Inbred),unique(SampleInfo$Variety))
 sampledInbreds<- intersect(unique(BookInfo$Inbred),unique(SampleInfo$Variety))
 SampleInfo$endo <- as.factor(SampleInfo$endo)
 
-#########Read in Wetlab Starch Data##########
+#########################
+###Read in Wetlab Starch Data###
+#########################
+###################
 wetLabStarch <- read.csv("Data/RawData/WSMDP_Wetlab_Starchs.csv")
 
 #separate out the data that aren't controls
@@ -122,7 +131,10 @@ cat(out, file=wetLabFile, sep="\n", append=TRUE)
 out <- capture.output(SD(wetLabStarchCtrl))
 cat(out, file=wetLabFile, sep="\n", append=TRUE)
 
-#########Read in Wetlab Sugar Data ##########
+#########################
+###Read in Wetlab Sugar Data ###
+#########################
+
 wetLabSugar <- read.csv("Data/RawData/WSMDP_Wetlab_Sugars.csv")
 
 #set columns from char to numeric
@@ -161,8 +173,10 @@ cat(out, file=wetLabFile, sep="\n", append=TRUE)
 
 
 
+#########################
+###Read in the output from NIR ###
+#########################
 
-#########Read in the output from NIR##########
 ####Copied pasted and modified from Hislop_carb_eqn_validation.R
 #6 files types. The starch and sugar predictions and the equations made by calibrating with only high wsp lines, high wsp var sug, high wsp high sug
 CarbCombos <- c("hwspsu","hwspst","lwspwfsu","lwspwfst","lwspnfsu","lwspwfst")
@@ -270,6 +284,7 @@ print(summary(OnlyUnique))
 }
 summarizeDF(CleanedInfoWF)
 summarizeDF(CleanedInfoNF)
+
 #########################
 ###Validate that the NIR Equation is good###
 #########################
@@ -572,31 +587,29 @@ linearmodel <- function(SampleDFtoModel,TitleAddendum, endoCheck = FALSE){
   write.table(VarDF, file = paste0("Data/OutputtedData/WSMDP_CarbPheno_Anova_Variances_",TitleAddendum,".txt"), col.names=T, row.names=F, sep=",")
   
   
+  
   # Write out BLUPs for Genotypes
   write.table(blupHolder, file=paste0("Data/OutputtedData/WSMDP_CarbPheno_InbredBLUPS_",TitleAddendum,".txt"), col.names=T, row.names=F, sep=",")
   beep(3)
   print(proc.time() - ptm)
   return(blupHolder)
 }
-#######TOFIX######
+
 WFBlups <- linearmodel(CleanedInfoWF,"CleanedOutliersWF")
 NFBlups <- linearmodel(CleanedInfoNF,"CleanedOutliersNF",endoCheck = FALSE)
 
 
 HWSPBlups <- linearmodel(CleanedInfoHWSP,"CleanedOutliersHWSP")
-LWSPNFBlups <- linearmodel(CleanedInfoLWSPNF,"CleanedOutliersLWSPNF")
-LWSPWFBlups <- linearmodel(CleanedInfoLWSPWF,"CleanedOutliersLWSPWF")
+# These dont work. Fix. Not enough of a certain factor type?
+# LWSPNFBlups <- linearmodel(CleanedInfoLWSPNF,"CleanedOutliersLWSPNF")
+# LWSPWFBlups <- linearmodel(CleanedInfoLWSPWF,"CleanedOutliersLWSPWF")
 
 
 
-#########################
-###Genomic Info###
-#########################
-genoinfo <- read.csv("Data/RawData/WSMDP_Inbreds_2021.9.8.csv",head = TRUE)
 
-# 
+
 # #########################
-# ###SNP Relate Establishment###
+# ###SNP Relate###
 # #########################
 # infilename <- "WSMDP_SeqG_PreLD"
 # 
@@ -691,6 +704,9 @@ colnames(geno)<-gsub(colnames(geno), pattern = ":.*", replacement = "")
 str(geno)
 # geno <- read.csv("Data/RawData/SeqG_numericFormat.csv")
 
+######## Read in blups from file########
+#this way you don't have to rerun the blup generation linear model function every time. that takes a long time
+
 BlupGenoCleanup <- function(BlupDFName){
 BlupDF <- read.csv(file=paste0("Data/OutputtedData/WSMDP_CarbPheno_InbredBLUPS_CleanedOutliers",BlupDFName,".txt"))#, col.names=T, row.names=F)
   
@@ -720,10 +736,10 @@ return(BlupDFGenoJustPheno)
 WFBlupsGenoJustPheno <- BlupGenoCleanup("WF")
 NFBlupsGenoJustPheno <- BlupGenoCleanup("NF")
 HWSPBlupsGenoJustPheno <- BlupGenoCleanup("HWSP")
-LWSPNFBlupsGenoJustPheno <- BlupGenoCleanup("LWSPNF")
-LWSPWFBlupsGenoJustPheno <- BlupGenoCleanup("LWSPWF")
+# LWSPNFBlupsGenoJustPheno <- BlupGenoCleanup("LWSPNF")
+# LWSPWFBlupsGenoJustPheno <- BlupGenoCleanup("LWSPWF")
 
-
+#Establish what and where the traits are for the gwas
 c1 <- which(colnames(NFBlupsGenoJustPheno)=="Total.Polysaccharides.BLUP")
 c2 <- which(colnames(NFBlupsGenoJustPheno)=="WSP.BLUP")
 c1 <- which(colnames(NFBlupsGenoJustPheno)=="Starch.BLUP")
@@ -734,25 +750,28 @@ blups <- colnames(NFBlupsGenoJustPheno[c1:c2])
 
 # Start the clock!
 ptm <- proc.time()
+#itterate through all the traits.
 for(blup in blups){
   GWASPolyRunner(WFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_",Sys.Date()),Seq,"WFBLUP")
   GWASPolyRunner(WFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_",Sys.Date()),Seq,"WFBLUP","endo","factor")
 
-  GWASPolyRunner(NFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),Seq,"NFBLUP")
-  GWASPolyRunner(NFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),Seq,"NFBLUP","endo","factor")
+  # GWASPolyRunner(NFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),Seq,"NFBLUP")
+  # GWASPolyRunner(NFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),Seq,"NFBLUP","endo","factor")
 
   GWASPolyRunner(HWSPBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),Seq,"WFBLUP")
   GWASPolyRunner(HWSPBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),Seq,"WFBLUP","endo","factor")
 
-  GWASPolyRunner(LWSPNFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),Seq,"LWSPNFBlups")
-  GWASPolyRunner(LWSPNFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),Seq,"LWSPNFBlups","endo","factor")
-
-  GWASPolyRunner(LWSPWFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),Seq,"LWSPWFBlups")
-  GWASPolyRunner(LWSPWFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),Seq,"LWSPWFBlups","endo","factor")
+  # GWASPolyRunner(LWSPNFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),Seq,"LWSPNFBlups")
+  # GWASPolyRunner(LWSPNFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),Seq,"LWSPNFBlups","endo","factor")
+  # 
+  # GWASPolyRunner(LWSPWFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),Seq,"LWSPWFBlups")
+  # GWASPolyRunner(LWSPWFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),Seq,"LWSPWFBlups","endo","factor")
 
 }
 beep(2)
+#Stop the clock!
 proc.time() - ptm
+
 #########################
 ###plot the gwas results###
 #########################
@@ -820,39 +839,91 @@ FullGWASVisualize("NoFixedEffect_FDRThresh_2021-09-10")
 FullGWASVisualize("NoFixedEffect_FDRThresh_2021-09-10","WFBLUP")
 
 #########################
-###Compare BLUPS by Endosperm###
+###Compare BLUPS by Endosperm with Tukey###
 #########################
 
 endoTukey <- function(BlupDF, DataSet){
 #establish a file to put the results in
-EndoCompareFile <- paste0("Data/OutputtedData/WSMDP_CarbBLUPComparedbyEndo_",DataSet,".txt")
+EndoCompareFile <- paste0("Data/OutputtedData/WSMDP_TukeyHSD_CarbBLUP_ComparedbyEndo_",DataSet,"Verbose.txt")
+EndoCompareTableFile <- paste0("Data/OutputtedData/WSMDP_TukeyHSD_CarbBLUP_ComparedbyEndo_",DataSet,".csv")
+EndoNum <- length(unique(BlupDF$endo))
+if( EndoNum == 4){
+  LSMHolder <- data.frame("Trait" = blups,  "sh2" = rep("sh2",7), "su1" = rep("su1",7), "su1se1" = rep("su1se1",7), "su1sh2-i" = rep("su1sh2-i",7) )
+}
+if( EndoNum == 6){
+  LSMHolder <- data.frame("Trait" = blups, "sh2" = rep(NA,7), "su1" = rep(NA,7), "su1se1" = rep(NA,7), "su1sh2-i" = rep(NA,7),  "aeduxw" = rep(NA,7), "field" = rep(NA,7) )
+}
 
 #iterate through all the traits
-for(blup in blups){
+for(i in 1:length(blups)){
   #paste in a header
+  blup <- blups[i]
   cat(paste0("Compare the ",blup," by endosperm mutant groups."), file=EndoCompareFile, sep="\n", append=TRUE)
-  EndoCompare<-aov(BlupDF[,blup]~BlupDF$endo)
+  EndoCompare<-aov(BlupDF[,blup]~ BlupDF$endo)
   # EndoCompare<-aov(CleanedInfoNF$Starch~CleanedInfoNF$endo)
   
-  #none of these residuals are normal. I don't know what. UUUUgh
-  # plot(EndoCompare, which=2)
-  # shapiro.test(EndoCompare$residuals)
-  # hist(EndoCompare$residuals)
-  # plot(EndoCompare, which=1)
   
   #find the least square means by group
   LSD<-lsmeans(EndoCompare, ~endo)
   #get the significant differences between the least square means
   LSM<-cld(LSD,Letters = LETTERS, decreasing=T)
+  LSMHolder[i,2] <- paste(round(LSM[which(LSM$endo=="sh2"),2],2),"+/-", round(LSM[which(LSM$endo=="sh2"),3],2), LSM[which(LSM$endo=="sh2"),7])
+  LSMHolder[i,3] <- paste(round(LSM[which(LSM$endo=="su1"),2],2),"+/-", round(LSM[which(LSM$endo=="su1"),3],2), LSM[which(LSM$endo=="su1"),7])
+  LSMHolder[i,4] <- paste(round(LSM[which(LSM$endo=="su1se1"),2],2),"+/-", round(LSM[which(LSM$endo=="su1se1"),3],2), LSM[which(LSM$endo=="su1se1"),7])
+  LSMHolder[i,5] <- paste(round(LSM[which(LSM$endo=="su1sh2-i"),2],2),"+/-", round(LSM[which(LSM$endo=="su1sh2-i"),3],2), LSM[which(LSM$endo=="su1sh2-i"),7])
+  if(EndoNum == 6){
+    LSMHolder[i,6] <- paste(round(LSM[which(LSM$endo=="aeduwx"),2],2),"+/-", round(LSM[which(LSM$endo=="aeduwx"),3],2), LSM[which(LSM$endo=="aeduwx"),7])
+    LSMHolder[i,7] <- paste(round(LSM[which(LSM$endo=="field"),2],2),"+/-", round(LSM[which(LSM$endo=="field"),3],2), LSM[which(LSM$endo=="field"),7])
+    
+  }
 
   #output that data
   out <- capture.output(LSM)
   cat(out, file=EndoCompareFile, sep="\n", append=TRUE)
-  }
+}
+write.table(LSMHolder, EndoCompareTableFile, sep = ",", row.names = FALSE)
 }
 endoTukey(NFBlupsGenoJustPheno,"NFBlup")
 endoTukey(WFBlupsGenoJustPheno,"WFBlup")
 
+
+enviTukey <- function(BlupDF, DataSet){
+  #establish a file to put the results in
+  EnviCompareFile <- paste0("Data/OutputtedData/WSMDP_TukeyHSD_CarbBLUP_ComparedbyEnvi_",DataSet,"Verbose.txt")
+  EnviCompareTableFile <- paste0("Data/OutputtedData/WSMDP_TukeyHSD_CarbBLUP_ComparedbyEnvi_",DataSet,".csv")
+  EnviNum <- length(unique(BlupDF$Envi))
+  if( EnviNum == 4){
+    LSMHolder <- data.frame("Trait" = blups,  "2014NewYork" = rep("sh2",7), "2015NewYork" = rep("su1",7), "2014Wisconsin" = rep("su1se1",7), "2014Wisconsin" = rep("su1sh2-i",7) )
+  }
+  blups <- colnames(BlupDF)[5:11]
+  
+  #iterate through all the traits
+  for(i in 1:length(blups)){
+    #paste in a header
+    blup <- blups[i]
+    cat(paste0("Compare the ",blup," by Envi groups."), file=EnviCompareFile, sep="\n", append=TRUE)
+    #TO FIX this isn't working, frustratingly. 
+    EnviCompare<-aov(as.list(BlupDF[blup])~ BlupDF$Envi)
+    # EnviCompare<-aov(CleanedInfoNF$Starch~CleanedInfoNF$Envi)
+    
+    
+    #find the least square means by group
+    LSD<-lsmeans(EnviCompare, ~Envi)
+    #get the significant differences between the least square means
+    LSM<-cld(LSD,Letters = LETTERS, decreasing=T)
+    LSMHolder[i,2] <- paste(round(LSM[which(LSM$Envi=="2014NewYork"),2],2),"+/-", round(LSM[which(LSM$Envi=="2014NewYork"),3],2), LSM[which(LSM$Envi=="2014NewYork"),7])
+    LSMHolder[i,3] <- paste(round(LSM[which(LSM$Envi=="2015NewYork"),2],2),"+/-", round(LSM[which(LSM$Envi=="2015NewYork"),3],2), LSM[which(LSM$Envi=="2015NewYork"),7])
+    LSMHolder[i,4] <- paste(round(LSM[which(LSM$Envi=="2014Wisconsin"),2],2),"+/-", round(LSM[which(LSM$Envi=="2014Wisconsin"),3],2), LSM[which(LSM$Envi=="2014Wisconsin"),7])
+    LSMHolder[i,5] <- paste(round(LSM[which(LSM$Envi=="2015Wisconsin"),2],2),"+/-", round(LSM[which(LSM$endo=="2015Wisconsin"),3],2), LSM[which(LSM$endo=="2015Wisconsin"),7])
+   
+    
+    #output that data
+    out <- capture.output(LSM)
+    cat(out, file=EnviCompareFile, sep="\n", append=TRUE)
+  }
+  write.table(LSMHolder, EnviCompareTableFile, sep = ",", row.names = FALSE)
+}
+enviTukey(CleanedInfoNF,"NFCleaned")
 
 
 

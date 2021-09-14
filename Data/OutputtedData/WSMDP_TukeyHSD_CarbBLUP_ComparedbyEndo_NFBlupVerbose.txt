@@ -1,0 +1,527 @@
+Compare the Starch.BLUP by endosperm mutant groups.
+ endo     lsmean    SE  df lower.CL upper.CL .group
+ su1se1   -5.658 0.782 397   -7.196   -4.120  A    
+ sh2       0.276 0.452 397   -0.612    1.164   B   
+ su1       0.290 0.247 397   -0.195    0.774   B   
+ su1sh2-i  2.904 0.887 397    1.160    4.648    C  
+
+Results are given on the [ (not the response) scale. 
+Confidence level used: 0.95 
+Note: contrasts are still on the [ scale 
+P value adjustment: tukey method for comparing a family of 4 estimates 
+significance level used: alpha = 0.05 
+NOTE: Compact letter displays can be misleading
+      because they show NON-findings rather than findings.
+      Consider using 'pairs()', 'pwpp()', or 'pwpm()' instead. 
+Compare the Starch.BLUP by endosperm mutant groups.
+ endo     lsmean    SE  df lower.CL upper.CL .group
+ su1se1   -5.658 0.782 397   -7.196   -4.120  A    
+ sh2       0.276 0.452 397   -0.612    1.164   B   
+ su1       0.290 0.247 397   -0.195    0.774   B   
+ su1sh2-i  2.904 0.887 397    1.160    4.648    C  
+
+Results are given on the [ (not the response) scale. 
+Confidence level used: 0.95 
+Note: contrasts are still on the [ scale 
+P value adjustment: tukey method for comparing a family of 4 estimates 
+significance level used: alpha = 0.05 
+NOTE: Compact letter displays can be misleading
+      because they show NON-findings rather than findings.
+      Consider using 'pairs()', 'pwpp()', or 'pwpm()' instead. 
+Compare the Starch.BLUP by endosperm mutant groups.
+ endo     lsmean    SE  df lower.CL upper.CL .group
+ su1se1   -5.658 0.782 397   -7.196   -4.120  A    
+ sh2       0.276 0.452 397   -0.612    1.164   B   
+ su1       0.290 0.247 397   -0.195    0.774   B   
+ su1sh2-i  2.904 0.887 397    1.160    4.648    C  
+
+Results are given on the [ (not the response) scale. 
+Confidence level used: 0.95 
+Note: contrasts are still on the [ scale 
+P value adjustment: tukey method for comparing a family of 4 estimates 
+significance level used: alpha = 0.05 
+NOTE: Compact letter displays can be misleading
+      because they show NON-findings rather than findings.
+      Consider using 'pairs()', 'pwpp()', or 'pwpm()' instead. 
+Compare the Starch.BLUP by endosperm mutant groups.
+ endo     lsmean    SE  df lower.CL upper.CL .group
+ su1se1   -5.658 0.782 397   -7.196   -4.120  A    
+ sh2       0.276 0.452 397   -0.612    1.164   B   
+ su1       0.290 0.247 397   -0.195    0.774   B   
+ su1sh2-i  2.904 0.887 397    1.160    4.648    C  
+
+Results are given on the [ (not the response) scale. 
+Confidence level used: 0.95 
+Note: contrasts are still on the [ scale 
+P value adjustment: tukey method for comparing a family of 4 estimates 
+significance level used: alpha = 0.05 
+NOTE: Compact letter displays can be misleading
+      because they show NON-findings rather than findings.
+      Consider using 'pairs()', 'pwpp()', or 'pwpm()' instead. 
+Compare the Starch.BLUP by endosperm mutant groups.
+ endo     lsmean    SE  df lower.CL upper.CL .group
+ su1se1   -5.658 0.782 397   -7.196   -4.120  A    
+ sh2       0.276 0.452 397   -0.612    1.164   B   
+ su1       0.290 0.247 397   -0.195    0.774   B   
+ su1sh2-i  2.904 0.887 397    1.160    4.648    C  
+
+Results are given on the [ (not the response) scale. 
+Confidence level used: 0.95 
+Note: contrasts are still on the [ scale 
+P value adjustment: tukey method for comparing a family of 4 estimates 
+significance level used: alpha = 0.05 
+NOTE: Compact letter displays can be misleading
+      because they show NON-findings rather than findings.
+      Consider using 'pairs()', 'pwpp()', or 'pwpm()' instead. 
+Compare the Starch.BLUP by endosperm mutant groups.
+ endo     lsmean    SE  df lower.CL upper.CL .group
+ su1se1   -5.658 0.782 397   -7.196   -4.120  A    
+ sh2       0.276 0.452 397   -0.612    1.164   B   
+ su1       0.290 0.247 397   -0.195    0.774   B   
+ su1sh2-i  2.904 0.887 397    1.160    4.648    C  
+
+Results are given on the [ (not the response) scale. 
+Confidence level used: 0.95 
+Note: contrasts are still on the [ scale 
+P value adjustment: tukey method for comparing a family of 4 estimates 
+significance level used: alpha = 0.05 
+NOTE: Compact letter displays can be misleading
+      because they show NON-findings rather than findings.
+      Consider using 'pairs()', 'pwpp()', or 'pwpm()' instead. 
+Compare the Starch.BLUP by endosperm mutant groups.
+ endo     lsmean    SE  df lower.CL upper.CL .group
+ su1se1   -5.658 0.782 397   -7.196   -4.120  A    
+ sh2       0.276 0.452 397   -0.612    1.164   B   
+ su1       0.290 0.247 397   -0.195    0.774   B   
+ su1sh2-i  2.904 0.887 397    1.160    4.648    C  
+
+Results are given on the [ (not the response) scale. 
+Confidence level used: 0.95 
+Note: contrasts are still on the [ scale 
+P value adjustment: tukey method for comparing a family of 4 estimates 
+significance level used: alpha = 0.05 
+NOTE: Compact letter displays can be misleading
+      because they show NON-findings rather than findings.
+      Consider using 'pairs()', 'pwpp()', or 'pwpm()' instead. 
+Compare the Starch.BLUP by endosperm mutant groups.
+ endo     lsmean    SE  df lower.CL upper.CL .group
+ su1se1   -5.658 0.782 397   -7.196   -4.120  A    
+ sh2       0.276 0.452 397   -0.612    1.164   B   
+ su1       0.290 0.247 397   -0.195    0.774   B   
+ su1sh2-i  2.904 0.887 397    1.160    4.648    C  
+
+Results are given on the [ (not the response) scale. 
+Confidence level used: 0.95 
+Note: contrasts are still on the [ scale 
+P value adjustment: tukey method for comparing a family of 4 estimates 
+significance level used: alpha = 0.05 
+NOTE: Compact letter displays can be misleading
+      because they show NON-findings rather than findings.
+      Consider using 'pairs()', 'pwpp()', or 'pwpm()' instead. 
+Compare the Total.Polysaccharides.BLUP by endosperm mutant groups.
+ endo     lsmean    SE  df lower.CL upper.CL .group
+ sh2       -9.84 0.481 397   -10.78   -8.889  A    
+ su1sh2-i  -8.30 0.946 397   -10.16   -6.443  A    
+ su1se1    -1.77 0.834 397    -3.41   -0.132   B   
+ su1        3.73 0.263 397     3.21    4.246    C  
+
+Results are given on the [ (not the response) scale. 
+Confidence level used: 0.95 
+Note: contrasts are still on the [ scale 
+P value adjustment: tukey method for comparing a family of 4 estimates 
+significance level used: alpha = 0.05 
+NOTE: Compact letter displays can be misleading
+      because they show NON-findings rather than findings.
+      Consider using 'pairs()', 'pwpp()', or 'pwpm()' instead. 
+Compare the WSP.BLUP by endosperm mutant groups.
+ endo     lsmean    SE  df lower.CL upper.CL .group
+ su1sh2-i -10.00 0.744 397   -11.46    -8.54  A    
+ sh2       -9.45 0.379 397   -10.20    -8.70  A    
+ su1        3.13 0.207 397     2.72     3.53   B   
+ su1se1     3.95 0.657 397     2.66     5.24   B   
+
+Results are given on the [ (not the response) scale. 
+Confidence level used: 0.95 
+Note: contrasts are still on the [ scale 
+P value adjustment: tukey method for comparing a family of 4 estimates 
+significance level used: alpha = 0.05 
+NOTE: Compact letter displays can be misleading
+      because they show NON-findings rather than findings.
+      Consider using 'pairs()', 'pwpp()', or 'pwpm()' instead. 
+Compare the Glucose.BLUP by endosperm mutant groups.
+ endo     lsmean    SE  df lower.CL upper.CL .group
+ su1      -0.483 0.054 397   -0.589   -0.377  A    
+ su1se1    0.506 0.171 397    0.169    0.843   B   
+ su1sh2-i  0.643 0.194 397    0.261    1.025   B   
+ sh2       1.319 0.099 397    1.125    1.514    C  
+
+Results are given on the [ (not the response) scale. 
+Confidence level used: 0.95 
+Note: contrasts are still on the [ scale 
+P value adjustment: tukey method for comparing a family of 4 estimates 
+significance level used: alpha = 0.05 
+NOTE: Compact letter displays can be misleading
+      because they show NON-findings rather than findings.
+      Consider using 'pairs()', 'pwpp()', or 'pwpm()' instead. 
+Compare the Fructose.BLUP by endosperm mutant groups.
+ endo     lsmean     SE  df lower.CL upper.CL .group
+ su1      -0.478 0.0483 397   -0.573   -0.383  A    
+ su1sh2-i  0.707 0.1737 397    0.366    1.049   B   
+ su1se1    0.754 0.1532 397    0.453    1.055   B   
+ sh2       1.186 0.0884 397    1.012    1.360   B   
+
+Results are given on the [ (not the response) scale. 
+Confidence level used: 0.95 
+Note: contrasts are still on the [ scale 
+P value adjustment: tukey method for comparing a family of 4 estimates 
+significance level used: alpha = 0.05 
+NOTE: Compact letter displays can be misleading
+      because they show NON-findings rather than findings.
+      Consider using 'pairs()', 'pwpp()', or 'pwpm()' instead. 
+Compare the Sucrose.BLUP by endosperm mutant groups.
+ endo     lsmean    SE  df lower.CL upper.CL .group
+ su1       -2.81 0.175 397    -3.16    -2.47  A    
+ su1se1     2.38 0.555 397     1.29     3.47   B   
+ su1sh2-i   5.76 0.629 397     4.53     7.00    C  
+ sh2        7.51 0.320 397     6.88     8.14    C  
+
+Results are given on the [ (not the response) scale. 
+Confidence level used: 0.95 
+Note: contrasts are still on the [ scale 
+P value adjustment: tukey method for comparing a family of 4 estimates 
+significance level used: alpha = 0.05 
+NOTE: Compact letter displays can be misleading
+      because they show NON-findings rather than findings.
+      Consider using 'pairs()', 'pwpp()', or 'pwpm()' instead. 
+Compare the Total.Sugar.BLUP by endosperm mutant groups.
+ endo     lsmean    SE  df lower.CL upper.CL .group
+ su1       -4.18 0.289 397    -4.74    -3.61  A    
+ su1se1     3.00 0.918 397     1.19     4.80   B   
+ su1sh2-i   9.36 1.041 397     7.31    11.40    C  
+ sh2       10.77 0.530 397     9.73    11.81    C  
+
+Results are given on the [ (not the response) scale. 
+Confidence level used: 0.95 
+Note: contrasts are still on the [ scale 
+P value adjustment: tukey method for comparing a family of 4 estimates 
+significance level used: alpha = 0.05 
+NOTE: Compact letter displays can be misleading
+      because they show NON-findings rather than findings.
+      Consider using 'pairs()', 'pwpp()', or 'pwpm()' instead. 
+Compare the Glucose.BLUP by endosperm mutant groups.
+Compare the Glucose.BLUP by endosperm mutant groups.
+Compare the Starch.BLUP by endosperm mutant groups.
+ endo     lsmean    SE  df lower.CL upper.CL .group
+ su1se1   -5.658 0.782 397   -7.196   -4.120  A    
+ sh2       0.276 0.452 397   -0.612    1.164   B   
+ su1       0.290 0.247 397   -0.195    0.774   B   
+ su1sh2-i  2.904 0.887 397    1.160    4.648    C  
+
+Results are given on the [ (not the response) scale. 
+Confidence level used: 0.95 
+Note: contrasts are still on the [ scale 
+P value adjustment: tukey method for comparing a family of 4 estimates 
+significance level used: alpha = 0.05 
+NOTE: Compact letter displays can be misleading
+      because they show NON-findings rather than findings.
+      Consider using 'pairs()', 'pwpp()', or 'pwpm()' instead. 
+Compare the Total.Polysaccharides.BLUP by endosperm mutant groups.
+ endo     lsmean    SE  df lower.CL upper.CL .group
+ sh2       -9.84 0.481 397   -10.78   -8.889  A    
+ su1sh2-i  -8.30 0.946 397   -10.16   -6.443  A    
+ su1se1    -1.77 0.834 397    -3.41   -0.132   B   
+ su1        3.73 0.263 397     3.21    4.246    C  
+
+Results are given on the [ (not the response) scale. 
+Confidence level used: 0.95 
+Note: contrasts are still on the [ scale 
+P value adjustment: tukey method for comparing a family of 4 estimates 
+significance level used: alpha = 0.05 
+NOTE: Compact letter displays can be misleading
+      because they show NON-findings rather than findings.
+      Consider using 'pairs()', 'pwpp()', or 'pwpm()' instead. 
+Compare the WSP.BLUP by endosperm mutant groups.
+ endo     lsmean    SE  df lower.CL upper.CL .group
+ su1sh2-i -10.00 0.744 397   -11.46    -8.54  A    
+ sh2       -9.45 0.379 397   -10.20    -8.70  A    
+ su1        3.13 0.207 397     2.72     3.53   B   
+ su1se1     3.95 0.657 397     2.66     5.24   B   
+
+Results are given on the [ (not the response) scale. 
+Confidence level used: 0.95 
+Note: contrasts are still on the [ scale 
+P value adjustment: tukey method for comparing a family of 4 estimates 
+significance level used: alpha = 0.05 
+NOTE: Compact letter displays can be misleading
+      because they show NON-findings rather than findings.
+      Consider using 'pairs()', 'pwpp()', or 'pwpm()' instead. 
+Compare the Glucose.BLUP by endosperm mutant groups.
+ endo     lsmean    SE  df lower.CL upper.CL .group
+ su1      -0.483 0.054 397   -0.589   -0.377  A    
+ su1se1    0.506 0.171 397    0.169    0.843   B   
+ su1sh2-i  0.643 0.194 397    0.261    1.025   B   
+ sh2       1.319 0.099 397    1.125    1.514    C  
+
+Results are given on the [ (not the response) scale. 
+Confidence level used: 0.95 
+Note: contrasts are still on the [ scale 
+P value adjustment: tukey method for comparing a family of 4 estimates 
+significance level used: alpha = 0.05 
+NOTE: Compact letter displays can be misleading
+      because they show NON-findings rather than findings.
+      Consider using 'pairs()', 'pwpp()', or 'pwpm()' instead. 
+Compare the Fructose.BLUP by endosperm mutant groups.
+ endo     lsmean     SE  df lower.CL upper.CL .group
+ su1      -0.478 0.0483 397   -0.573   -0.383  A    
+ su1sh2-i  0.707 0.1737 397    0.366    1.049   B   
+ su1se1    0.754 0.1532 397    0.453    1.055   B   
+ sh2       1.186 0.0884 397    1.012    1.360   B   
+
+Results are given on the [ (not the response) scale. 
+Confidence level used: 0.95 
+Note: contrasts are still on the [ scale 
+P value adjustment: tukey method for comparing a family of 4 estimates 
+significance level used: alpha = 0.05 
+NOTE: Compact letter displays can be misleading
+      because they show NON-findings rather than findings.
+      Consider using 'pairs()', 'pwpp()', or 'pwpm()' instead. 
+Compare the Sucrose.BLUP by endosperm mutant groups.
+ endo     lsmean    SE  df lower.CL upper.CL .group
+ su1       -2.81 0.175 397    -3.16    -2.47  A    
+ su1se1     2.38 0.555 397     1.29     3.47   B   
+ su1sh2-i   5.76 0.629 397     4.53     7.00    C  
+ sh2        7.51 0.320 397     6.88     8.14    C  
+
+Results are given on the [ (not the response) scale. 
+Confidence level used: 0.95 
+Note: contrasts are still on the [ scale 
+P value adjustment: tukey method for comparing a family of 4 estimates 
+significance level used: alpha = 0.05 
+NOTE: Compact letter displays can be misleading
+      because they show NON-findings rather than findings.
+      Consider using 'pairs()', 'pwpp()', or 'pwpm()' instead. 
+Compare the Total.Sugar.BLUP by endosperm mutant groups.
+ endo     lsmean    SE  df lower.CL upper.CL .group
+ su1       -4.18 0.289 397    -4.74    -3.61  A    
+ su1se1     3.00 0.918 397     1.19     4.80   B   
+ su1sh2-i   9.36 1.041 397     7.31    11.40    C  
+ sh2       10.77 0.530 397     9.73    11.81    C  
+
+Results are given on the [ (not the response) scale. 
+Confidence level used: 0.95 
+Note: contrasts are still on the [ scale 
+P value adjustment: tukey method for comparing a family of 4 estimates 
+significance level used: alpha = 0.05 
+NOTE: Compact letter displays can be misleading
+      because they show NON-findings rather than findings.
+      Consider using 'pairs()', 'pwpp()', or 'pwpm()' instead. 
+Compare the Starch.BLUP by endosperm mutant groups.
+ endo     lsmean    SE  df lower.CL upper.CL .group
+ su1se1   -5.658 0.782 397   -7.196   -4.120  A    
+ sh2       0.276 0.452 397   -0.612    1.164   B   
+ su1       0.290 0.247 397   -0.195    0.774   B   
+ su1sh2-i  2.904 0.887 397    1.160    4.648    C  
+
+Results are given on the [ (not the response) scale. 
+Confidence level used: 0.95 
+Note: contrasts are still on the [ scale 
+P value adjustment: tukey method for comparing a family of 4 estimates 
+significance level used: alpha = 0.05 
+NOTE: Compact letter displays can be misleading
+      because they show NON-findings rather than findings.
+      Consider using 'pairs()', 'pwpp()', or 'pwpm()' instead. 
+Compare the Total.Polysaccharides.BLUP by endosperm mutant groups.
+ endo     lsmean    SE  df lower.CL upper.CL .group
+ sh2       -9.84 0.481 397   -10.78   -8.889  A    
+ su1sh2-i  -8.30 0.946 397   -10.16   -6.443  A    
+ su1se1    -1.77 0.834 397    -3.41   -0.132   B   
+ su1        3.73 0.263 397     3.21    4.246    C  
+
+Results are given on the [ (not the response) scale. 
+Confidence level used: 0.95 
+Note: contrasts are still on the [ scale 
+P value adjustment: tukey method for comparing a family of 4 estimates 
+significance level used: alpha = 0.05 
+NOTE: Compact letter displays can be misleading
+      because they show NON-findings rather than findings.
+      Consider using 'pairs()', 'pwpp()', or 'pwpm()' instead. 
+Compare the WSP.BLUP by endosperm mutant groups.
+ endo     lsmean    SE  df lower.CL upper.CL .group
+ su1sh2-i -10.00 0.744 397   -11.46    -8.54  A    
+ sh2       -9.45 0.379 397   -10.20    -8.70  A    
+ su1        3.13 0.207 397     2.72     3.53   B   
+ su1se1     3.95 0.657 397     2.66     5.24   B   
+
+Results are given on the [ (not the response) scale. 
+Confidence level used: 0.95 
+Note: contrasts are still on the [ scale 
+P value adjustment: tukey method for comparing a family of 4 estimates 
+significance level used: alpha = 0.05 
+NOTE: Compact letter displays can be misleading
+      because they show NON-findings rather than findings.
+      Consider using 'pairs()', 'pwpp()', or 'pwpm()' instead. 
+Compare the Glucose.BLUP by endosperm mutant groups.
+ endo     lsmean    SE  df lower.CL upper.CL .group
+ su1      -0.483 0.054 397   -0.589   -0.377  A    
+ su1se1    0.506 0.171 397    0.169    0.843   B   
+ su1sh2-i  0.643 0.194 397    0.261    1.025   B   
+ sh2       1.319 0.099 397    1.125    1.514    C  
+
+Results are given on the [ (not the response) scale. 
+Confidence level used: 0.95 
+Note: contrasts are still on the [ scale 
+P value adjustment: tukey method for comparing a family of 4 estimates 
+significance level used: alpha = 0.05 
+NOTE: Compact letter displays can be misleading
+      because they show NON-findings rather than findings.
+      Consider using 'pairs()', 'pwpp()', or 'pwpm()' instead. 
+Compare the Fructose.BLUP by endosperm mutant groups.
+ endo     lsmean     SE  df lower.CL upper.CL .group
+ su1      -0.478 0.0483 397   -0.573   -0.383  A    
+ su1sh2-i  0.707 0.1737 397    0.366    1.049   B   
+ su1se1    0.754 0.1532 397    0.453    1.055   B   
+ sh2       1.186 0.0884 397    1.012    1.360   B   
+
+Results are given on the [ (not the response) scale. 
+Confidence level used: 0.95 
+Note: contrasts are still on the [ scale 
+P value adjustment: tukey method for comparing a family of 4 estimates 
+significance level used: alpha = 0.05 
+NOTE: Compact letter displays can be misleading
+      because they show NON-findings rather than findings.
+      Consider using 'pairs()', 'pwpp()', or 'pwpm()' instead. 
+Compare the Sucrose.BLUP by endosperm mutant groups.
+ endo     lsmean    SE  df lower.CL upper.CL .group
+ su1       -2.81 0.175 397    -3.16    -2.47  A    
+ su1se1     2.38 0.555 397     1.29     3.47   B   
+ su1sh2-i   5.76 0.629 397     4.53     7.00    C  
+ sh2        7.51 0.320 397     6.88     8.14    C  
+
+Results are given on the [ (not the response) scale. 
+Confidence level used: 0.95 
+Note: contrasts are still on the [ scale 
+P value adjustment: tukey method for comparing a family of 4 estimates 
+significance level used: alpha = 0.05 
+NOTE: Compact letter displays can be misleading
+      because they show NON-findings rather than findings.
+      Consider using 'pairs()', 'pwpp()', or 'pwpm()' instead. 
+Compare the Total.Sugar.BLUP by endosperm mutant groups.
+ endo     lsmean    SE  df lower.CL upper.CL .group
+ su1       -4.18 0.289 397    -4.74    -3.61  A    
+ su1se1     3.00 0.918 397     1.19     4.80   B   
+ su1sh2-i   9.36 1.041 397     7.31    11.40    C  
+ sh2       10.77 0.530 397     9.73    11.81    C  
+
+Results are given on the [ (not the response) scale. 
+Confidence level used: 0.95 
+Note: contrasts are still on the [ scale 
+P value adjustment: tukey method for comparing a family of 4 estimates 
+significance level used: alpha = 0.05 
+NOTE: Compact letter displays can be misleading
+      because they show NON-findings rather than findings.
+      Consider using 'pairs()', 'pwpp()', or 'pwpm()' instead. 
+Compare the Starch.BLUP by endosperm mutant groups.
+ endo     lsmean    SE  df lower.CL upper.CL .group
+ su1se1   -5.658 0.782 397   -7.196   -4.120  A    
+ sh2       0.276 0.452 397   -0.612    1.164   B   
+ su1       0.290 0.247 397   -0.195    0.774   B   
+ su1sh2-i  2.904 0.887 397    1.160    4.648    C  
+
+Results are given on the [ (not the response) scale. 
+Confidence level used: 0.95 
+Note: contrasts are still on the [ scale 
+P value adjustment: tukey method for comparing a family of 4 estimates 
+significance level used: alpha = 0.05 
+NOTE: Compact letter displays can be misleading
+      because they show NON-findings rather than findings.
+      Consider using 'pairs()', 'pwpp()', or 'pwpm()' instead. 
+Compare the Total.Polysaccharides.BLUP by endosperm mutant groups.
+ endo     lsmean    SE  df lower.CL upper.CL .group
+ sh2       -9.84 0.481 397   -10.78   -8.889  A    
+ su1sh2-i  -8.30 0.946 397   -10.16   -6.443  A    
+ su1se1    -1.77 0.834 397    -3.41   -0.132   B   
+ su1        3.73 0.263 397     3.21    4.246    C  
+
+Results are given on the [ (not the response) scale. 
+Confidence level used: 0.95 
+Note: contrasts are still on the [ scale 
+P value adjustment: tukey method for comparing a family of 4 estimates 
+significance level used: alpha = 0.05 
+NOTE: Compact letter displays can be misleading
+      because they show NON-findings rather than findings.
+      Consider using 'pairs()', 'pwpp()', or 'pwpm()' instead. 
+Compare the WSP.BLUP by endosperm mutant groups.
+ endo     lsmean    SE  df lower.CL upper.CL .group
+ su1sh2-i -10.00 0.744 397   -11.46    -8.54  A    
+ sh2       -9.45 0.379 397   -10.20    -8.70  A    
+ su1        3.13 0.207 397     2.72     3.53   B   
+ su1se1     3.95 0.657 397     2.66     5.24   B   
+
+Results are given on the [ (not the response) scale. 
+Confidence level used: 0.95 
+Note: contrasts are still on the [ scale 
+P value adjustment: tukey method for comparing a family of 4 estimates 
+significance level used: alpha = 0.05 
+NOTE: Compact letter displays can be misleading
+      because they show NON-findings rather than findings.
+      Consider using 'pairs()', 'pwpp()', or 'pwpm()' instead. 
+Compare the Glucose.BLUP by endosperm mutant groups.
+ endo     lsmean    SE  df lower.CL upper.CL .group
+ su1      -0.483 0.054 397   -0.589   -0.377  A    
+ su1se1    0.506 0.171 397    0.169    0.843   B   
+ su1sh2-i  0.643 0.194 397    0.261    1.025   B   
+ sh2       1.319 0.099 397    1.125    1.514    C  
+
+Results are given on the [ (not the response) scale. 
+Confidence level used: 0.95 
+Note: contrasts are still on the [ scale 
+P value adjustment: tukey method for comparing a family of 4 estimates 
+significance level used: alpha = 0.05 
+NOTE: Compact letter displays can be misleading
+      because they show NON-findings rather than findings.
+      Consider using 'pairs()', 'pwpp()', or 'pwpm()' instead. 
+Compare the Fructose.BLUP by endosperm mutant groups.
+ endo     lsmean     SE  df lower.CL upper.CL .group
+ su1      -0.478 0.0483 397   -0.573   -0.383  A    
+ su1sh2-i  0.707 0.1737 397    0.366    1.049   B   
+ su1se1    0.754 0.1532 397    0.453    1.055   B   
+ sh2       1.186 0.0884 397    1.012    1.360   B   
+
+Results are given on the [ (not the response) scale. 
+Confidence level used: 0.95 
+Note: contrasts are still on the [ scale 
+P value adjustment: tukey method for comparing a family of 4 estimates 
+significance level used: alpha = 0.05 
+NOTE: Compact letter displays can be misleading
+      because they show NON-findings rather than findings.
+      Consider using 'pairs()', 'pwpp()', or 'pwpm()' instead. 
+Compare the Sucrose.BLUP by endosperm mutant groups.
+ endo     lsmean    SE  df lower.CL upper.CL .group
+ su1       -2.81 0.175 397    -3.16    -2.47  A    
+ su1se1     2.38 0.555 397     1.29     3.47   B   
+ su1sh2-i   5.76 0.629 397     4.53     7.00    C  
+ sh2        7.51 0.320 397     6.88     8.14    C  
+
+Results are given on the [ (not the response) scale. 
+Confidence level used: 0.95 
+Note: contrasts are still on the [ scale 
+P value adjustment: tukey method for comparing a family of 4 estimates 
+significance level used: alpha = 0.05 
+NOTE: Compact letter displays can be misleading
+      because they show NON-findings rather than findings.
+      Consider using 'pairs()', 'pwpp()', or 'pwpm()' instead. 
+Compare the Total.Sugar.BLUP by endosperm mutant groups.
+ endo     lsmean    SE  df lower.CL upper.CL .group
+ su1       -4.18 0.289 397    -4.74    -3.61  A    
+ su1se1     3.00 0.918 397     1.19     4.80   B   
+ su1sh2-i   9.36 1.041 397     7.31    11.40    C  
+ sh2       10.77 0.530 397     9.73    11.81    C  
+
+Results are given on the [ (not the response) scale. 
+Confidence level used: 0.95 
+Note: contrasts are still on the [ scale 
+P value adjustment: tukey method for comparing a family of 4 estimates 
+significance level used: alpha = 0.05 
+NOTE: Compact letter displays can be misleading
+      because they show NON-findings rather than findings.
+      Consider using 'pairs()', 'pwpp()', or 'pwpm()' instead. 

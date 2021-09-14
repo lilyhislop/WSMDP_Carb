@@ -1,1 +1,10 @@
 Phenotypic Statistics for the Carbohydrates of CleanedOutliersNF Through Mixed Linear Modeling.
+     Starch     
+ Min.   : 0.00  
+ 1st Qu.:10.34  
+ Median :14.69  
+ Mean   :14.95  
+ 3rd Qu.:18.91  
+ Max.   :56.95  
+ NA's   :9      
+Starch ~ Check + (1|BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)

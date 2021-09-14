@@ -1,0 +1,15 @@
+Compare the Glucose by Envi groups.
+ endo     lsmean    SE  df lower.CL upper.CL .group
+ su1      -0.483 0.054 397   -0.589   -0.377  A    
+ su1se1    0.506 0.171 397    0.169    0.843   B   
+ su1sh2-i  0.643 0.194 397    0.261    1.025   B   
+ sh2       1.319 0.099 397    1.125    1.514    C  
+
+Results are given on the [ (not the response) scale. 
+Confidence level used: 0.95 
+Note: contrasts are still on the [ scale 
+P value adjustment: tukey method for comparing a family of 4 estimates 
+significance level used: alpha = 0.05 
+NOTE: Compact letter displays can be misleading
+      because they show NON-findings rather than findings.
+      Consider using 'pairs()', 'pwpp()', or 'pwpm()' instead. 
