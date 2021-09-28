@@ -1,4 +1,4 @@
-GWASPolyVis <- function(GWASPolyRunVersion,trait,data3,Seq,DataSet, Thresh = "FDR"){
+GWASPolyVis <- function(GWASPolyRunVersion,trait,data3, Seq,DataSet, Thresh = "FDR"){
   
   visfileprefix <- paste0("Figures/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,"_",DataSet,"_",GWASPolyRunVersion,"_",trait,"_",Thresh)
   
@@ -9,7 +9,7 @@ GWASPolyVis <- function(GWASPolyRunVersion,trait,data3,Seq,DataSet, Thresh = "FD
   
   dev.off()
   
-  data4 <- set.threshold(data3,method=Thresh,level=0.05)
+  data4 <- set.threshold(data3,method=Thresh,level=0.01)
   #Here's the QTLS found
   print(get.QTL(data4))
   data5 <- get.QTL(data4) 
@@ -68,11 +68,11 @@ GWASPolyVis <- function(GWASPolyRunVersion,trait,data3,Seq,DataSet, Thresh = "FD
   })
   dev.off()
 
-  Scoresfile <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,DataSet,GWASPolyRunVersion,"_",trait,"_",Thresh,"_scores.csv", sep = "")
-  Effectfile <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,DataSet,GWASPolyRunVersion,"_",trait,"_",Thresh,"_effects.csv", sep = "")
+  Scoresfile <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,"_",DataSet,"_",GWASPolyRunVersion,"_",trait,"_",Thresh,"_scores.csv", sep = "")
+  Effectfile <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,"_",DataSet,"_",GWASPolyRunVersion,"_",trait,"_",Thresh,"_effects.csv", sep = "")
   write.GWASpoly(data4, trait, filename=Scoresfile, what = "scores", delim = ",")
   write.GWASpoly(data4, trait, filename=Effectfile, what = "effects", delim = ",")
-  data5File <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,DataSet,GWASPolyRunVersion,"_",trait,"_",Thresh,"_SignificantQTL.csv", sep = "")
+  data5File <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,"_",DataSet,"_",GWASPolyRunVersion,"_",trait,"_",Thresh,"_SignificantQTL.csv", sep = "")
   write.table(data5,
               append = FALSE,
               file = data5File,
@@ -80,17 +80,18 @@ GWASPolyVis <- function(GWASPolyRunVersion,trait,data3,Seq,DataSet, Thresh = "FD
               dec = ".",
               row.names = FALSE,
               col.names = TRUE)
-  #  if(length(data5)>0){
-  #   fit.ans <- fit.QTL(data=data4,trait=trait,
-  #                      qtl=data5[,c("Marker","Model")],
-  #                      fixed=data.frame(Effect="endo",Type="factor"))
-  # QTLfile <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,DataSet,GWASPolyRunVersion,"_",trait,"_",Thresh,"_QTLswithEffects.csv", sep = "")
-  # write.table(fit.ans,
-  #             append = FALSE,
-  #             file = QTLfile,
-  #             sep = ",",
-  #             dec = ".",
-  #             row.names = FALSE,
-  #             col.names = TRUE)}
+   if(length(data5)>0){
+    fit.ans <- fit.QTL(data=data4,trait=trait,
+    # fit.ans <- fit.QTL(data=data3,trait=trait,
+                        qtl=data5[,c("Marker","Model")],
+                       fixed=data.frame(Effect="endo",Type="factor"))
+  QTLfile <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,DataSet,GWASPolyRunVersion,"_",trait,"_",Thresh,"_QTLswithEffects.csv", sep = "")
+  write.table(fit.ans,
+              append = FALSE,
+              file = QTLfile,
+              sep = ",",
+              dec = ".",
+              row.names = FALSE,
+              col.names = TRUE)}
 
 }

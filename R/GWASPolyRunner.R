@@ -22,11 +22,11 @@ data <- read.GWASpoly(ploidy=2,
                       n.traits=7,
                       delim=",")
 
-data2 <- set.K(data, LOCO=TRUE)
-params <- set.params(fixed=fixedEffect, fixed.type=fixedType,n.PC = 3, MAF = 0.025) #no fixed effects, MAF should do nothing as it's already been filtered
+data2 <- set.K(data, LOCO=FALSE)
+params <- set.params(fixed=fixedEffect, fixed.type=fixedType,n.PC = 3, MAF = 0.005) #no fixed effects, MAF should do nothing as it's already been filtered
 
 data3 <- GWASpoly(data2,models=c("general", "additive"),traits=trait, params=params)
 
 #visualize the gwas results
-GWASPolyVis(GWASPolyRunVersion, trait, data3,Seq,DataSet, Thresh)
+GWASPolyVis(GWASPolyRunVersion, trait, data3, Seq,DataSet, Thresh)
 }

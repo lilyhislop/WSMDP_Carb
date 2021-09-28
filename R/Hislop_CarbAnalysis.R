@@ -67,6 +67,7 @@ source("R/PCAFigureCreation.R")
 source("R/hmpToNumeric.R")
 source("R/getmedianLDVis.R")
 source("R/getpercentileLDVis.R")
+# source("R/read.GWASpoly.R")
 
 #########################
 ###Read in Genomic Info###
@@ -457,10 +458,15 @@ linearmodel <- function(SampleDFtoModel,TitleAddendum, endoCheck = FALSE){
   model <- x$finalModel
   
   print(paste0("Read Out ",carbs[j]," BLUPS from selected model"))
-  #get the random effects of that model
+  #get the random effects of that model. This is deviation from the average
   RandomEffects <- ranef(model)
+  #get mean of the trait
+  average <- mean(pull(SampleDFtoModel[,c1+j-1]),na.rm = T)
+  #add the average to get the predicted trait value, not deviation of the book inbreds
+  BLUPofTrait <- RandomEffects$BookInbred + average 
   #hold the blups
-  tempBlup <- data.frame("Inbred" = rownames(RandomEffects$BookInbred), "BLUP" = RandomEffects$BookInbred)
+  # tempBlup <- data.frame("Inbred" = rownames(RandomEffects$BookInbred), "BLUP" = RandomEffects$BookInbred)
+  tempBlup <- data.frame("Inbred" = rownames(RandomEffects$BookInbred), "BLUP" = BLUPofTrait)
   blupHolder <- merge(blupHolder, tempBlup, by = "Inbred", all = TRUE)
   colnames(blupHolder)[j+1] <- paste0(carbs[j],".BLUP")
   
@@ -598,8 +604,8 @@ linearmodel <- function(SampleDFtoModel,TitleAddendum, endoCheck = FALSE){
 WFBlups <- linearmodel(CleanedInfoWF,"CleanedOutliersWF")
 NFBlups <- linearmodel(CleanedInfoNF,"CleanedOutliersNF",endoCheck = FALSE)
 
-
-HWSPBlups <- linearmodel(CleanedInfoHWSP,"CleanedOutliersHWSP")
+# 
+# HWSPBlups <- linearmodel(CleanedInfoHWSP,"CleanedOutliersHWSP")
 # These dont work. Fix. Not enough of a certain factor type?
 # LWSPNFBlups <- linearmodel(CleanedInfoLWSPNF,"CleanedOutliersLWSPNF")
 # LWSPWFBlups <- linearmodel(CleanedInfoLWSPWF,"CleanedOutliersLWSPWF")
@@ -608,83 +614,83 @@ HWSPBlups <- linearmodel(CleanedInfoHWSP,"CleanedOutliersHWSP")
 
 
 
-# #########################
-# ###SNP Relate###
-# #########################
-# infilename <- "WSMDP_SeqG_PreLD"
-# 
-# 
-# #read in VCF. This file has been previously filtered for 90% SNP call rate and MinorAlleleFrequency of 0.025
-# infilename
-# vcfpath <- paste("Data/RawData/",infilename,".vcf",sep = "")
-# snpgdsVCF2GDS(vcfpath, "Data/test.gds", method = "biallelic.only")
-# snpgdsSummary("Data/test.gds")
-# PreLDGeno <- snpgdsOpen("Data/test.gds")
-# 
-# # #LDVisualization
-# # L1 <- snpgdsLDMat(PreLDGeno, method="r", slide=250)
-# # # plot
-# # LDMatFile <- paste0("Figures/",Sys.Date(),"SNPRelate_LDMatrix.png")
-# # png(LDMatFile, width = 1000, height = 1000)
-# # image(abs(L1$LD), col=terrain.colors(64))
-# # dev.off()
-# 
-# #Lets prune anything with an LD over 0.98
-# PostLDGeno <- snpgdsLDpruning(PreLDGeno, ld.threshold = 0.98, start.pos = "first", verbose = TRUE)
-# names(PostLDGeno)
-# head(PostLDGeno$chr1)
-# PostLDGeno.id <- unlist(PostLDGeno)
-# 
-# #########################
-# ### PCA ###
-# #########################
-# #Read in the SCMV gdsobj with only the snp.id's found by LD pruning and only the sample.id's that we phenotypes
-# 
-# PCA <- snpgdsPCA(PreLDGeno, snp.id = PostLDGeno.id)
-# #cut off the numbers at the end of the sample.id that don't mean things to humans
-# holdtrunc<-gsub(PCA$sample.id, pattern = ":.*", replacement = "")
-# 
-# #########only include the samples that are in genoinfo########
-# #this is a round about way of looking at only the genotype info I have for the things planted in this trial
-# #eliminate inbreds tested in other experiments
-# genoinfo2014only <- genoinfo[which(genoinfo$Planting20142015 == 1),]
-# 
-# #look at what inbreds have the same genoname in both the seq file and the data summary
-# matching <- data.frame("GenoName" = unique(PCA$sample.id[na.omit(match(genoinfo2014only$GenoName, holdtrunc))]))
-# 
-# #hold the names of the inbreds I have seq info for
-# holdnocol <- unique(holdtrunc[na.omit(match(genoinfo2014only$GenoName, holdtrunc))])
-# 
-# #combine the geno name with the endosperm mutant type from the genoinfo file
-# matching$endo <- genoinfo2014only$endo[match(holdnocol,genoinfo2014only$GenoName)]
-# 
-# #combine the geno name with the endosperm mutant type from the genoinfo file
-# matching$Program <- genoinfo2014only$Program[match(holdnocol,genoinfo2014only$GenoName)]
-# #combine the geno name with the endosperm mutant type from the genoinfo file
-# matching$Region <- genoinfo2014only$Region[match(holdnocol,genoinfo2014only$GenoName)]
-# 
-# 
-# #conduct pca again with only those samples
-# PCA <- snpgdsPCA(PreLDGeno, sample.id = matching$GenoName, snp.id = PostLDGeno.id)
-# pc.perc <- PCA$varprop*100
-# head(round(pc.perc,2))
-# 
-# 
-# ptm <- proc.time()
-# #visualize the PCA with ld pruned snps and only the tested samples 
-# PCAFigureCreation(PCA,pc.perc,matching,infilename,"endo")
-# PCAFigureCreation(PCA,pc.perc,matching,infilename,"Program")
-# PCAFigureCreation(PCA,pc.perc,matching,infilename,"Region")
-# proc.time() - ptm
-# #########################
-# ### Close Snp Relate ###
-# #########################
-# outfilename <- "WSMDP_SeqG"
-# outfile <- paste("Data/RawData/",outfilename ,sep="")
-# snpgdsGDS2PED(PreLDGeno, outfile, snp.id = PostLDGeno.id)
-# snpgdsGDS2PED(PreLDGeno, paste0("Data/RawData/",outfilename,"_NoLD_InbredsPruned"), sample.id = matching$GenoName)
-# snpgdsClose(PreLDGeno)
-# 
+#########################
+###SNP Relate###
+#########################
+infilename <- "WSMDP_SeqG_PreLD"
+
+
+#read in VCF. This file has been previously filtered for 90% SNP call rate and MinorAlleleFrequency of 0.025
+infilename
+vcfpath <- paste("Data/RawData/",infilename,".vcf",sep = "")
+snpgdsVCF2GDS(vcfpath, "Data/test.gds", method = "biallelic.only")
+snpgdsSummary("Data/test.gds")
+PreLDGeno <- snpgdsOpen("Data/test.gds")
+
+# #LDVisualization
+# L1 <- snpgdsLDMat(PreLDGeno, method="r", slide=250)
+# # plot
+# LDMatFile <- paste0("Figures/",Sys.Date(),"SNPRelate_LDMatrix.png")
+# png(LDMatFile, width = 1000, height = 1000)
+# image(abs(L1$LD), col=terrain.colors(64))
+# dev.off()
+
+#Lets prune anything with an LD over 0.98
+PostLDGeno <- snpgdsLDpruning(PreLDGeno, ld.threshold = 0.98, start.pos = "first", verbose = TRUE)
+names(PostLDGeno)
+head(PostLDGeno$chr1)
+PostLDGeno.id <- unlist(PostLDGeno)
+
+#########################
+### PCA ###
+#########################
+#Read in the SCMV gdsobj with only the snp.id's found by LD pruning and only the sample.id's that we phenotypes
+
+PCA <- snpgdsPCA(PreLDGeno, snp.id = PostLDGeno.id)
+#cut off the numbers at the end of the sample.id that don't mean things to humans
+holdtrunc<-gsub(PCA$sample.id, pattern = ":.*", replacement = "")
+
+#########only include the samples that are in genoinfo########
+#this is a round about way of looking at only the genotype info I have for the things planted in this trial
+#eliminate inbreds tested in other experiments
+genoinfo2014only <- genoinfo[which(genoinfo$Planting20142015 == 1),]
+
+#look at what inbreds have the same genoname in both the seq file and the data summary
+matching <- data.frame("GenoName" = unique(PCA$sample.id[na.omit(match(genoinfo2014only$GenoName, holdtrunc))]))
+
+#hold the names of the inbreds I have seq info for
+holdnocol <- unique(holdtrunc[na.omit(match(genoinfo2014only$GenoName, holdtrunc))])
+
+#combine the geno name with the endosperm mutant type from the genoinfo file
+matching$endo <- genoinfo2014only$endo[match(holdnocol,genoinfo2014only$GenoName)]
+
+#combine the geno name with the endosperm mutant type from the genoinfo file
+matching$Program <- genoinfo2014only$Program[match(holdnocol,genoinfo2014only$GenoName)]
+#combine the geno name with the endosperm mutant type from the genoinfo file
+matching$Region <- genoinfo2014only$Region[match(holdnocol,genoinfo2014only$GenoName)]
+
+
+#conduct pca again with only those samples
+PCA <- snpgdsPCA(PreLDGeno, sample.id = matching$GenoName, snp.id = PostLDGeno.id)
+pc.perc <- PCA$varprop*100
+head(round(pc.perc,2))
+
+
+ptm <- proc.time()
+#visualize the PCA with ld pruned snps and only the tested samples
+PCAFigureCreation(PCA,pc.perc,matching,infilename,"endo")
+PCAFigureCreation(PCA,pc.perc,matching,infilename,"Program")
+PCAFigureCreation(PCA,pc.perc,matching,infilename,"Region")
+proc.time() - ptm
+#########################
+### Close Snp Relate ###
+#########################
+outfilename <- "WSMDP_SeqG"
+outfile <- paste("Data/RawData/",outfilename ,sep="")
+snpgdsGDS2PED(PreLDGeno, outfile, snp.id = PostLDGeno.id)
+snpgdsGDS2PED(PreLDGeno, paste0("Data/RawData/",outfilename,"_NoLD_InbredsPruned"), sample.id = matching$GenoName)
+snpgdsClose(PreLDGeno)
+
 
 
 #########################
@@ -752,14 +758,15 @@ blups <- colnames(NFBlupsGenoJustPheno[c1:c2])
 ptm <- proc.time()
 #itterate through all the traits.
 for(blup in blups){
+
   GWASPolyRunner(WFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_",Sys.Date()),Seq,"WFBLUP")
   GWASPolyRunner(WFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_",Sys.Date()),Seq,"WFBLUP","endo","factor")
 
-  # GWASPolyRunner(NFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),Seq,"NFBLUP")
-  # GWASPolyRunner(NFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),Seq,"NFBLUP","endo","factor")
+  # GWASPolyRunner(NFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_001alpha",Sys.Date()),Seq,"NFBLUP")
+  # GWASPolyRunner(NFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_001alpha",Sys.Date()),Seq,"NFBLUP","endo","factor")
 
-  GWASPolyRunner(HWSPBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),Seq,"WFBLUP")
-  GWASPolyRunner(HWSPBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),Seq,"WFBLUP","endo","factor")
+  # GWASPolyRunner(HWSPBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),Seq,"WFBLUP")
+  # GWASPolyRunner(HWSPBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),Seq,"WFBLUP","endo","factor")
 
   # GWASPolyRunner(LWSPNFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),Seq,"LWSPNFBlups")
   # GWASPolyRunner(LWSPNFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),Seq,"LWSPNFBlups","endo","factor")
@@ -768,6 +775,7 @@ for(blup in blups){
   # GWASPolyRunner(LWSPWFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),Seq,"LWSPWFBlups","endo","factor")
 
 }
+
 beep(2)
 #Stop the clock!
 proc.time() - ptm
@@ -786,15 +794,22 @@ QTLList <- list()
 #Put these files into a dataframe
 #This is the originally created filename
 for(i in 1:7){
-  file <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,DataSet,GWASPolyRunVersion,"_",blups[i],"_",Thresh,"_SignificantQTL.csv", sep = "")
+  file1 <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,DataSet,GWASPolyRunVersion,"_",blups[i],"_",Thresh,"_QTLswithEffects.csv", sep = "")
+  file2 <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,"_",DataSet,"_",GWASPolyRunVersion,"_",blups[i],"_",Thresh,"_SignificantQTL.csv", sep = "")
   #make sure theres actually something in the file: As in, there are any QTLs and you don't try to open an empty file
-  if (file.size(file) > 100){ 
-  QTLList[[i]] <- read.csv(file)}}
+  if ( file.exists(file1)){ 
+    merge1 <- read.csv(file1)
+    merge2 <- read.csv(file2)
+    if(dim(merge1)[1] != dim(merge2)[1]){
+      stop("Something is wrong with the QTL files")
+    }
+    merge <- merge(merge1, merge2)
+  QTLList[[i]] <- merge}}
 #bind the QTLs into one dataframe
 QTLDF <- bind_rows(QTLList)
 #pull out only the general QTL
 QTLDFGen <- QTLDF[which(QTLDF$Model == "general"),]
-#Write those aggregated QTL to fild
+#Write those aggregated QTL to file
 outfile <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,DataSet,GWASPolyRunVersion,"_",Thresh,"_SignificantQTL_Aggregated.csv", sep = "")
 write.csv(QTLDFGen, outfile)
 #get the positions of the snps
@@ -834,9 +849,9 @@ p <- ggplot(QTLDFGen, aes(as.integer(Chrom), Position)) +
 dev.off()
 }
 
-FullGWASVisualize("EndoFixedEffect_FDRThresh_2021-09-09")
-FullGWASVisualize("NoFixedEffect_FDRThresh_2021-09-10")
-FullGWASVisualize("NoFixedEffect_FDRThresh_2021-09-10","WFBLUP")
+FullGWASVisualize("EndoFixedEffect_FDRThresh_001alpha2021-09-27")
+FullGWASVisualize("NoFixedEffect_FDRThresh_001alpha2021-09-27")
+# FullGWASVisualize("NoFixedEffect_FDRThresh_2021-09-10","WFBLUP")
 
 #########################
 ###Compare BLUPS by Endosperm with Tukey###
@@ -886,52 +901,51 @@ write.table(LSMHolder, EndoCompareTableFile, sep = ",", row.names = FALSE)
 endoTukey(NFBlupsGenoJustPheno,"NFBlup")
 endoTukey(WFBlupsGenoJustPheno,"WFBlup")
 
-
-enviTukey <- function(BlupDF, DataSet){
-  #establish a file to put the results in
-  EnviCompareFile <- paste0("Data/OutputtedData/WSMDP_TukeyHSD_CarbBLUP_ComparedbyEnvi_",DataSet,"Verbose.txt")
-  EnviCompareTableFile <- paste0("Data/OutputtedData/WSMDP_TukeyHSD_CarbBLUP_ComparedbyEnvi_",DataSet,".csv")
-  EnviNum <- length(unique(BlupDF$Envi))
-  if( EnviNum == 4){
-    LSMHolder <- data.frame("Trait" = blups,  "2014NewYork" = rep("sh2",7), "2015NewYork" = rep("su1",7), "2014Wisconsin" = rep("su1se1",7), "2014Wisconsin" = rep("su1sh2-i",7) )
-  }
-  blups <- colnames(BlupDF)[5:11]
-  
-  #iterate through all the traits
-  for(i in 1:length(blups)){
-    #paste in a header
-    blup <- blups[i]
-    cat(paste0("Compare the ",blup," by Envi groups."), file=EnviCompareFile, sep="\n", append=TRUE)
-    #TO FIX this isn't working, frustratingly. 
-    EnviCompare<-aov(as.list(BlupDF[blup])~ BlupDF$Envi)
-    # EnviCompare<-aov(CleanedInfoNF$Starch~CleanedInfoNF$Envi)
-    
-    
-    #find the least square means by group
-    LSD<-lsmeans(EnviCompare, ~Envi)
-    #get the significant differences between the least square means
-    LSM<-cld(LSD,Letters = LETTERS, decreasing=T)
-    LSMHolder[i,2] <- paste(round(LSM[which(LSM$Envi=="2014NewYork"),2],2),"+/-", round(LSM[which(LSM$Envi=="2014NewYork"),3],2), LSM[which(LSM$Envi=="2014NewYork"),7])
-    LSMHolder[i,3] <- paste(round(LSM[which(LSM$Envi=="2015NewYork"),2],2),"+/-", round(LSM[which(LSM$Envi=="2015NewYork"),3],2), LSM[which(LSM$Envi=="2015NewYork"),7])
-    LSMHolder[i,4] <- paste(round(LSM[which(LSM$Envi=="2014Wisconsin"),2],2),"+/-", round(LSM[which(LSM$Envi=="2014Wisconsin"),3],2), LSM[which(LSM$Envi=="2014Wisconsin"),7])
-    LSMHolder[i,5] <- paste(round(LSM[which(LSM$Envi=="2015Wisconsin"),2],2),"+/-", round(LSM[which(LSM$endo=="2015Wisconsin"),3],2), LSM[which(LSM$endo=="2015Wisconsin"),7])
-   
-    
-    #output that data
-    out <- capture.output(LSM)
-    cat(out, file=EnviCompareFile, sep="\n", append=TRUE)
-  }
-  write.table(LSMHolder, EnviCompareTableFile, sep = ",", row.names = FALSE)
-}
-enviTukey(CleanedInfoNF,"NFCleaned")
+# 
+# enviTukey <- function(BlupDF, DataSet){
+#   #establish a file to put the results in
+#   EnviCompareFile <- paste0("Data/OutputtedData/WSMDP_TukeyHSD_CarbBLUP_ComparedbyEnvi_",DataSet,"Verbose.txt")
+#   EnviCompareTableFile <- paste0("Data/OutputtedData/WSMDP_TukeyHSD_CarbBLUP_ComparedbyEnvi_",DataSet,".csv")
+#   EnviNum <- length(unique(BlupDF$Envi))
+#   if( EnviNum == 4){
+#     LSMHolder <- data.frame("Trait" = blups,  "2014NewYork" = rep("sh2",7), "2015NewYork" = rep("su1",7), "2014Wisconsin" = rep("su1se1",7), "2014Wisconsin" = rep("su1sh2-i",7) )
+#   }
+#   blups <- colnames(BlupDF)[5:11]
+#   
+#   #iterate through all the traits
+#   for(i in 1:length(blups)){
+#     #paste in a header
+#     blup <- blups[i]
+#     cat(paste0("Compare the ",blup," by Envi groups."), file=EnviCompareFile, sep="\n", append=TRUE)
+#     #TO FIX this isn't working, frustratingly. 
+#     EnviCompare<-aov(as.list(BlupDF[blup])~ BlupDF$Envi)
+#     # EnviCompare<-aov(CleanedInfoNF$Starch~CleanedInfoNF$Envi)
+#     
+#     
+#     #find the least square means by group
+#     LSD<-lsmeans(EnviCompare, ~Envi)
+#     #get the significant differences between the least square means
+#     LSM<-cld(LSD,Letters = LETTERS, decreasing=T)
+#     LSMHolder[i,2] <- paste(round(LSM[which(LSM$Envi=="2014NewYork"),2],2),"+/-", round(LSM[which(LSM$Envi=="2014NewYork"),3],2), LSM[which(LSM$Envi=="2014NewYork"),7])
+#     LSMHolder[i,3] <- paste(round(LSM[which(LSM$Envi=="2015NewYork"),2],2),"+/-", round(LSM[which(LSM$Envi=="2015NewYork"),3],2), LSM[which(LSM$Envi=="2015NewYork"),7])
+#     LSMHolder[i,4] <- paste(round(LSM[which(LSM$Envi=="2014Wisconsin"),2],2),"+/-", round(LSM[which(LSM$Envi=="2014Wisconsin"),3],2), LSM[which(LSM$Envi=="2014Wisconsin"),7])
+#     LSMHolder[i,5] <- paste(round(LSM[which(LSM$Envi=="2015Wisconsin"),2],2),"+/-", round(LSM[which(LSM$endo=="2015Wisconsin"),3],2), LSM[which(LSM$endo=="2015Wisconsin"),7])
+#    
+#     
+#     #output that data
+#     out <- capture.output(LSM)
+#     cat(out, file=EnviCompareFile, sep="\n", append=TRUE)
+#   }
+#   write.table(LSMHolder, EnviCompareTableFile, sep = ",", row.names = FALSE)
+# }
+# enviTukey(CleanedInfoNF,"NFCleaned")
 
 
 
 justthebitsNF <- NFBlupsGenoJustPheno[2:8]
-png(paste("Figures/WSMDP_AllNIRPred_MixedEqn_CorrelationfromPSYCH_BLUPs_NoField.png",sep=""), width = 500, height = 500)
+png(paste("Figures/WSMDP_AllNIRPred_MixedEqn_CorrelationfromPSYCH_BLUPs_NoField.png",sep=""), width = 750, height = 750)
 pairs.panels(justthebitsNF, scale = TRUE)
 dev.off()
-
 
 
 #########################
@@ -1034,4 +1048,104 @@ for(j in 1:length(chrmiterant)){
 }
 
 
+#########################
+### Candidate Gene Discovery ###
+#########################
 
+## Identify candidate genes using GenomicRanges
+
+# Prep the genes ----------------------------------------------------------
+library(rtracklayer)
+gff = import(gzfile('Data/RawData/Zea_mays.AGPv3.22.gff3.gz'))
+head(gff)
+
+
+# Create tibble from gff file removing non-chromosomal mitochondrial, and chloroplast genes
+library(data.table)
+library(tidyverse)
+
+gffFiltered = as_tibble(gff) %>% 
+  # select(seqnames, start, end, type, ID, description) %>% 
+  filter(type == "gene") %>% 
+  # filter(!grepl("B73",seqnames)) %>% 
+  # filter(grepl("Chr*",seqnames)) %>% 
+  filter(!grepl("Mt",seqnames)) %>%
+  filter(!grepl("scaffold",seqnames)) %>%
+  filter(!grepl("Pt",seqnames)) %>%
+  separate(seqnames, into = c("Intro","ChrmNum"), sep = "r") %>% 
+  mutate(ChrmNum = as.numeric(ChrmNum)) %>% 
+  arrange(ChrmNum, start)
+
+head(gffFiltered)
+
+
+
+## Gene ranges
+library(GenomicRanges)
+gR = with(gffFiltered, GRanges(seqnames = ChrmNum,
+                       ranges = IRanges(start = start, end = end),
+                       ids = ID,
+                       description = description))
+
+## Read in SNP results should have SNP, CHROM, POS, p.value, Trait columns
+n_marks = 8e4
+
+#Pull from this file
+GWASPolyRunVersion <- "EndoFixedEffect_FDRThresh_2021-09-27"
+# GWASPolyRunVersion <- "NoFixedEffect_FDRThresh_2021-09-27"
+DataSet = "NFBLUP"
+Thresh = "FDR"
+outfile <- paste0("WSMDP_Carb_GWASpoly_",Seq,DataSet,GWASPolyRunVersion,"_",Thresh,"_SignificantQTL_Aggregated")
+GWASResultsFile <- paste("Data/OutputtedData/GWASpoly/",outfile,".csv", sep = "")
+snpDat = fread(GWASResultsFile, data.table = FALSE)
+#ToOnlyLookAtSigLoci
+# snpDatFull = fread(GWASResultsFile, data.table = FALSE)
+# snpDat <- snpDatFull[which(snpDatFull$pval < 0.05),]
+
+head(snpDat)
+bonf = 0.05/n_marks
+window = 250e3
+
+## SNP ranges
+sR = snpDat %>% 
+  # filter(Method == "FarmCPU") %>% 
+  # filter(pval<=bonf) %>%
+  arrange(Chrom ,Position) %>%
+  with(., GRanges(seqnames = Chrom, 
+                  ranges = IRanges(start = Position - window, end = Position + window),
+                  pheno = Trait, 
+                  SNP = Marker))
+
+## Find overlaps
+#This somehow finds things of same positions regardless of chrom number, so thats no good
+sR@seqnames
+gR@seqnames
+my_genes = findOverlaps(gR, sR)
+# split(gR, seqnames(gR))$'1'
+# 
+# 
+# my_genes = findOverlaps(gR@ranges, sR@ranges)
+# my_genes = as_tibble(findOverlaps(split(gR, seqnames(gR))$'1'@ranges, split(sR, seqnames(sR))$'1'@ranges))
+# my_genes <- my_genes %>% add_column("Chrm" = 1)
+# 
+# for(i in 2:10)
+# {
+#   tempgR <- split(gR, seqnames(gR))[i]
+#   tempsR <-split(sR, seqnames(sR))[i]
+#   tempGenes <- as_tibble(findOverlaps(tempgR@unlistData@ranges, tempsR@unlistData@ranges))
+#   tempGenes <- tempGenes %>% add_column("Chrm" = i)
+#   my_genes = rbind(my_genes, tempGenes)
+# }
+
+## Index variables
+gmind <- my_genes@from
+smind <- my_genes@to
+
+#this is donked
+## Create a table from genomic ranges and SNP ranges
+genes_results = tibble(GeneID = gR@elementMetadata@listData$ids[c(gmind)],
+                       SNP = c(sR@elementMetadata@listData$SNP[smind]),
+                       Phenotype = c(sR@elementMetadata@listData$pheno[smind])) %>%
+  inner_join(., gffFiltered, by = c("GeneID" = "ID")) %>%
+  arrange(Phenotype, ChrmNum, start)
+write.table(genes_results,paste0("Data/OutputtedData/GWASpoly/",outfile,"_CandidateGenes.csv"))
