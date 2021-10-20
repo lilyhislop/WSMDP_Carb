@@ -49,6 +49,7 @@ library(MuMIn)
 library(SNPRelate)
 library(beepr)#beep when code is done
 library("cAIC4")
+library(ggpubr)
 
 getwd()
 setwd("C:/Users/LHislop/Documents/GitHub/WSMDP_Carb")
@@ -116,6 +117,8 @@ wetLabStarch <- read.csv("Data/RawData/WSMDP_Wetlab_Starchs.csv")
 wetLabStarchNoCtrl<- wetLabStarch[which(wetLabStarch$Sample_ID != "control"),c(5,9:11)]
 #Separate out the controls
 wetLabStarchCtrl<- wetLabStarch[which(wetLabStarch$Sample_ID == "control"),c(5,9:11)]
+summary(wetLabStarchCtrl)
+SD(wetLabStarchCtrl)
 
 #Establish File to Hold stats
 wetLabFile <- paste0("Data/OutputtedData/WSMDP_Wetlab_stats.txt")
@@ -158,6 +161,10 @@ Fructose <- c(wetLabSugarCtrl$Rep.A.Fructose, wetLabSugarCtrl$Rep.B.Fructose, we
 Sucro <- c(wetLabSugarCtrl$Rep.A.Sucro, wetLabSugarCtrl$Rep.B.Sucro, wetLabSugarCtrl$Rep.C.Sucro )
 Total <- c(wetLabSugarCtrl$Rep.A.Total, wetLabSugarCtrl$Rep.B.Total, wetLabSugarCtrl$Rep.C.Total )
 wetLabSugarControlConj <- data.frame(Glucose,Fructose,Sucro,Total)
+
+summary(wetLabSugarControlConj)
+SD(wetLabSugarControlConj)
+
 
 #Write Sugar Stats to File
 cat("Sugar Wetlab Data", file=wetLabFile, sep="\n", append=TRUE)
@@ -248,7 +255,8 @@ LWSPNFs <- LWSPNFsDF[which(LWSPNFsDF$endo == "sh2" | LWSPNFsDF$endo == "su1sh2-i
 CarbInfoExpandedWFDF <- subset(rbind(HWSPs,LWSPWFs), !is.na(IsExperimental))
 #all the predictions without the field lines
 CarbInfoExpandedNFDF <- subset(rbind(HWSPs,LWSPNFs), !is.na(IsExperimental))
-
+write.csv(file = "Data/OutputtedData/UncleanedInfoWFOutput.csv",CarbInfoExpandedWFDF)
+write.csv(file = "Data/OutputtedData/UncleanedInfoNFOutput.csv",CarbInfoExpandedNFDF)
 
 #visualize these data sets pre cleaning
 CarbDataFrameVis(CarbInfoExpandedWFDF,"WithField_WithOutliers")
@@ -285,6 +293,23 @@ print(summary(OnlyUnique))
 }
 summarizeDF(CleanedInfoWF)
 summarizeDF(CleanedInfoNF)
+checkfile <- "Data/OutputtedData/CheckDistributions.csv"
+
+CleanedInfoWFCheck1 <- CleanedInfoWF[which(CleanedInfoWF$BookInbred == "Check1"),c(5:11,15)]
+write.csv(summary(CleanedInfoWFCheck1), checkfile,append = TRUE)
+write.csv(SD(CleanedInfoWFCheck1), checkfile,append = TRUE)
+
+CleanedInfoWFCheck2 <- CleanedInfoWF[which(CleanedInfoWF$BookInbred == "Check2"),c(5:11,15)]
+write.csv(summary(CleanedInfoWFCheck2), checkfile,append = TRUE)
+          write.csv(SD(CleanedInfoWFCheck2), checkfile,append = TRUE)
+
+CleanedInfoWFCheck3 <- CleanedInfoWF[which(CleanedInfoWF$BookInbred == "Check3"),c(5:11,15)]
+write.csv(summary(CleanedInfoWFCheck3), checkfile,append = TRUE)
+          write.csv(SD(CleanedInfoWFCheck3), checkfile,append = TRUE)
+
+CleanedInfoWFCheck4 <- CleanedInfoWF[which(CleanedInfoWF$BookInbred == "Check4"),c(5:11,15)]
+write.csv(summary(CleanedInfoWFCheck4), checkfile,append = TRUE)
+          write.csv(SD(CleanedInfoWFCheck4), checkfile,append = TRUE)
 
 #########################
 ###Validate that the NIR Equation is good###
@@ -324,8 +349,8 @@ R2Vis <- function(DF, label, Out){
   Carb = c("Fructose", "Glucose", "Sucrose", "Total Sugar", "Starch", "Total Polysaccharide", "WSP")
   for(i in 1:7){
     carbCompare  <- lm(DF[,dfpos[i]]~ DF[,dfpos[i]-1])
-    carbFileName <- paste("Figures/wsmdp2021_",label,Carb[i],"_NIR_Eqn_Prediction_vis.png", sep = "")
-    png(carbFileName)
+    carbFileName <- paste("Figures/wsmdp2021_",label,Carb[i],"_NIR_Eqn_Prediction_vis.jpeg", sep = "")
+    jpeg(carbFileName)
     par(mfrow=c(1,1))
     print(summary(carbCompare))
     rsqua <- summary(carbCompare)$r.squared
@@ -474,7 +499,7 @@ linearmodel <- function(SampleDFtoModel,TitleAddendum, endoCheck = FALSE){
   
   ###### Check Assumptions#######
   print(paste0("Check  ",carbs[j]," Model Assumption"))
-  png(paste0("Figures/WSMDP_LinearModel_assumptions_",TitleAddendum,"_", carbs[j], ".png"), width = 1000, height = 500)
+  jpeg(paste0("Figures/WSMDP_LinearModel_assumptions_",TitleAddendum,"_", carbs[j], ".jpeg"), width = 1000, height = 500)
   par(mfrow=c(1,3))
 
   # Model Fit with REML
@@ -575,14 +600,14 @@ linearmodel <- function(SampleDFtoModel,TitleAddendum, endoCheck = FALSE){
 
   #######Graph the different variances explained by different factors######
   VarDFMelt <- reshape2::melt(VarDF)
-  png(paste("Figures/WSMDP_AllNIRPred_MixedEqn_PercentVarianceExplainedby_Factors_",TitleAddendum,".png",sep=""), width = 1000, height = 500)
+  jpeg(paste("Figures/WSMDP_AllNIRPred_MixedEqn_PercentVarianceExplainedby_Factors_",TitleAddendum,".jpeg",sep=""), width = 1000, height = 500)
   print(barchart(~value|variable, group = factor(Carb), data= VarDFMelt,reverse.rows = FALSE,main = "Percent Phenotypic Variance Explained",layout = c(8,1),
            key = simpleKey(text = colnames(SampleDFtoModel)[5:11],
                            rectangles = TRUE, points = FALSE, space = "right")))
   dev.off()
   
   #######Graph the different variances explained by different factors with GGPlot ######
-  png(paste("Figures/WSMDP_AllNIRPred_MixedEqn_PercentVarianceExplainedby_Factors_",TitleAddendum,"_ggplot.png",sep=""), width = 1000, height = 500)
+  jpeg(paste("Figures/WSMDP_AllNIRPred_MixedEqn_PercentVarianceExplainedby_Factors_",TitleAddendum,"_ggplot.jpeg",sep=""), width = 1000, height = 500)
   p <- ggplot(VarDFMelt, aes(y = Carb, value)) +
     geom_bar(aes(fill = variable),stat = "identity",  position = position_stack(reverse = TRUE)) + 
     theme(legend.position = "top")
@@ -630,8 +655,8 @@ PreLDGeno <- snpgdsOpen("Data/test.gds")
 # #LDVisualization
 # L1 <- snpgdsLDMat(PreLDGeno, method="r", slide=250)
 # # plot
-# LDMatFile <- paste0("Figures/",Sys.Date(),"SNPRelate_LDMatrix.png")
-# png(LDMatFile, width = 1000, height = 1000)
+# LDMatFile <- paste0("Figures/",Sys.Date(),"SNPRelate_LDMatrix.jpeg")
+# jpeg(LDMatFile, width = 1000, height = 1000)
 # image(abs(L1$LD), col=terrain.colors(64))
 # dev.off()
 
@@ -753,17 +778,19 @@ c1 <- which(colnames(NFBlupsGenoJustPheno)=="Starch.BLUP")
 c2 <- which(colnames(NFBlupsGenoJustPheno)=="Total.Sugar.BLUP")
 blups <- colnames(NFBlupsGenoJustPheno[c1:c2])
 
-
+gwasPlotsNo <- vector('list', 7)
+gwasPlotsEndo <- vector('list', 7)
+count = 1
 # Start the clock!
 ptm <- proc.time()
 #itterate through all the traits.
 for(blup in blups){
 
-  GWASPolyRunner(WFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_",Sys.Date()),Seq,"WFBLUP")
-  GWASPolyRunner(WFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_",Sys.Date()),Seq,"WFBLUP","endo","factor")
+  # gwasPlotsNo[[count]] <-  GWASPolyRunner(WFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_",Sys.Date()),Seq,"WFBLUP")
+  # gwasPlotsEndo[[count]] <- GWASPolyRunner(WFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_",Sys.Date()),Seq,"WFBLUP","endo","factor")
 
-  # GWASPolyRunner(NFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_001alpha",Sys.Date()),Seq,"NFBLUP")
-  # GWASPolyRunner(NFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_001alpha",Sys.Date()),Seq,"NFBLUP","endo","factor")
+  gwasPlotsNo[[count]] <- GWASPolyRunner(NFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),Seq,"NFBLUP")
+  gwasPlotsEndo[[count]] <- GWASPolyRunner(NFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),Seq,"NFBLUP","endo","factor")
 
   # GWASPolyRunner(HWSPBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),Seq,"WFBLUP")
   # GWASPolyRunner(HWSPBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),Seq,"WFBLUP","endo","factor")
@@ -774,11 +801,49 @@ for(blup in blups){
   # GWASPolyRunner(LWSPWFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),Seq,"LWSPWFBlups")
   # GWASPolyRunner(LWSPWFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),Seq,"LWSPWFBlups","endo","factor")
 
+  count <- count + 1
 }
 
 beep(2)
 #Stop the clock!
 proc.time() - ptm
+
+removelegend <- function(p){
+  g <- p +  theme(legend.position = "none")
+  return(g)
+}
+
+gwasPlotsNope <- vector('list', 7)
+gwasPlotsEndope <- vector('list', 7)
+gwasPlotsNope <- lapply(gwasPlotsNo, removelegend )
+gwasPlotsEndope <- lapply(gwasPlotsEndo, removelegend )
+
+pdf("Figures/GWASpoly/WSMDP_Carb_GWASpoly_NoFixedEffect_FDRThresh_2021-10-20_NFBLUP_ALLTraitsGWASCumulative_GeneralModel.pdf",width = 10, height = 10)
+figure <- ggarrange(gwasPlotsNope[[1]], gwasPlotsNope[[2]], gwasPlotsNope[[3]], gwasPlotsNope[[4]], gwasPlotsNope[[5]], gwasPlotsNope[[6]], gwasPlotsNope[[7]],
+                    labels = c("A", "B","C","D","E","F","G"),
+                    ncol = 2, nrow = 4,
+                    font.label = list(size = 18))
+
+print(figure)
+dev.off()
+
+pdf("Figures/GWASpoly/WSMDP_Carb_GWASpoly_EndoFixedEffect_FDRThresh_2021-10-20_NFBLUP_ALLTraitsGWASCumulative_GeneralModel.pdf",width = 10, height = 10)
+figure <- ggarrange(gwasPlotsEndope[[1]], gwasPlotsEndope[[2]], gwasPlotsEndope[[3]], gwasPlotsEndope[[4]], gwasPlotsEndope[[5]], gwasPlotsEndope[[6]], gwasPlotsEndope[[7]],
+                    labels = c("A", "B","C","D","E","F","G"),
+                    ncol = 2, nrow = 4,
+                    font.label = list(size = 18))
+
+print(figure)
+dev.off()
+
+pdf("Figures/GWASpoly/WSMDP_Carb_GWASpoly_NoandEndoFixedEffect_FDRThresh_2021-10-20_NFBLUP_TotalSugar_GeneralModel.pdf",width = 10, height = 10)
+figure <- ggarrange(gwasPlotsNope[[7]],gwasPlotsEndope[[7]],
+                    labels = c("A","B"),
+                    ncol = 1, nrow = 2,
+                    font.label = list(size = 18))
+
+print(figure)
+dev.off()
 
 #########################
 ###plot the gwas results###
@@ -787,8 +852,13 @@ proc.time() - ptm
 # GWASPolyRunVersion <- paste0("EndoFixedEffect_FDRThresh_",Sys.Date())
 
 FullGWASVisualize <- function(GWASPolyRunVersion, DataSet = "NFBLUP", Thresh = "FDR"){
-#establish DF to hold the file readins 
-QTLList <- list()
+  # #for debugging
+  # Thresh = "FDR"
+  # DataSet = "NFBLUP"
+  # GWASPolyRunVersion <- "EndoFixedEffect_FDRThresh_2021-10-20"
+
+  #establish DF to hold the file readins 
+  QTLList <- list()
 
 
 #Put these files into a dataframe
@@ -797,7 +867,7 @@ for(i in 1:7){
   file1 <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,DataSet,GWASPolyRunVersion,"_",blups[i],"_",Thresh,"_QTLswithEffects.csv", sep = "")
   file2 <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,"_",DataSet,"_",GWASPolyRunVersion,"_",blups[i],"_",Thresh,"_SignificantQTL.csv", sep = "")
   #make sure theres actually something in the file: As in, there are any QTLs and you don't try to open an empty file
-  if ( file.exists(file1)){ 
+  if (file.exists(file1) && file.size(file1)>15){ 
     merge1 <- read.csv(file1)
     merge2 <- read.csv(file2)
     if(dim(merge1)[1] != dim(merge2)[1]){
@@ -809,6 +879,23 @@ for(i in 1:7){
 QTLDF <- bind_rows(QTLList)
 #pull out only the general QTL
 QTLDFGen <- QTLDF[which(QTLDF$Model == "general"),]
+QTLDFGen$Trait <- paste0(QTLDFGen$Trait," (",QTLDFGen$Threshold, " LOD)")
+#Add in dot for sh2 and su1
+#su1
+#su1 is at chr 4 41,369,510..41,378,299
+su1 <- c("Su1",4,round((41369510+41378299)/2), "general",NA,NA,"Su1",NA,NA,NA,NA,NA)
+#sh2
+#sh2 is at Chr3:216,414,684..216,424,048
+sh2 <- c("Sh2",3,(216414684+216424048)/2, "general",NA,NA,"Sh2",NA,NA,NA,NA,NA)
+#se1
+#se1 is at Chr2:229,983,005..229,983,526
+se1 <- c("Se1",2,(229983005+229983526)/2, "general",NA,NA,"Se1",NA,NA,NA,NA,NA)
+
+genes <- data.frame(rbind(rbind(su1,sh2),se1))
+colnames(genes) <- colnames(QTLDFGen)
+genes$Chrom <- as.numeric(genes$Chrom)
+genes$Position <- as.numeric(genes$Position)
+
 #Write those aggregated QTL to file
 outfile <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,DataSet,GWASPolyRunVersion,"_",Thresh,"_SignificantQTL_Aggregated.csv", sep = "")
 write.csv(QTLDFGen, outfile)
@@ -821,36 +908,62 @@ chrMax[chr] <- max(genoPosInfo$pos[which(genoPosInfo == chr)])}
 
 
 # make chromosome and end1 as numeric, trait as factor
-QTLDFGen$chr <- as.factor(QTLDFGen$Chrom)
-QTLDFGen$pos <- as.numeric(QTLDFGen$Position)
-QTLDFGen$Trait <- as.factor(paste0(QTLDFGen$Trait," (",QTLDFGen$Threshold, " LOD)"))
+QTLDFGen$Chrom <- as.numeric(QTLDFGen$Chrom)
+QTLDFGen$Position <- as.numeric(QTLDFGen$Position)
+QTLDFGen$Trait <- as.factor(QTLDFGen$Trait)
+
+if( length(unique(QTLDFGen$Trait)) != 5){
+  clrs <- c("#000000","#004949","#009292","#ff6db6","#ffb6db",
+            "#490092","#006ddb","#b66dff","#6db6ff")
+}
+if( length(unique(QTLDFGen$Trait)) == 5){
+  clrs <- c("#009292","#ff6db6","#ffb6db",
+            "#490092","#006ddb","#b66dff","#6db6ff")
+}
 
 #create a new table of maize chromosome length and make it a data frame
 maize_chromosomes <- cbind(chromosome = c(1:10), start = c(rep(0,10)), end = c(chrMax))
 maize_chromosomes <- data.frame(maize_chromosomes)
 str(maize_chromosomes)
+ytitle <- expression(paste("Genomic positions (",italic(Mb),")"))
 
-
-png(paste0("Figures/GWASpoly/WSMDP_Carb_GWASpoly_",GWASPolyRunVersion,"_",DataSet,"_AllQTLPosition_GeneralModel.png"),width = 900,height =750)
-p <- ggplot(QTLDFGen, aes(as.integer(Chrom), Position)) +
+pdf(paste0("Figures/GWASpoly/WSMDP_Carb_GWASpoly_",GWASPolyRunVersion,"_",DataSet,"_AllQTLPosition_GeneralModel.pdf"),width = 10)
+p <- ggplot(QTLDFGen, aes(Chrom, Position)) +
   geom_segment(data = maize_chromosomes, aes(x = chromosome, xend = chromosome, y = start, yend = end), lineend = "round", color = "black", size = 16, inherit.aes = FALSE) +
   geom_segment(data = maize_chromosomes, aes(x = chromosome, xend = chromosome, y = start, yend = end), lineend = "round", color = "white", size = 15, inherit.aes = FALSE) +
   scale_y_reverse(breaks = seq(3.5e8, 0, -50e6), labels = c(350, seq(300, 0, -50)), limits = c(3.5e8, 0)) +
   scale_x_continuous(breaks = c(1,2,3,4,5,6,7,8,9,10)) +
-  ylab("Genomic positions (Mb)") + xlab ("Chromosome") +
+  ylab(ytitle) + xlab ("Chromosome") +
   theme_classic() +
-  theme(axis.text.x = element_text(size=12), axis.title.x = element_text(size= 12), axis.text.y = element_text(size=11), axis.title.y = element_text(size=12)) +
+  theme(axis.text.x = element_text(size=18), axis.title.x = element_text(size= 18), axis.text.y = element_text(size=18), axis.title.y = element_text(size=18)) +
   theme(legend.text = element_text(size=12), legend.title = element_text(size=12)) +
   geom_point(aes(color= Trait), position = position_dodge(width = 0.4), size = 3, alpha = 1) +
-  scale_color_brewer(palette = "Paired") +
-  theme(legend.title = element_blank(), legend.position = c(0.55,0.05), legend.direction = "horizontal", legend.text=element_text(size=12)) +
-  scale_color_manual(values = c("#d55e00",  "#cc79a7", "#0072b2", "#f0e442", "#009e73", "#000000", "#924900"))
+  # geom_point(data = genes, aes(x = Chrom, y = Position,color = Trait), size = 5)+data = genes, aes(x = Chrom +.5, y = Position, xend = (Chrom+.1), yend = Position, color = Trait)
+  geom_segment(data = genes, aes(x = Chrom +.4, y = Position, xend = (Chrom+.25), yend = Position), size = 1.5,
+                 arrow = arrow(length = unit(.25, "cm")))+
+  geom_text(data = genes,label= genes$Trait, nudge_x = 0.5, nudge_y = 10000000)+
+  # theme(legend.title = element_blank(), legend.position = c(0.50,0.08), legend.direction = "horizontal", legend.text=element_text(size=15)) +  guides(colour = guide_legend(nrow = 2)) +
+  scale_color_manual(values = clrs)
   print(p)
+  # add_h_arrow(p, genes$Chrom, genes$Position, label = genes$Trait)
 dev.off()
+return (p)
 }
 
-FullGWASVisualize("EndoFixedEffect_FDRThresh_001alpha2021-09-27")
-FullGWASVisualize("NoFixedEffect_FDRThresh_001alpha2021-09-27")
+# p <- FullGWASVisualize("EndoFixedEffect_FDRThresh_2021-09-27")
+p <- FullGWASVisualize("EndoFixedEffect_FDRThresh_2021-10-20")
+p <- p +  theme(legend.position = "none")
+g <- FullGWASVisualize("NoFixedEffect_FDRThresh_2021-10-20")
+g <- g +  theme(legend.title = element_blank(), legend.position = c(0.75,0.2), legend.text=element_text(size=15)) +  guides(colour = guide_legend(nrow = 8)) 
+  
+pdf("Figures/GWASpoly/WSMDP_Carb_GWASpoly_NoandEndoFixedEffect_FDRThresh_2021-10-20_NFBLUP_AllQTLPosition_GeneralModel.pdf",width = 10, height = 14,)
+figure <- ggarrange(g,p,
+                    labels = c("A", "B"),
+                    ncol = 1, nrow = 2,
+                    font.label = list(size = 24))
+
+print(figure)
+dev.off()
 # FullGWASVisualize("NoFixedEffect_FDRThresh_2021-09-10","WFBLUP")
 
 #########################
@@ -902,49 +1015,52 @@ endoTukey(NFBlupsGenoJustPheno,"NFBlup")
 endoTukey(WFBlupsGenoJustPheno,"WFBlup")
 
 # 
-# enviTukey <- function(BlupDF, DataSet){
-#   #establish a file to put the results in
-#   EnviCompareFile <- paste0("Data/OutputtedData/WSMDP_TukeyHSD_CarbBLUP_ComparedbyEnvi_",DataSet,"Verbose.txt")
-#   EnviCompareTableFile <- paste0("Data/OutputtedData/WSMDP_TukeyHSD_CarbBLUP_ComparedbyEnvi_",DataSet,".csv")
-#   EnviNum <- length(unique(BlupDF$Envi))
-#   if( EnviNum == 4){
-#     LSMHolder <- data.frame("Trait" = blups,  "2014NewYork" = rep("sh2",7), "2015NewYork" = rep("su1",7), "2014Wisconsin" = rep("su1se1",7), "2014Wisconsin" = rep("su1sh2-i",7) )
-#   }
-#   blups <- colnames(BlupDF)[5:11]
-#   
-#   #iterate through all the traits
-#   for(i in 1:length(blups)){
-#     #paste in a header
-#     blup <- blups[i]
-#     cat(paste0("Compare the ",blup," by Envi groups."), file=EnviCompareFile, sep="\n", append=TRUE)
-#     #TO FIX this isn't working, frustratingly. 
-#     EnviCompare<-aov(as.list(BlupDF[blup])~ BlupDF$Envi)
-#     # EnviCompare<-aov(CleanedInfoNF$Starch~CleanedInfoNF$Envi)
-#     
-#     
-#     #find the least square means by group
-#     LSD<-lsmeans(EnviCompare, ~Envi)
-#     #get the significant differences between the least square means
-#     LSM<-cld(LSD,Letters = LETTERS, decreasing=T)
-#     LSMHolder[i,2] <- paste(round(LSM[which(LSM$Envi=="2014NewYork"),2],2),"+/-", round(LSM[which(LSM$Envi=="2014NewYork"),3],2), LSM[which(LSM$Envi=="2014NewYork"),7])
-#     LSMHolder[i,3] <- paste(round(LSM[which(LSM$Envi=="2015NewYork"),2],2),"+/-", round(LSM[which(LSM$Envi=="2015NewYork"),3],2), LSM[which(LSM$Envi=="2015NewYork"),7])
-#     LSMHolder[i,4] <- paste(round(LSM[which(LSM$Envi=="2014Wisconsin"),2],2),"+/-", round(LSM[which(LSM$Envi=="2014Wisconsin"),3],2), LSM[which(LSM$Envi=="2014Wisconsin"),7])
-#     LSMHolder[i,5] <- paste(round(LSM[which(LSM$Envi=="2015Wisconsin"),2],2),"+/-", round(LSM[which(LSM$endo=="2015Wisconsin"),3],2), LSM[which(LSM$endo=="2015Wisconsin"),7])
-#    
-#     
-#     #output that data
-#     out <- capture.output(LSM)
-#     cat(out, file=EnviCompareFile, sep="\n", append=TRUE)
-#   }
-#   write.table(LSMHolder, EnviCompareTableFile, sep = ",", row.names = FALSE)
-# }
-# enviTukey(CleanedInfoNF,"NFCleaned")
+enviTukey <- function(BlupDF, DataSet){
+  #establish a file to put the results in
+  EnviCompareFile <- paste0("Data/OutputtedData/WSMDP_TukeyHSD_CarbBLUP_ComparedbyEnvi_",DataSet,"Verbose.txt")
+  EnviCompareTableFile <- paste0("Data/OutputtedData/WSMDP_TukeyHSD_CarbBLUP_ComparedbyEnvi_",DataSet,".csv")
+  EnviNum <- length(unique(BlupDF$Envi))
+  if( EnviNum == 4){
+    LSMHolder <- data.frame("Trait" = blups,  "2014NewYork" = rep("sh2",7), "2015NewYork" = rep("su1",7), "2014Wisconsin" = rep("su1se1",7), "2015Wisconsin" = rep("su1sh2-i",7) )
+  }
+  blups <- colnames(BlupDF)[5:11]
+
+  #iterate through all the traits
+  for(i in 1:length(blups)){
+    #paste in a header
+    blup <- blups[i]
+    cat(paste0("Compare the ",blup," by Envi groups."), file=EnviCompareFile, sep="\n", append=TRUE)
+    #TO FIX this isn't working, frustratingly.
+    EnviCompare<-aov(pull(BlupDF[blup])~ BlupDF$Envi)
+    # EnviCompare<-aov(CleanedInfoNF$Starch~CleanedInfoNF$Envi)
+
+
+    #find the least square means by group
+    LSD<-lsmeans(EnviCompare, ~Envi)
+    #get the significant differences between the least square means
+    LSM<-cld(LSD,Letters = LETTERS, decreasing=T)
+    LSMHolder[i,2] <- paste(round(LSM[which(LSM$Envi=="2014NewYork"),2],2),"+/-", round(LSM[which(LSM$Envi=="2014NewYork"),3],2), LSM[which(LSM$Envi=="2014NewYork"),7])
+    LSMHolder[i,3] <- paste(round(LSM[which(LSM$Envi=="2015NewYork"),2],2),"+/-", round(LSM[which(LSM$Envi=="2015NewYork"),3],2), LSM[which(LSM$Envi=="2015NewYork"),7])
+    LSMHolder[i,4] <- paste(round(LSM[which(LSM$Envi=="2014Wisconsin"),2],2),"+/-", round(LSM[which(LSM$Envi=="2014Wisconsin"),3],2), LSM[which(LSM$Envi=="2014Wisconsin"),7])
+    LSMHolder[i,5] <- paste(round(LSM[which(LSM$Envi=="2015Wisconsin"),2],2),"+/-", round(LSM[which(LSM$Envi=="2015Wisconsin"),3],2), LSM[which(LSM$Envi=="2015Wisconsin"),7])
+
+
+    #output that data
+    out <- capture.output(LSM)
+    cat(out, file=EnviCompareFile, sep="\n", append=TRUE)
+  }
+  write.table(LSMHolder, EnviCompareTableFile, sep = ",", row.names = FALSE)
+}
+enviTukey(CleanedInfoNF,"NFCleaned")
 
 
 
 justthebitsNF <- NFBlupsGenoJustPheno[2:8]
-png(paste("Figures/WSMDP_AllNIRPred_MixedEqn_CorrelationfromPSYCH_BLUPs_NoField.png",sep=""), width = 750, height = 750)
-pairs.panels(justthebitsNF, scale = TRUE)
+colnames(justthebitsNF) <- c("Starch","Total poly","WSP","Glucose","Fructose","Sucrose","Total sugar")
+pdf(paste("Figures/WSMDP_AllNIRPred_MixedEqn_CorrelationfromPSYCH_BLUPs_NoField.pdf",sep=""))
+pairs.panels(justthebitsNF, stars = TRUE, cex = 1,cex.lab = 2, cex.axis = 1)
+# cor.plot(justthebitsNF, stars = TRUE, cex.cor = 3.5, cex.axis = 1)
+# pairs(justthebitsNF, stars = TRUE, cex.cor = 3.5, cex.axis = 1)
 dev.off()
 
 
@@ -1020,7 +1136,7 @@ for(j in 1:length(chrmiterant)){
   
   #plot and save the visualization
   {pdf(outfile, pointsize=8,family='serif',width = 5,height = 3.5)
-  # {png(outfile, pointsize=8,family='serif',width = 500,height = 300)
+  # {jpeg(outfile, pointsize=8,family='serif',width = 500,height = 300)
     lwd=1
     ylim=c(0,1)
     xlim= c(0, range(mean.xvals)[2] * 1.1)	# Increase the upper xlim by a little bit
@@ -1056,7 +1172,8 @@ for(j in 1:length(chrmiterant)){
 
 # Prep the genes ----------------------------------------------------------
 library(rtracklayer)
-gff = import(gzfile('Data/RawData/Zea_mays.AGPv3.22.gff3.gz'))
+gff = import(gzfile('Data/RawData/ZmB73_5b.60_FGS.gff3.gz'))
+# gff = import(gzfile('Data/RawData/Zea_mays.AGPv3.22.gff3.gz'))
 head(gff)
 
 
@@ -1069,12 +1186,16 @@ gffFiltered = as_tibble(gff) %>%
   filter(type == "gene") %>% 
   # filter(!grepl("B73",seqnames)) %>% 
   # filter(grepl("Chr*",seqnames)) %>% 
-  filter(!grepl("Mt",seqnames)) %>%
-  filter(!grepl("scaffold",seqnames)) %>%
-  filter(!grepl("Pt",seqnames)) %>%
-  separate(seqnames, into = c("Intro","ChrmNum"), sep = "r") %>% 
-  mutate(ChrmNum = as.numeric(ChrmNum)) %>% 
-  arrange(ChrmNum, start)
+  # filter(!grepl("Mt",seqnames)) %>%
+  filter(!grepl("chrMt",seqnames)) %>%
+  # filter(!grepl("Cp",seqnames)) %>%
+  # filter(!grepl("UNMAPPED",seqnames))%>%
+  filter(!grepl("chrUNKNOWN",seqnames))%>%
+  # filter(!grepl("scaffold",seqnames)) %>%
+  filter(!grepl("chrPt",seqnames)) %>%
+  separate(seqnames, into = c("Intro","seqnames"), sep = "r") %>%
+  mutate(seqnames = as.numeric(seqnames)) %>%
+  arrange(seqnames, start)
 
 head(gffFiltered)
 
@@ -1082,10 +1203,11 @@ head(gffFiltered)
 
 ## Gene ranges
 library(GenomicRanges)
-gR = with(gffFiltered, GRanges(seqnames = ChrmNum,
+gR = with(gffFiltered, GRanges(seqnames = seqnames,
                        ranges = IRanges(start = start, end = end),
                        ids = ID,
-                       description = description))
+                       description = biotype))
+                       # description = description))
 
 ## Read in SNP results should have SNP, CHROM, POS, p.value, Trait columns
 n_marks = 8e4
@@ -1103,7 +1225,7 @@ snpDat = fread(GWASResultsFile, data.table = FALSE)
 # snpDat <- snpDatFull[which(snpDatFull$pval < 0.05),]
 
 head(snpDat)
-bonf = 0.05/n_marks
+bonf = 0.05
 window = 250e3
 
 ## SNP ranges
@@ -1147,5 +1269,5 @@ genes_results = tibble(GeneID = gR@elementMetadata@listData$ids[c(gmind)],
                        SNP = c(sR@elementMetadata@listData$SNP[smind]),
                        Phenotype = c(sR@elementMetadata@listData$pheno[smind])) %>%
   inner_join(., gffFiltered, by = c("GeneID" = "ID")) %>%
-  arrange(Phenotype, ChrmNum, start)
-write.table(genes_results,paste0("Data/OutputtedData/GWASpoly/",outfile,"_CandidateGenes.csv"))
+  arrange(Phenotype, seqnames, start)
+write.table(genes_results,paste0("Data/OutputtedData/GWASpoly/",outfile,"_CandidateGenes_B73v2.csv"))
