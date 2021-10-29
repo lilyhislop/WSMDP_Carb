@@ -179,7 +179,7 @@ out <- capture.output(SD(wetLabSugarControlConj))
 cat(out, file=wetLabFile, sep="\n", append=TRUE)
 
 
-
+WetLabSugarExpanded <- InfoCombination(wetLabSugar,SampleInfo,BookInfo)
 
 #########################
 ###Read in the output from NIR ###
@@ -208,6 +208,7 @@ LWSPNFsDF <- AgPredOutput(StarchDF = CarbDF[[5]], SugDF = CarbDF[[6]], condense 
 
 InfoCombination <- function(NIRDF, SampleInfoDF, BookInfoDF){
   OutDF <- NIRDF
+  # NIRDF$NIRBase<-gsub(NIRDF$NIR_ID, pattern = "-.*", replacement = "")
   OutDF$endo <- SampleInfoDF$endo[match(NIRDF$NIRBase, SampleInfoDF$NIRBase, nomatch = NA)]
   #eliminate SE markers
   OutDF$endo[which(OutDF$endo == "SE")] <- "field"
@@ -294,24 +295,64 @@ print(summary(OnlyUnique))
 summarizeDF(CleanedInfoWF)
 summarizeDF(CleanedInfoNF)
 checkfile <- "Data/OutputtedData/CheckDistributions.csv"
+checkfile2 <- "Data/OutputtedData/CheckDistributionsByEnvi.csv"
 
 CleanedInfoWFCheck1 <- CleanedInfoWF[which(CleanedInfoWF$BookInbred == "Check1"),c(5:11,15)]
+carbs <- matrix(c("",colnames(CleanedInfoWF)[5:11]),nrow = 1, ncol = 8)
+write.csv(carbs,checkfile,append = TRUE, row.names = FALSE)
+write.csv("Check 1, We05407",checkfile,append = TRUE, row.names = FALSE)
 write.csv(summary(CleanedInfoWFCheck1), checkfile,append = TRUE)
+write.csv(carbs,checkfile,append = TRUE, row.names = FALSE)
+write.csv("Standard Deviation",checkfile,append = TRUE, row.names = FALSE)
 write.csv(SD(CleanedInfoWFCheck1), checkfile,append = TRUE)
+# hist(CleanedInfoWFCheck2$Starch)
+
+Check1 <- CleanedInfoWF[which(CleanedInfoWF$BookInbred == "Check1"),]
+out1 <- Check1 %>%
+  group_by(Envi) %>%
+  summarise_at(vars(5:11), list(name = mean), na.rm = TRUE)
+carbs <- matrix(c("Envi",colnames(CleanedInfoWF)[5:11]),nrow = 1, ncol = 8)
+write.csv(carbs,checkfile2,append = TRUE, row.names = FALSE)
+write.csv("Check 1, We05407",checkfile2,append = TRUE, row.names = FALSE)
+write.csv(out1, checkfile2,append = TRUE, row.names = FALSE)
+
 
 CleanedInfoWFCheck2 <- CleanedInfoWF[which(CleanedInfoWF$BookInbred == "Check2"),c(5:11,15)]
+write.csv("Check 2, W5579",checkfile,append = TRUE, row.names = FALSE)
 write.csv(summary(CleanedInfoWFCheck2), checkfile,append = TRUE)
+write.csv("Standard Deviation",checkfile,append = TRUE, row.names = FALSE)
           write.csv(SD(CleanedInfoWFCheck2), checkfile,append = TRUE)
-
+Check2 <- CleanedInfoWF[which(CleanedInfoWF$BookInbred == "Check2"),]
+out2 <- Check2 %>%
+  group_by(Envi) %>%
+  summarise_at(vars(5:11), list(name = mean), na.rm = TRUE)
+write.csv("Check 2, W5579",checkfile2,append = TRUE, row.names = FALSE)
+write.csv(out2, checkfile2,append = TRUE, row.names = FALSE)
+          
+          
 CleanedInfoWFCheck3 <- CleanedInfoWF[which(CleanedInfoWF$BookInbred == "Check3"),c(5:11,15)]
+write.csv("Check 3, Ia5125",checkfile,append = TRUE, row.names = FALSE)
 write.csv(summary(CleanedInfoWFCheck3), checkfile,append = TRUE)
+write.csv("Standard Deviation",checkfile,append = TRUE, row.names = FALSE)
           write.csv(SD(CleanedInfoWFCheck3), checkfile,append = TRUE)
+Check3 <- CleanedInfoWF[which(CleanedInfoWF$BookInbred == "Check3"),]
+out3 <- Check3 %>%
+  group_by(Envi) %>%
+  summarise_at(vars(5:11), list(name = mean))
+write.csv("Check 3, Ia5125",checkfile2,append = TRUE, row.names = FALSE)
+write.csv(out3, checkfile2,append = TRUE, row.names = FALSE)
 
 CleanedInfoWFCheck4 <- CleanedInfoWF[which(CleanedInfoWF$BookInbred == "Check4"),c(5:11,15)]
+write.csv("Check 4, IL125b",checkfile,append = TRUE, row.names = FALSE)
 write.csv(summary(CleanedInfoWFCheck4), checkfile,append = TRUE)
+write.csv("Standard Deviation",checkfile,append = TRUE, row.names = FALSE)
           write.csv(SD(CleanedInfoWFCheck4), checkfile,append = TRUE)
-
-#########################
+Check4 <- CleanedInfoWF[which(CleanedInfoWF$BookInbred == "Check4"),]
+out4 <- Check4 %>%
+  group_by(Envi) %>%
+  summarise_at(vars(5:11), list(name = mean))
+write.csv("Check 4, IL125b",checkfile2,append = TRUE, row.names = FALSE)
+write.csv(out4, checkfile2,append = TRUE, row.names = FALSE)
 ###Validate that the NIR Equation is good###
 #########################
 
@@ -346,29 +387,33 @@ EqnStats <- function(DF){
 #Visualize these
 R2Vis <- function(DF, label, Out){
   dfpos <- c(2,4,6,8,10,12,14)
-  Carb = c("Fructose", "Glucose", "Sucrose", "Total Sugar", "Starch", "Total Polysaccharide", "WSP")
+  alpha <- LETTERS[1:8]
+  Carb = c("Starch", "Total Polysaccharide", "WSP","Fructose", "Glucose", "Sucrose", "Total Sugar")
+  carbFileName <- paste("Figures/wsmdp2021_",label,"_AllCarb_NIREqn_Prediction_vis.pdf", sep = "")
+  pdf(carbFileName, height= 14)
+  par(mfrow=c(4,2))
   for(i in 1:7){
     carbCompare  <- lm(DF[,dfpos[i]]~ DF[,dfpos[i]-1])
-    carbFileName <- paste("Figures/wsmdp2021_",label,Carb[i],"_NIR_Eqn_Prediction_vis.jpeg", sep = "")
-    jpeg(carbFileName)
-    par(mfrow=c(1,1))
     print(summary(carbCompare))
-    rsqua <- summary(carbCompare)$r.squared
+    rsqua <- round(summary(carbCompare)$r.squared,2)
     plot(DF[,dfpos[i]]~ DF[,dfpos[i]-1],
          pch = 16,
-         xlab = paste(Carb[i]," wetlab (%)",sep = ""),
-         ylab = paste(Carb[i]," NIR Prediction (%)",sep = ""),
-         main = paste("Actual Vs Predicted ",Carb[i]," r^2 =",trunc(rsqua*10^3)/10^3,sep = ""))
+         xlab = "Assay Results (%)",
+         ylab = "NIR Prediction (%)",
+         # main = expression(Carb[i]*'r'^2*" ="*!!rsqua))
+         main = paste0(alpha[i],": ",Carb[i]))
     abline(coefficients(carbCompare), lwd = 2, lty = 2, col = "red")
+   
+    legend("bottomright",paste0("r^2 =",rsqua),  
+           box.lty=0)
     # text(15,max(Prediction[,i])-5,labels = paste("r^2 =",trunc(rsqua*10^3)/10^3))
 
     Out$slope[i] <- trunc(10^3*summary(carbCompare)$coefficients[2])/10^3
     Out$intercept[i] <- trunc(10^3*summary(carbCompare)$coefficients[1])/10^3
-    Out$R2[i] <- trunc(10^3*summary(carbCompare)$r.squared)/10^3
-
-
-    dev.off()
+    Out$R2[i] <- rsqua
+    
   }
+  dev.off()
   return(Out)
 }
 
@@ -407,18 +452,18 @@ write.csv(WFValWLdfEqnStatsR, "Data/OutputtedData/EqnFitStatisticsValidationWF.c
 write.csv(NFValWLdfEqnStatsR, "Data/OutputtedData/EqnFitStatisticsValidationNF.csv")
 
 
-####With Jared WetlabDATA
+# ####With Jared WetlabDATA
 # HWSPsJ <- HWSPsDF[which(HWSPsDF$endo == "su1" | HWSPsDF$endo == "se" | is.na(HWSPsDF$endo)),]
-# alternatingorder2 <- c(1,5,26,6,27,7,28,8,29,9,30,10,31,11,32)
+# alternatingorder2 <- c(1,5,27,6,28,7,29,8,30,9,31,10,32,11,33)
 # CarbInfoExpandedWFJDF <- rbind(HWSPsJ,LWSPWFs)
 # CarbInfoExpandedNFJDF <- rbind(HWSPsJ,LWSPNFs)
 # WFValWLJ <- merge(CarbInfoExpandedWFJDF, valwetlabDF, by = "Samples")
 # NFValWLJ <- merge(CarbInfoExpandedNFJDF, valwetlabDF, by = "Samples")
-# WFValWLJdf <- WFValWLJ[,alternatingorder2]
-# NFValWLJdf <- NFValWLJ[,alternatingorder2]
+# WFValWLJdf <- WFValWLJ[19:30,alternatingorder2]
+# NFValWLJdf <- NFValWLJ[19:30,alternatingorder2]
 # WFValWLdfJEqnStatsR <- R2Vis(WFValWLJdf[,2:15], "UnCleanedWSPeqnWF_PredVsWetlab_ValidationSubset_WJared", EqnStats(WFValWLdf[,2:15]))
 # NFValWLdfJEqnStatsR <- R2Vis(NFValWLJdf[,2:15], "UnCleanedWSPeqnNF_PredVsWetlab_ValidationSubset_WJared", EqnStats(NFValWLdf[,2:15]))
-#
+# 
 # write.csv(WFValWLdfJEqnStatsR, "Data/OutputtedData/EqnFitStatisticsValidationWF_WJared.csv")
 # write.csv(NFValWLdfJEqnStatsR, "Data/OutputtedData/EqnFitStatisticsValidationNF_WJared.csv")
 
@@ -927,7 +972,8 @@ maize_chromosomes <- data.frame(maize_chromosomes)
 str(maize_chromosomes)
 ytitle <- expression(paste("Genomic positions (",italic(Mb),")"))
 
-pdf(paste0("Figures/GWASpoly/WSMDP_Carb_GWASpoly_",GWASPolyRunVersion,"_",DataSet,"_AllQTLPosition_GeneralModel.pdf"),width = 10)
+# pdf(paste0("Figures/GWASpoly/WSMDP_Carb_GWASpoly_",GWASPolyRunVersion,"_",DataSet,"_AllQTLPosition_GeneralModel.pdf"),width = 10)
+tiff(paste0("Figures/GWASpoly/WSMDP_Carb_GWASpoly_",GWASPolyRunVersion,"_",DataSet,"_AllQTLPosition_GeneralModel.tiff"),width = 800)
 p <- ggplot(QTLDFGen, aes(Chrom, Position)) +
   geom_segment(data = maize_chromosomes, aes(x = chromosome, xend = chromosome, y = start, yend = end), lineend = "round", color = "black", size = 16, inherit.aes = FALSE) +
   geom_segment(data = maize_chromosomes, aes(x = chromosome, xend = chromosome, y = start, yend = end), lineend = "round", color = "white", size = 15, inherit.aes = FALSE) +
@@ -956,7 +1002,8 @@ p <- p +  theme(legend.position = "none")
 g <- FullGWASVisualize("NoFixedEffect_FDRThresh_2021-10-20")
 g <- g +  theme(legend.title = element_blank(), legend.position = c(0.75,0.2), legend.text=element_text(size=15)) +  guides(colour = guide_legend(nrow = 8)) 
   
-pdf("Figures/GWASpoly/WSMDP_Carb_GWASpoly_NoandEndoFixedEffect_FDRThresh_2021-10-20_NFBLUP_AllQTLPosition_GeneralModel.pdf",width = 10, height = 14,)
+# pdf("Figures/GWASpoly/WSMDP_Carb_GWASpoly_NoandEndoFixedEffect_FDRThresh_2021-10-20_NFBLUP_AllQTLPosition_GeneralModel.pdf",width = 10, height = 14,)
+tiff("Figures/GWASpoly/WSMDP_Carb_GWASpoly_NoandEndoFixedEffect_FDRThresh_2021-10-20_NFBLUP_AllQTLPosition_GeneralModel.tiff",width = 1000, height = 1400)
 figure <- ggarrange(g,p,
                     labels = c("A", "B"),
                     ncol = 1, nrow = 2,
@@ -1058,12 +1105,24 @@ enviTukey(CleanedInfoNF,"NFCleaned")
 justthebitsNF <- NFBlupsGenoJustPheno[2:8]
 colnames(justthebitsNF) <- c("Starch","Total poly","WSP","Glucose","Fructose","Sucrose","Total sugar")
 pdf(paste("Figures/WSMDP_AllNIRPred_MixedEqn_CorrelationfromPSYCH_BLUPs_NoField.pdf",sep=""))
+# tiff(paste("Figures/WSMDP_AllNIRPred_MixedEqn_CorrelationfromPSYCH_BLUPs_NoField.tiff",sep=""))
 pairs.panels(justthebitsNF, stars = TRUE, cex = 1,cex.lab = 2, cex.axis = 1)
 # cor.plot(justthebitsNF, stars = TRUE, cex.cor = 3.5, cex.axis = 1)
 # pairs(justthebitsNF, stars = TRUE, cex.cor = 3.5, cex.axis = 1)
 dev.off()
+pdf(paste("Figures/WSMDP_EndoInbred_Barchart.pdf",sep=""))
+ggplot(WFBlupsGenoJustPheno, aes(x = endo, fill = endo))+
+         geom_bar(stat="count")
+dev.off()
 
+grep(blups, ".*")
 
+df <- data.frame(Carb = c("Starch", "Total.Polysaccharides", "WSP","Glucose","Fructose","Sucrose", "Total.Sugar"),Heritability =c(0.86,0.94,0.94,0.88,0.86,0.96,0.95) )
+pdf(paste("Figures/WSMDP_HeritabilityBarchart.pdf",sep=""),width = 10,height = 10)
+ggplot(df, aes(x = Carb,y = Heritability))+
+         geom_bar(stat = "identity",fill="steelblue") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+dev.off()
 #########################
 ### LD Visualization ###
 #########################
