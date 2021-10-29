@@ -363,7 +363,7 @@ write.csv(out4, checkfile2,append = TRUE, row.names = FALSE)
 EqnStats <- function(DF){
 
   #establish dataframe used to record stats
-  Out <- data.frame(Carb = c("Fructose", "Glucose", "Sucrose", "Total Sugar", "Starch", "Total Polysaccharide", "WSP"),
+  Out <- data.frame(Carb = c("Starch", "Total Polysaccharide", "WSP", "Glucose","Fructose", "Sucrose", "Total Sugar"),
                     RMSEP = rep(NA,7),
                     bias = rep(NA,7),
                     SEE = rep(NA,7),
@@ -378,7 +378,7 @@ EqnStats <- function(DF){
     Out$bias[carb] <- mean(DF[,dfpos[carb]], na.rm = TRUE) - mean(DF[,dfpos[carb]-1],na.rm = TRUE)
     #Calculated the SEE
     Out$SEE[carb] <- sqrt((dim(DF)[1]/(dim(DF)[1]-1))*(Out$RMSEP[carb]^2-Out$bias[carb]^2))
-    Out$Carb[carb] <- colnames(DF[dfpos[carb]])
+    # Out$Carb[carb] <- colnames(DF[dfpos[carb]-1])
   }
   return(Out)
 }
@@ -388,7 +388,7 @@ EqnStats <- function(DF){
 R2Vis <- function(DF, label, Out){
   dfpos <- c(2,4,6,8,10,12,14)
   alpha <- LETTERS[1:8]
-  Carb = c("Starch", "Total Polysaccharide", "WSP","Fructose", "Glucose", "Sucrose", "Total Sugar")
+  Carb = c("Starch", "Total Polysaccharide", "WSP", "Glucose","Fructose", "Sucrose", "Total Sugar")
   carbFileName <- paste("Figures/wsmdp2021_",label,"_AllCarb_NIREqn_Prediction_vis.pdf", sep = "")
   pdf(carbFileName, height= 14)
   par(mfrow=c(4,2))
@@ -422,7 +422,7 @@ R2Vis <- function(DF, label, Out){
 wetlab <- read.csv("Data/WSMDP_Wetlab_StarchSugarData_FormatedForWinISI_WithR.csv")
 wetlabDF <- wetlab[,c(1,6:8,3,2,4,5)]
 
-WLLabels <- c("Samples","Starch_WL","Total.Polysaccharides_WL", "WSP_WL","Glucose_WL","Fructose_WL","Sucrose_WL","Total.Sugar_WL")
+WLLabels <- c("Samples","Starch_WL", "Total Polysaccharide_WL", "WSP_WL", "Glucose_WL","Fructose_WL", "Sucrose_WL", "Total Sugar_WL")
 colnames(wetlabDF) <- WLLabels
 
 WFWL <- merge(CleanedInfoWF, wetlabDF, by = "Samples")
@@ -473,6 +473,7 @@ write.csv(NFValWLdfEqnStatsR, "Data/OutputtedData/EqnFitStatisticsValidationNF.c
 
 linearmodel <- function(SampleDFtoModel,TitleAddendum, endoCheck = FALSE){
   ptm <- proc.time()
+  alpha <- LETTERS[1:8]
   #For Debugging
   # SampleDFtoModel <- CleanedInfoNF
   # TitleAddendum <- "CleanedOutliersNF"
@@ -494,7 +495,8 @@ linearmodel <- function(SampleDFtoModel,TitleAddendum, endoCheck = FALSE){
   carbs <- colnames(SampleDFtoModel)[c1:c2]
   
   ######Iteratite though all the traits#####
-
+  pdf(paste0("Figures/WSMDP_LinearModel_assumptions_",TitleAddendum,"_AllCarbs.pdf"), width = 6, height = 12)
+  par(mfrow=c(7,3))
   for(j in 1:length(carbs)){
     print(paste0("Starting ",carbs[j]," Model Generation"))
     #output the statistics about this trait to the stats file
@@ -544,19 +546,16 @@ linearmodel <- function(SampleDFtoModel,TitleAddendum, endoCheck = FALSE){
   
   ###### Check Assumptions#######
   print(paste0("Check  ",carbs[j]," Model Assumption"))
-  jpeg(paste0("Figures/WSMDP_LinearModel_assumptions_",TitleAddendum,"_", carbs[j], ".jpeg"), width = 1000, height = 500)
-  par(mfrow=c(1,3))
-
   # Model Fit with REML
   plot(fitted(model), residuals(model), pch=19, col="dark blue", ylab="Residuals", xlab="Predicted")
   abline(h=0,col="red", lwd=1, lty=1)
   # histogram of residuals
-  hist(residuals(model),main=paste0("Histogram of ", carbs[j]," residuals from ", TitleAddendum),freq=F, xlab="Residuals", ylab= "Freq", col="palegreen", col.main="darkblue")
+  hist(residuals(model),main=paste0(alpha[j], ": ", carbs[j]," residuals"),freq=F, xlab="Residuals", ylab= "Freq", col="palegreen", col.main="darkblue")
   x=seq(-5e-15,9e-15,5e-15)
   curve(dnorm(x,mean(residuals(model)),sd(residuals(model))),add=T,lwd=2, col="red", lty=1)
   # qq plot
-  qqnorm(residuals(model), pch=19, col="dark blue", col.lines="red", xlab="Pred quantiles", ylab="Obs quantiles")
-  dev.off()
+  qqnorm(residuals(model), pch=19, col="dark blue", col.lines="red", xlab="Pred quantiles", ylab="Obs quantiles", main = "")
+
 
   # Summary of random effects
   summary <- summary(model, correlation=FALSE)
@@ -642,20 +641,21 @@ linearmodel <- function(SampleDFtoModel,TitleAddendum, endoCheck = FALSE){
     VarDF[j,i+1] <- (out$`Sum Sq`[i]/SStotal)}
   
   }
+  dev.off()
 
   #######Graph the different variances explained by different factors######
   VarDFMelt <- reshape2::melt(VarDF)
-  jpeg(paste("Figures/WSMDP_AllNIRPred_MixedEqn_PercentVarianceExplainedby_Factors_",TitleAddendum,".jpeg",sep=""), width = 1000, height = 500)
+  pdf(paste("Figures/WSMDP_AllNIRPred_MixedEqn_PercentVarianceExplainedby_Factors_",TitleAddendum,".pdf",sep=""), width = 10, height = 5)
   print(barchart(~value|variable, group = factor(Carb), data= VarDFMelt,reverse.rows = FALSE,main = "Percent Phenotypic Variance Explained",layout = c(8,1),
            key = simpleKey(text = colnames(SampleDFtoModel)[5:11],
                            rectangles = TRUE, points = FALSE, space = "right")))
   dev.off()
   
   #######Graph the different variances explained by different factors with GGPlot ######
-  jpeg(paste("Figures/WSMDP_AllNIRPred_MixedEqn_PercentVarianceExplainedby_Factors_",TitleAddendum,"_ggplot.jpeg",sep=""), width = 1000, height = 500)
+  pdf(paste("Figures/WSMDP_AllNIRPred_MixedEqn_PercentVarianceExplainedby_Factors_",TitleAddendum,"_ggplot.pdf",sep=""), width = 10, height = 5)
   p <- ggplot(VarDFMelt, aes(y = Carb, value)) +
     geom_bar(aes(fill = variable),stat = "identity",  position = position_stack(reverse = TRUE)) + 
-    theme(legend.position = "top")
+    theme(legend.position = "top",text = element_text(size=20))
   print(p)
   dev.off()
   
