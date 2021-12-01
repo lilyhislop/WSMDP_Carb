@@ -50,7 +50,7 @@ library(SNPRelate)
 library(beepr)#beep when code is done
 library("cAIC4")
 library(ggpubr)
-
+library("PAST")
 getwd()
 setwd("C:/Users/LHislop/Documents/GitHub/WSMDP_Carb")
 
@@ -507,8 +507,8 @@ linearmodel <- function(SampleDFtoModel,TitleAddendum, endoCheck = FALSE){
     #####Establish Model
     modelpastecheck<-  paste0(carbs[j], " ~ (1|BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)")
 
-    # Use check if there enough checks in the model set
-    if(length(unique(SampleDFtoModel$Check))>1){
+    # Use check if there enough checks in the model set. Unique numbers if no check are NA and 99
+    if(length(unique(SampleDFtoModel$Check))>2){
     modelpastecheck<-  paste0(carbs[j], " ~ Check + (1|BookInbred) + (1|BookInbred:Envi) + (1|Envi/superblock/block) + (1|Envi:Row) + (1|Envi:Col)")
     }
     
@@ -673,6 +673,10 @@ linearmodel <- function(SampleDFtoModel,TitleAddendum, endoCheck = FALSE){
 
 WFBlups <- linearmodel(CleanedInfoWF,"CleanedOutliersWF")
 NFBlups <- linearmodel(CleanedInfoNF,"CleanedOutliersNF",endoCheck = FALSE)
+JustSu1 <- HWSPsDF[which(HWSPsDF$endo == "su1" ),]
+
+JustSu1Blups <- linearmodel(JustSu1, "Uncleanedsu1only")
+Justsh2Blups <- linearmodel(LWSPNFs, "Uncleanedsh2nionly")
 
 # 
 # HWSPBlups <- linearmodel(CleanedInfoHWSP,"CleanedOutliersHWSP")
@@ -897,11 +901,14 @@ dev.off()
 # GWASPolyRunVersion <- paste0("EndoFixedEffect_FDRThresh_",Sys.Date())
 
 FullGWASVisualize <- function(GWASPolyRunVersion, DataSet = "NFBLUP", Thresh = "FDR"){
-  # #for debugging
+  # for debugging
   # Thresh = "FDR"
   # DataSet = "NFBLUP"
   # GWASPolyRunVersion <- "EndoFixedEffect_FDRThresh_2021-10-20"
-
+  # Seq <- "SeqG"
+  # hmppath <- paste0("Data/RawData/WSMDP_",Seq,".hmp.txt")
+  # blups <- colnames(NFBlupsGenoJustPheno[2:8])
+  
   #establish DF to hold the file readins 
   QTLList <- list()
 
