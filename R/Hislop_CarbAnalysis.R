@@ -445,6 +445,9 @@ EqnStats <- function(DF){
                     slope = rep(NA,7),
                     intercept = rep(NA,7),
                     R2 = rep(NA,7))
+  
+  #look at each trait in turn
+
   dfpos <- c(2,4,6,8,10,12,14)
   for(carb in 1:7){
     #Calculated the RMSEP
@@ -500,12 +503,21 @@ wetlabDF <- wetlab[,c(1,6:8,3,2,4,5)]
 WLLabels <- c("Samples","Starch_WL", "Total Polysaccharide_WL", "WSP_WL", "Glucose_WL","Fructose_WL", "Sucrose_WL", "Total Sugar_WL")
 colnames(wetlabDF) <- WLLabels
 
+#merge the actual and the predicted traits
 WFWL <- merge(CleanedInfoWF, wetlabDF, by = "Samples")
 NFWL <- merge(CleanedInfoNF, wetlabDF, by = "Samples")
+
+#this pulls out just the traits and eliminates extraneous info
 alternatingorder <- c(1,5,28,6,29,7,30,8,31,9,32,10,33,11,34)
+
+#this makes a data frame where the traits alternate. Predicted starch, actual (wetlab) starch, Predicted totalpoly, actual totalpoly, etc etc
 WFWLdf <- WFWL[,alternatingorder]
 NFWLdf <- NFWL[,alternatingorder]
-WFWLdfEqnStatsR <- R2Vis(WFWLdf[,2:15], "CleanedWSPeqnWF_PredVsWetlab_for_Calibration_Samples", EqnStats(WFWLdf[,2:15]))
+
+#calculate some of the statistics about this dataframe
+EqnStatisticOut <- EqnStats(WFWLdf[,2:15])
+#read the output from the eqnstatistics and plug it into the R2Vis function. string is name for saving the files
+WFWLdfEqnStatsR <- R2Vis(WFWLdf[,2:15], "CleanedWSPeqnWF_PredVsWetlab_for_Calibration_Samples", EqnStatisticOut)
 NFWLdfEqnStatsR <- R2Vis(NFWLdf[,2:15], "CleanedWSPeqnNF_PredVsWetlab_for_Calibration_Samples", EqnStats(NFWLdf[,2:15]))
 
 write.csv(WFWLdfEqnStatsR, "Data/OutputtedData/EqnFitStatisticsAllWetlabWF.csv")
