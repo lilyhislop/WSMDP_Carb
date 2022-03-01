@@ -245,6 +245,8 @@ HWSPs <- HWSPsDF[which(HWSPsDF$endo == "su1" | HWSPsDF$endo == "su1se1"),]
 LWSPWFs <- LWSPWFsDF[which(LWSPNFsDF$endo != "su1se1" & LWSPNFsDF$endo != "su1" & LWSPNFsDF$endo != ""),]
 LWSPNFs <- LWSPNFsDF[which(LWSPNFsDF$endo == "sh2" | LWSPNFsDF$endo == "su1sh2-i"),]
 
+
+
 # #lets look at the validation data that I predicted from kahtleen and Jareds data and output it for further analysis
 # jared <- HWSPsDF[which(HWSPsDF$Year == "sc"),]
 # write.csv(jared, file = "Data/OutputtedData/JaredsPredictedLineswHWSPeqn.csv")
@@ -256,6 +258,7 @@ LWSPNFs <- LWSPNFsDF[which(LWSPNFsDF$endo == "sh2" | LWSPNFsDF$endo == "su1sh2-i
 CarbInfoExpandedWFDF <- subset(rbind(HWSPs,LWSPWFs), !is.na(IsExperimental))
 #all the predictions without the field lines
 CarbInfoExpandedNFDF <- subset(rbind(HWSPs,LWSPNFs), !is.na(IsExperimental))
+
 write.csv(file = "Data/OutputtedData/UncleanedInfoWFOutput.csv",CarbInfoExpandedWFDF)
 write.csv(file = "Data/OutputtedData/UncleanedInfoNFOutput.csv",CarbInfoExpandedNFDF)
 
@@ -283,6 +286,78 @@ write.csv(file = "Data/OutputtedData/InbredsWithinWSMDPCarbDataWF.csv",unique(Cl
 CleanedInfoHWSP <- CarbOutlierCleanup(HWSPs,"HWSP",alpha = 0.05)
 CleanedInfoLWSPNF <- CarbOutlierCleanup(LWSPNFs,"LWSPNFs",alpha = 0.05)
 CleanedInfoLWSPWF <- CarbOutlierCleanup(LWSPWFs,"LWSPWFs",alpha = 0.05)
+
+
+
+
+
+#Take out the medians of each sample based on inbred and environment and visualize that too
+CarbDFMedian <- CarbInfoExpandedWFDF %>%  
+  group_by(Inbred, Envi) %>% 
+  summarise(Starch = median(Starch)) 
+
+CarbDFMedian$Total.Polysaccharides <- pull((CarbInfoExpandedWFDF %>%  
+                                         group_by(Inbred, Envi) %>% 
+                                         summarise(Total.Polysaccharides = median(Total.Polysaccharides)))[3] )
+
+CarbDFMedian$WSP <- pull((CarbInfoExpandedWFDF %>%  
+                       group_by(Inbred, Envi) %>% 
+                       summarise(WSP = median(WSP)))[3] )
+CarbDFMedian$Glucose <- pull((CarbInfoExpandedWFDF %>%  
+                           group_by(Inbred, Envi) %>% 
+                           summarise(Glucose = median(Glucose)))[3] )
+CarbDFMedian$Fructose <- pull((CarbInfoExpandedWFDF %>%  
+                            group_by(Inbred, Envi) %>% 
+                            summarise(Fructose = median(Fructose)))[3] )
+CarbDFMedian$Sucrose <- pull((CarbInfoExpandedWFDF %>%  
+                           group_by(Inbred, Envi) %>% 
+                           summarise(Sucrose = median(Sucrose)))[3] )
+CarbDFMedian$Total.Sugar <- pull((CarbInfoExpandedWFDF %>%  
+                               group_by(Inbred, Envi) %>% 
+                               summarise(Total.Sugar = median(Total.Sugar)))[3] )
+CarbDFMedian$endo <- pull((CarbInfoExpandedWFDF %>%  
+                                    group_by(Inbred, Envi) %>% 
+                                    summarise(Total.Sugar = last(endo)))[3] )
+
+# CarbDFMedian[c(3:9)] <- lapply(CarbDFMedian[c(3:9)], as.numeric)
+
+CarbDataFrameVis(CarbDFMedian,"WithField_WithOutliers_Inbred-enviMedian")
+
+
+
+##Now look at the median for just the inbreds
+CarbDFMedian <- CarbInfoExpandedWFDF %>%  
+  group_by(Inbred) %>% 
+  summarise(Starch = median(Starch)) 
+
+CarbDFMedian$Total.Polysaccharides <- pull((CarbInfoExpandedWFDF %>%  
+                                              group_by(Inbred) %>% 
+                                              summarise(Total.Polysaccharides = median(Total.Polysaccharides)))[2] )
+
+CarbDFMedian$WSP <- pull((CarbInfoExpandedWFDF %>%  
+                            group_by(Inbred) %>% 
+                            summarise(WSP = median(WSP)))[2] )
+CarbDFMedian$Glucose <- pull((CarbInfoExpandedWFDF %>%  
+                                group_by(Inbred) %>% 
+                                summarise(Glucose = median(Glucose)))[2] )
+CarbDFMedian$Fructose <- pull((CarbInfoExpandedWFDF %>%  
+                                 group_by(Inbred) %>% 
+                                 summarise(Fructose = median(Fructose)))[2] )
+CarbDFMedian$Sucrose <- pull((CarbInfoExpandedWFDF %>%  
+                                group_by(Inbred) %>% 
+                                summarise(Sucrose = median(Sucrose)))[2] )
+CarbDFMedian$Total.Sugar <- pull((CarbInfoExpandedWFDF %>%  
+                                    group_by(Inbred) %>% 
+                                    summarise(Total.Sugar = median(Total.Sugar)))[2] )
+CarbDFMedian$endo <- pull((CarbInfoExpandedWFDF %>%  
+                             group_by(Inbred) %>% 
+                             summarise(Total.Sugar = last(endo)))[2] )
+
+# CarbDFMedian[c(3:9)] <- lapply(CarbDFMedian[c(3:9)], as.numeric)
+
+#need to do this manually since no envi data
+# CarbDataFrameVis(CarbDFMedian,"WithField_WithOutliers_Inbred-enviMedian")
+
 
 #######################
 ### Summarize the samples within CleanedInfoNF
@@ -671,8 +746,8 @@ linearmodel <- function(SampleDFtoModel,TitleAddendum, endoCheck = FALSE){
   return(blupHolder)
 }
 
-WFBlups <- linearmodel(CleanedInfoWF,"CleanedOutliersWF")
-NFBlups <- linearmodel(CleanedInfoNF,"CleanedOutliersNF",endoCheck = FALSE)
+# WFBlups <- linearmodel(CleanedInfoWF,"CleanedOutliersWF")
+# NFBlups <- linearmodel(CleanedInfoNF,"CleanedOutliersNF",endoCheck = FALSE)
 JustSu1 <- HWSPsDF[which(HWSPsDF$endo == "su1" ),]
 
 JustSu1Blups <- linearmodel(JustSu1, "Uncleanedsu1only")
@@ -815,7 +890,7 @@ return(BlupDFGenoJustPheno)
 
 WFBlupsGenoJustPheno <- BlupGenoCleanup("WF")
 NFBlupsGenoJustPheno <- BlupGenoCleanup("NF")
-HWSPBlupsGenoJustPheno <- BlupGenoCleanup("HWSP")
+# HWSPBlupsGenoJustPheno <- BlupGenoCleanup("HWSP")
 # LWSPNFBlupsGenoJustPheno <- BlupGenoCleanup("LWSPNF")
 # LWSPWFBlupsGenoJustPheno <- BlupGenoCleanup("LWSPWF")
 
@@ -827,6 +902,8 @@ c1 <- which(colnames(NFBlupsGenoJustPheno)=="Starch.BLUP")
 c2 <- which(colnames(NFBlupsGenoJustPheno)=="Total.Sugar.BLUP")
 blups <- colnames(NFBlupsGenoJustPheno[c1:c2])
 
+
+
 gwasPlotsNo <- vector('list', 7)
 gwasPlotsEndo <- vector('list', 7)
 count = 1
@@ -834,22 +911,22 @@ count = 1
 ptm <- proc.time()
 #itterate through all the traits.
 for(blup in blups){
-
+  
   # gwasPlotsNo[[count]] <-  GWASPolyRunner(WFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_",Sys.Date()),Seq,"WFBLUP")
   # gwasPlotsEndo[[count]] <- GWASPolyRunner(WFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_",Sys.Date()),Seq,"WFBLUP","endo","factor")
-
-  gwasPlotsNo[[count]] <- GWASPolyRunner(NFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),Seq,"NFBLUP")
-  gwasPlotsEndo[[count]] <- GWASPolyRunner(NFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),Seq,"NFBLUP","endo","factor")
-
+  
+  gwasPlotsNo[[count]] <- GWASPolyRunner(NFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),Seq,"NFBLUP",NULL,NULL,Thresh = "M.eff")
+  gwasPlotsEndo[[count]] <- GWASPolyRunner(NFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),Seq,"NFBLUP","endo","factor",Thresh = "M.eff")
+  
   # GWASPolyRunner(HWSPBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),Seq,"WFBLUP")
   # GWASPolyRunner(HWSPBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),Seq,"WFBLUP","endo","factor")
-
+  
   # GWASPolyRunner(LWSPNFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),Seq,"LWSPNFBlups")
   # GWASPolyRunner(LWSPNFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),Seq,"LWSPNFBlups","endo","factor")
   # 
   # GWASPolyRunner(LWSPWFBlupsGenoJustPheno[,1:8],geno,blup,paste0("NoFixedEffect_FDRThresh_",Sys.Date()),Seq,"LWSPWFBlups")
   # GWASPolyRunner(LWSPWFBlupsGenoJustPheno,geno,blup,paste0("EndoFixedEffect_FDRThresh_",Sys.Date()),Seq,"LWSPWFBlups","endo","factor")
-
+  
   count <- count + 1
 }
 
@@ -867,7 +944,9 @@ gwasPlotsEndope <- vector('list', 7)
 gwasPlotsNope <- lapply(gwasPlotsNo, removelegend )
 gwasPlotsEndope <- lapply(gwasPlotsEndo, removelegend )
 
-pdf("Figures/GWASpoly/WSMDP_Carb_GWASpoly_NoFixedEffect_FDRThresh_2021-10-20_NFBLUP_ALLTraitsGWASCumulative_GeneralModel.pdf",width = 10, height = 10)
+# pdf("Figures/GWASpoly/WSMDP_Carb_GWASpoly_NoFixedEffect_FDRThresh_2021-10-20_NFBLUP_ALLTraitsGWASCumulative_GeneralModel.pdf",width = 10, height = 10)
+# pdf("Figures/GWASpoly/WSMDP_Carb_GWASpoly_NoFixedEffect_FDRThresh_2021-12-09_NFBLUP_ALLTraitsGWASCumulative_AdditiveModel.pdf",width = 10, height = 10)
+pdf("Figures/GWASpoly/WSMDP_Carb_GWASpoly_NoFixedEffect_FDRThresh_2021-12-16_NFBLUP_ALLTraitsGWASCumulative_AdditiveModel.pdf",width = 10, height = 10)
 figure <- ggarrange(gwasPlotsNope[[1]], gwasPlotsNope[[2]], gwasPlotsNope[[3]], gwasPlotsNope[[4]], gwasPlotsNope[[5]], gwasPlotsNope[[6]], gwasPlotsNope[[7]],
                     labels = c("A", "B","C","D","E","F","G"),
                     ncol = 2, nrow = 4,
@@ -876,7 +955,9 @@ figure <- ggarrange(gwasPlotsNope[[1]], gwasPlotsNope[[2]], gwasPlotsNope[[3]], 
 print(figure)
 dev.off()
 
-pdf("Figures/GWASpoly/WSMDP_Carb_GWASpoly_EndoFixedEffect_FDRThresh_2021-10-20_NFBLUP_ALLTraitsGWASCumulative_GeneralModel.pdf",width = 10, height = 10)
+# pdf("Figures/GWASpoly/WSMDP_Carb_GWASpoly_EndoFixedEffect_FDRThresh_2021-10-20_NFBLUP_ALLTraitsGWASCumulative_GeneralModel.pdf",width = 10, height = 10)
+# pdf("Figures/GWASpoly/WSMDP_Carb_GWASpoly_EndoFixedEffect_FDRThresh_2021-12-09_NFBLUP_ALLTraitsGWASCumulative_AdditiveModel.pdf",width = 10, height = 10)
+pdf("Figures/GWASpoly/WSMDP_Carb_GWASpoly_EndoFixedEffect_FDRThresh_2021-12-16_NFBLUP_ALLTraitsGWASCumulative_AdditiveModel.pdf",width = 10, height = 10)
 figure <- ggarrange(gwasPlotsEndope[[1]], gwasPlotsEndope[[2]], gwasPlotsEndope[[3]], gwasPlotsEndope[[4]], gwasPlotsEndope[[5]], gwasPlotsEndope[[6]], gwasPlotsEndope[[7]],
                     labels = c("A", "B","C","D","E","F","G"),
                     ncol = 2, nrow = 4,
@@ -885,7 +966,9 @@ figure <- ggarrange(gwasPlotsEndope[[1]], gwasPlotsEndope[[2]], gwasPlotsEndope[
 print(figure)
 dev.off()
 
-pdf("Figures/GWASpoly/WSMDP_Carb_GWASpoly_NoandEndoFixedEffect_FDRThresh_2021-10-20_NFBLUP_TotalSugar_GeneralModel.pdf",width = 10, height = 10)
+# pdf("Figures/GWASpoly/WSMDP_Carb_GWASpoly_NoandEndoFixedEffect_FDRThresh_2021-10-20_NFBLUP_TotalSugar_GeneralModel.pdf",width = 10, height = 10)
+# pdf("Figures/GWASpoly/WSMDP_Carb_GWASpoly_NoandEndoFixedEffect_FDRThresh_2021-12-09_NFBLUP_TotalSugar_AdditiveModel.pdf",width = 10, height = 10)
+pdf("Figures/GWASpoly/WSMDP_Carb_GWASpoly_NoandEndoFixedEffect_FDRThresh_2021-12-16_NFBLUP_TotalSugar_AdditiveModel.pdf",width = 10, height = 10)
 figure <- ggarrange(gwasPlotsNope[[7]],gwasPlotsEndope[[7]],
                     labels = c("A","B"),
                     ncol = 1, nrow = 2,
@@ -904,7 +987,8 @@ FullGWASVisualize <- function(GWASPolyRunVersion, DataSet = "NFBLUP", Thresh = "
   # for debugging
   # Thresh = "FDR"
   # DataSet = "NFBLUP"
-  # GWASPolyRunVersion <- "EndoFixedEffect_FDRThresh_2021-10-20"
+  # # GWASPolyRunVersion <- "EndoFixedEffect_FDRThresh_2021-10-20"
+  # GWASPolyRunVersion <- "EndoFixedEffect_FDRThresh_2021-12-09"
   # Seq <- "SeqG"
   # hmppath <- paste0("Data/RawData/WSMDP_",Seq,".hmp.txt")
   # blups <- colnames(NFBlupsGenoJustPheno[2:8])
@@ -916,8 +1000,8 @@ FullGWASVisualize <- function(GWASPolyRunVersion, DataSet = "NFBLUP", Thresh = "
 #Put these files into a dataframe
 #This is the originally created filename
 for(i in 1:7){
-  file1 <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,DataSet,GWASPolyRunVersion,"_",blups[i],"_",Thresh,"_QTLswithEffects.csv", sep = "")
-  file2 <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,"_",DataSet,"_",GWASPolyRunVersion,"_",blups[i],"_",Thresh,"_SignificantQTL.csv", sep = "")
+  file1 <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,DataSet,GWASPolyRunVersion,"_",blups[i],"_",Thresh,"_FitQTLLoci.csv", sep = "")
+  file2 <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,"_",DataSet,"_",GWASPolyRunVersion,"_",blups[i],"_",Thresh,"_SignificantLoci.csv", sep = "")
   #make sure theres actually something in the file: As in, there are any QTLs and you don't try to open an empty file
   if (file.exists(file1) && file.size(file1)>15){ 
     merge1 <- read.csv(file1)
@@ -930,7 +1014,8 @@ for(i in 1:7){
 #bind the QTLs into one dataframe
 QTLDF <- bind_rows(QTLList)
 #pull out only the general QTL
-QTLDFGen <- QTLDF[which(QTLDF$Model == "general"),]
+# QTLDFGen <- QTLDF[which(QTLDF$Model == "general"),]
+QTLDFGen <- QTLDF[which(QTLDF$Model == "additive"),]
 QTLDFGen$Trait <- paste0(QTLDFGen$Trait," (",QTLDFGen$Threshold, " LOD)")
 #Add in dot for sh2 and su1
 #su1
@@ -1004,13 +1089,17 @@ return (p)
 }
 
 # p <- FullGWASVisualize("EndoFixedEffect_FDRThresh_2021-09-27")
-p <- FullGWASVisualize("EndoFixedEffect_FDRThresh_2021-10-20")
+# p <- FullGWASVisualize("EndoFixedEffect_FDRThresh_2021-10-20")
+p <- FullGWASVisualize("EndoFixedEffect_FDRThresh_2021-12-09")
 p <- p +  theme(legend.position = "none")
-g <- FullGWASVisualize("NoFixedEffect_FDRThresh_2021-10-20")
+# g <- FullGWASVisualize("NoFixedEffect_FDRThresh_2021-10-20")
+g <- FullGWASVisualize("NoFixedEffect_FDRThresh_2021-12-09")
 g <- g +  theme(legend.title = element_blank(), legend.position = c(0.75,0.2), legend.text=element_text(size=15)) +  guides(colour = guide_legend(nrow = 8)) 
   
 # pdf("Figures/GWASpoly/WSMDP_Carb_GWASpoly_NoandEndoFixedEffect_FDRThresh_2021-10-20_NFBLUP_AllQTLPosition_GeneralModel.pdf",width = 10, height = 14,)
-tiff("Figures/GWASpoly/WSMDP_Carb_GWASpoly_NoandEndoFixedEffect_FDRThresh_2021-10-20_NFBLUP_AllQTLPosition_GeneralModel.tiff",width = 1000, height = 1400)
+pdf("Figures/GWASpoly/WSMDP_Carb_GWASpoly_NoandEndoFixedEffect_FDRThresh_2021-12-09_NFBLUP_AllQTLPosition_AdditiveModel.pdf",width = 10, height = 14,)
+# tiff("Figures/GWASpoly/WSMDP_Carb_GWASpoly_NoandEndoFixedEffect_FDRThresh_2021-10-20_NFBLUP_AllQTLPosition_GeneralModel.tiff",width = 1000, height = 1400)
+# tiff("Figures/GWASpoly/WSMDP_Carb_GWASpoly_NoandEndoFixedEffect_FDRThresh_2021-12-09_NFBLUP_AllQTLPosition_AdditiveModel.tiff",width = 1000, height = 1400)
 figure <- ggarrange(g,p,
                     labels = c("A", "B"),
                     ncol = 1, nrow = 2,

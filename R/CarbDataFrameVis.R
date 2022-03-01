@@ -14,7 +14,7 @@ CarbDataFrameVis <- function(CarbDF, TitleQuality = ""){
   
   
   #endomutants 
-  tiff(paste("Figures/WSMDP_AllNIRPred_",TitleQuality,"Starch_byEndo_Boxplot.tiff",sep=""), width = 750, height = 500)
+  tiff(paste("Figures/WSMDP_AllNIRPred_",TitleQuality,"Starch_byEndo_Boxplot.tiff",sep=""), width = 500, height = 250)
   dat.m <- reshape2::melt(CarbDF, id.vars = "endo", measure.vars = c('Starch', 'WSP', 'Total.Polysaccharides') )
   
     p <- ggplot(dat.m) +
@@ -23,7 +23,7 @@ CarbDataFrameVis <- function(CarbDF, TitleQuality = ""){
   dev.off()
   
   
-  tiff(paste("Figures/WSMDP_AllNIRPred_",TitleQuality,"Sugar_byEndo_Boxplot.tiff",sep=""), width = 1000, height = 500)
+  tiff(paste("Figures/WSMDP_AllNIRPred_",TitleQuality,"Sugar_byEndo_Boxplot.tiff",sep=""), width = 500, height = 250)
   dat.m <- reshape2::melt(CarbDF, id.vars = "endo", measure.vars = c('Glucose', 'Fructose', 'Sucrose', 'Total.Sugar') )
   p <- ggplot(dat.m) +
     geom_boxplot(aes(x = endo, y = value, color = variable))

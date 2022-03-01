@@ -2,10 +2,13 @@ GWASPolyVis <- function(GWASPolyRunVersion,trait,data3, Seq,DataSet, Thresh = "F
   
   visfileprefix <- paste0("Figures/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,"_",DataSet,"_",GWASPolyRunVersion,"_",trait,"_",Thresh)
   
-  QQplotfile <- paste(visfileprefix,"_QQplot_General.png", sep = "")
+  # QQplotfile <- paste(visfileprefix,"_QQplot_General.png", sep = "")
+  QQplotfile <- paste(visfileprefix,"_QQplot_Additive.png", sep = "")
   png(QQplotfile, width = 500, height = 500)
   #,"1-dom-alt-alt","1-dom-alt-ref","1-dom-ref-alt","1-dom-ref-ref")
-  print(qq.plot(data3,trait=trait,model="general"))
+  # print(qq.plot(data3,trait=trait,model="general"))
+  print(qq.plot(data3,trait=trait,model="additive"))
+  
   
   dev.off()
   
@@ -50,30 +53,33 @@ GWASPolyVis <- function(GWASPolyRunVersion,trait,data3, Seq,DataSet, Thresh = "F
   # })
   # dev.off()
   # 
+# 
+#   MANGenplotfile <- paste(visfileprefix,"_Manhattan_GeneralModel.png", sep = "")
+#   png(MANGenplotfile,width = 750, height = 500)
+#   gwasplot <- manhattan.plot(data4,trait=trait,model="general")
+#   print({
+#   par(mfrow=c(1,1))
+#     gwasplot
+#   # abline(a = get.QTL(data4, model="general")$Threshold[1], b = 0, lty = "dashed")
+#   })
+#   dev.off()
 
-  MANGenplotfile <- paste(visfileprefix,"_Manhattan_GeneralModel.png", sep = "")
-  png(MANGenplotfile,width = 750, height = 500)
-  gwasplot <- manhattan.plot(data4,trait=trait,model="general")
-  print({
-  par(mfrow=c(1,1))
-    gwasplot
-  # abline(a = get.QTL(data4, model="general")$Threshold[1], b = 0, lty = "dashed")
-  })
-  dev.off()
+    MANAddplotfile <- paste(visfileprefix,"_Manhattan_AdditiveModel.png", sep = "")
+    png(MANAddplotfile,width = 750, height = 500)
+    gwasplot <- manhattan.plot(data4,trait=trait,model="additive")
+    print({
+    par(mfrow=c(1,1))
+      gwasplot
+    # abline(a = get.QTL(data4, model="additive")$Threshold[1], b = 0, lty = "dashed")
+    })
+    dev.off()
 
-  # MANAddplotfile <- paste(visfileprefix,"_Manhattan_AdditiveModel.png", sep = "")
-  # png(MANAddplotfile,width = 750, height = 500)
-  # print({
-  # par(mfrow=c(1,1))
-  # manhattan.plot(data4,trait=trait,model="additive")
-  # })
-  # dev.off()
 
   Scoresfile <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,"_",DataSet,"_",GWASPolyRunVersion,"_",trait,"_",Thresh,"_scores.csv", sep = "")
   Effectfile <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,"_",DataSet,"_",GWASPolyRunVersion,"_",trait,"_",Thresh,"_effects.csv", sep = "")
   write.GWASpoly(data4, trait, filename=Scoresfile, what = "scores", delim = ",")
   write.GWASpoly(data4, trait, filename=Effectfile, what = "effects", delim = ",")
-  data5File <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,"_",DataSet,"_",GWASPolyRunVersion,"_",trait,"_",Thresh,"_SignificantQTL.csv", sep = "")
+  data5File <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,"_",DataSet,"_",GWASPolyRunVersion,"_",trait,"_",Thresh,"_SignificantLoci.csv", sep = "")
   write.table(data5,
               append = FALSE,
               file = data5File,
@@ -86,7 +92,7 @@ GWASPolyVis <- function(GWASPolyRunVersion,trait,data3, Seq,DataSet, Thresh = "F
     # fit.ans <- fit.QTL(data=data3,trait=trait,
                         qtl=data5[,c("Marker","Model")],
                        fixed=data.frame(Effect="endo",Type="factor"))
-  QTLfile <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,DataSet,GWASPolyRunVersion,"_",trait,"_",Thresh,"_QTLswithEffects.csv", sep = "")
+  QTLfile <- paste("Data/OutputtedData/GWASpoly/WSMDP_Carb_GWASpoly_",Seq,DataSet,GWASPolyRunVersion,"_",trait,"_",Thresh,"_FitQTLLoci.csv", sep = "")
   write.table(fit.ans,
               append = FALSE,
               file = QTLfile,
@@ -97,3 +103,4 @@ GWASPolyVis <- function(GWASPolyRunVersion,trait,data3, Seq,DataSet, Thresh = "F
   return(gwasplot)
 
 }
+
